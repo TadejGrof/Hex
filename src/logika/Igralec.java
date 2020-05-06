@@ -1,5 +1,6 @@
 package logika;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -12,24 +13,34 @@ public class Igralec {
 	private int tip;
 	
 	private String ime;
-	private int barva;
+	private Color barva;
 	private Igra igra;
 	
-	public Igralec(String ime,Igra igra, int barva) {
+	public Igralec(String ime,Igra igra, Color barva) {
 		this.igra = igra;
 		this.ime = ime;
 		tip = IGRALEC;
 		this.barva = barva;
 	}
 	
-	public Igralec(String ime, Igra igra, int barva, int tip) {
+	public Igralec(String ime, Igra igra, Color barva, int tip) {
 		this.igra = igra;
 		this.ime = ime;
 		this.barva = barva;
 		this.tip = tip;
 	}
 	
-	public int getBarva() {
+	public Igralec(String ime, Color barva, int tip) {
+		this.ime = ime;
+		this.barva = barva;
+		this.tip = tip;
+	}
+	
+	public void setIgra(Igra igra) {
+		this.igra = igra;
+	}
+	
+	public Color getBarva() {
 		return this.barva;
 	}
 	
@@ -43,7 +54,5 @@ public class Igralec {
 		ArrayList<Koordinati> veljavne = igra.veljavnePoteze();
 		igra.odigraj(veljavne.get(random.nextInt(veljavne.size())));
 	}
-	
-	
 	
 }

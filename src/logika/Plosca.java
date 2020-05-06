@@ -1,21 +1,22 @@
 package logika;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import koordinati.Koordinati;
 
 public class Plosca {
-	private final int PRAZNO = 0;
+
 	
 	private ArrayList<Koordinati> koordinate;
 	private ArrayList<ArrayList<Koordinati>> plosca;
-	private HashMap<Koordinati, Integer> stanje;
+	private HashMap<Koordinati, Color> stanje;
 	private int velikost;
-	private int zmagovalec;
+	private Color zmagovalec;
 	
 	public Plosca(int velikost) {
-		zmagovalec = PRAZNO;
+		zmagovalec = Igra.PRAZNO;
 		this.velikost = velikost;
 		koordinate = new ArrayList<Koordinati>();
 		plosca = new ArrayList<ArrayList<Koordinati>>();
@@ -36,27 +37,27 @@ public class Plosca {
 			}
 		}
 		
-		stanje = new HashMap<Koordinati,Integer>();
+		stanje = new HashMap<Koordinati,Color>();
 			for(Koordinati koordinati: koordinate) {
-				stanje.put(koordinati, PRAZNO);
+				stanje.put(koordinati, Igra.PRAZNO);
 			}
 	}
 	
 	public ArrayList<Koordinati> prazne() {
 		ArrayList<Koordinati> prazne = new ArrayList<Koordinati>();
 		for(Koordinati koordinati: koordinate) {
-			if (stanje.get(koordinati) == PRAZNO) {
+			if (stanje.get(koordinati) == Igra.PRAZNO) {
 				prazne.add(koordinati);
 			}
 		}
 		return prazne;
 	}
 	
-	public void odigraj(Koordinati koordinati, int barva) {
+	public void odigraj(Koordinati koordinati, Color barva) {
 		stanje.replace(koordinati, barva);
 	}
 	
-	public HashMap<Koordinati, Integer> getStanje(){
+	public HashMap<Koordinati, Color> getStanje(){
 		return stanje;
 	}
 	
@@ -64,7 +65,7 @@ public class Plosca {
 		return plosca;
 	}
 	
-	public int getZmagovalec() {
+	public Color getZmagovalec() {
 		return zmagovalec;
 	}
 	
@@ -87,13 +88,13 @@ public class Plosca {
 		return false;
 	}
 	
-	public ArrayList<Koordinati> najdaljsaPot(int barva, ArrayList<Koordinati> pot, int i, int j) {
+	public ArrayList<Koordinati> najdaljsaPot(Color barva, ArrayList<Koordinati> pot, int i, int j) {
 		ArrayList<Koordinati> osnovnaPot;
 		
 		Koordinati koordinati = koordinati(i,j);
 		pot.add(koordinati);
 		for ( Koordinati sosednji :sosednje(i,j)) {
-			if (stanje.get(sosednji) == barva & !pot.contains(sosednji)) {
+			if (stanje.get(sosednji).equals(barva) & !pot.contains(sosednji)) {
 				osnovnaPot = pot;
 				pot = najdaljsaPot(barva,pot,sosednji.getX(),sosednji.getY());
 				if (jeKoncnaPot(pot)) {

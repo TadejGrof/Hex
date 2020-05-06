@@ -9,9 +9,9 @@ import java.util.Scanner;
 import koordinati.Koordinati;
 
 public class Igra {
-	public static final int PRAZNO = 0;
-	public static final int RDECA = 1;
-	public static final int MODRA = 2;
+	public static final Color PRAZNO = Color.WHITE;
+	public static final Color RDECA = Color.RED;
+	public static final Color MODRA = Color.BLUE;
 	
 	private int velikost;
 	private Plosca plosca;
@@ -65,6 +65,18 @@ public class Igra {
 		 
 	 }
 	 
+	 public void setIgralca(Igralec igralec1, Igralec igralec2) {
+		 this.igralec1 = igralec1;
+		 this.igralec2 = igralec2;
+		 igralec1.setIgra(this);
+		 igralec2.setIgra(this);
+		 
+		 igralecNaPotezi = igralec1;
+		 igralca.clear();
+		 igralca.add(igralec1);
+		 igralca.add(igralec2);
+	 }
+	 
 	 public int getVelikost() {return velikost;}
 	 
 	 public Igralec getIgralecNaPotezi() {return igralecNaPotezi;}
@@ -102,7 +114,7 @@ public class Igra {
 		 return plosca.getPlosca();
 	 }
 	 
-	 public HashMap<Koordinati,Integer> vrniStanje() {
+	 public HashMap<Koordinati,Color> vrniStanje() {
 		 return plosca.getStanje();
 	 }
 	 public boolean konecIgre() {
@@ -115,27 +127,17 @@ public class Igra {
 	 }
 	 
 	 public Igralec zmagovalecIgre() {
-		int tip = plosca.getZmagovalec();
-		
-		return getIgralec(tip); 
+		Color barva = plosca.getZmagovalec();
+		return getIgralec(barva); 
 	 }
 	 
-	 private Igralec getIgralec(int tip) {
+	 private Igralec getIgralec(Color barva) {
 		 for(Igralec igralec: igralca) {
-			 if (igralec.getBarva() == tip) {
+			 if (igralec.getBarva().equals(barva)) {
 				 return igralec;
 			 }
 		 }
 		 return null;
 	 }
-	 public Color getBarva(int barva) {
-		 if(barva == PRAZNO) {
-			 return Color.white;
-		 } else if (barva == RDECA) {
-			 return Color.red;
-		 } else if ( barva == MODRA) {
-			 return Color.blue;
-		 } 
-		 return Color.white;
-	 }
+
 }
