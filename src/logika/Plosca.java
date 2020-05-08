@@ -14,8 +14,12 @@ public class Plosca {
 	private HashMap<Koordinati, Color> stanje;
 	private int velikost;
 	private Color zmagovalec;
+	private Color igralec1;
+	private Color igralec2;
 	
-	public Plosca(int velikost) {
+	public Plosca(int velikost, Color igralec1, Color igralec2) {
+		this.igralec1 = igralec1;
+		this.igralec2 = igralec2;
 		zmagovalec = Igra.PRAZNO;
 		this.velikost = velikost;
 		koordinate = new ArrayList<Koordinati>();
@@ -41,6 +45,11 @@ public class Plosca {
 			for(Koordinati koordinati: koordinate) {
 				stanje.put(koordinati, Igra.PRAZNO);
 			}
+	}
+	
+	public void setIgralca(Color igralec1, Color igralec2) {
+		this.igralec1 = igralec1;
+		this.igralec2 = igralec2;
 	}
 	
 	public ArrayList<Koordinati> prazne() {
@@ -73,15 +82,15 @@ public class Plosca {
 		int i; int j;
 		i = 0;
 		for (j = 0; j < velikost; j++) {
-			if (jeKoncnaPot(najdaljsaPot(Igra.RDECA,new ArrayList<Koordinati>(), i, j))) {
-				zmagovalec = Igra.RDECA;
+			if (jeKoncnaPot(najdaljsaPot(igralec1,new ArrayList<Koordinati>(), i, j))) {
+				zmagovalec = igralec1;
 				return true;
 			}
 		}
 		j = 0;
 		for (i = 0; i < velikost; i++) {
-			if (jeKoncnaPot(najdaljsaPot(Igra.MODRA,new ArrayList<Koordinati>(), i, j))) {
-				zmagovalec = Igra.MODRA;
+			if (jeKoncnaPot(najdaljsaPot(igralec2,new ArrayList<Koordinati>(), i, j))) {
+				zmagovalec = igralec2;
 				return true;
 			}
 		}
@@ -113,8 +122,8 @@ public class Plosca {
 	public boolean jeKoncnaPot(ArrayList<Koordinati> pot) {
 		Koordinati prva = pot.get(0);
 		Koordinati zadnja = pot.get(pot.size() - 1);
-		boolean rdeca = prva.getX() == 0 & zadnja.getX() == velikost - 1 & stanje.get(prva) == Igra.RDECA;
-		boolean modra = prva.getY() == 0 & zadnja.getY() == velikost - 1 & stanje.get(prva) == Igra.MODRA;
+		boolean rdeca = prva.getX() == 0 & zadnja.getX() == velikost - 1 & stanje.get(prva) == igralec1;
+		boolean modra = prva.getY() == 0 & zadnja.getY() == velikost - 1 & stanje.get(prva) == igralec2;
 		return rdeca | modra;
 	}
 	

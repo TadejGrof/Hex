@@ -41,7 +41,7 @@ public class Okno {
 	
 	public Okno() {	
 		frame = new JFrame();
-		frame.setBounds(60, 60, 1000, 650);
+		frame.setBounds(60, 20, 1000, 700);
 		//frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

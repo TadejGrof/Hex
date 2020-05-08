@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.util.ArrayList;
 
 import koordinati.Koordinati;
 
@@ -56,8 +57,34 @@ public class Sestkotnik {
         	return barva;
         }
         
-        public Polygon getSmallerHexagon(int zamik) {
-        	return createHexagon(zamik);
+        public Polygon getOuterLine(int i) {
+        	int debelina = 10;
+        	Polygon polygon = new Polygon();
+        	int xval = (int) (x + (radius)
+                    * Math.sin(i * 2 * Math.PI / 6D));
+        	int yval = (int) (y + (radius)
+                    * Math.cos(i * 2 * Math.PI / 6D));
+            polygon.addPoint(xval,yval);
+            xval = (int) (x + (radius + debelina)
+                    * Math.sin(i * 2 * Math.PI / 6D));
+        	yval = (int) (y + (radius + debelina)
+                    * Math.cos(i * 2 * Math.PI / 6D));
+            polygon.addPoint(xval,yval);
+            xval = (int) (x + (radius + debelina)
+                    * Math.sin((i + 1) * 2 * Math.PI / 6D));
+        	yval = (int) (y + (radius + debelina)
+                    * Math.cos((i + 1) * 2 * Math.PI / 6D));
+            polygon.addPoint(xval,yval);
+            xval = (int) (x + (radius)
+                    * Math.sin((i + 1) * 2 * Math.PI / 6D));
+        	yval = (int) (y + (radius)
+                    * Math.cos((i + 1) * 2 * Math.PI / 6D));
+            polygon.addPoint(xval,yval);
+        	return polygon;
+        }
+        
+        public Polygon getResizedHexagon(int zamik) {
+        	return createHexagon(-zamik);
         }
         
 

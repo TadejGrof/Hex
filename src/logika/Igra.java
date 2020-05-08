@@ -52,8 +52,6 @@ public class Igra {
 	 
 	 
 	 private void initialize() {
-		 plosca = new Plosca(velikost);
-		 
 		 igralca = new ArrayList<Igralec>();
 		 
 		 igralec1 = new Igralec("Igralec1", this, RDECA, Igralec.RACUNALNIK);
@@ -61,8 +59,19 @@ public class Igra {
 		 igralec2 = new Igralec("Igralec2", this, MODRA, Igralec.RACUNALNIK);
 		 igralca.add(igralec2);
 		 
+		 plosca = new Plosca(velikost, igralec1.getBarva(), igralec2.getBarva());
+		 
 		 igralecNaPotezi = igralec1;
 		 
+	 }
+	 
+	 public Color getIgralecBarva(int index) {
+		 if (index == 1) {
+			 return igralec1.getBarva();
+		 } else if (index == 2) {
+			 return igralec2.getBarva();
+		 }
+		 return null;
 	 }
 	 
 	 public void setIgralca(Igralec igralec1, Igralec igralec2) {
@@ -75,6 +84,8 @@ public class Igra {
 		 igralca.clear();
 		 igralca.add(igralec1);
 		 igralca.add(igralec2);
+		 
+		 plosca.setIgralca(igralec1.getBarva(),igralec2.getBarva());
 	 }
 	 
 	 public int getVelikost() {return velikost;}

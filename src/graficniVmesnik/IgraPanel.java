@@ -1,7 +1,9 @@
 package graficniVmesnik;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -9,6 +11,8 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -19,10 +23,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import static javax.swing.JOptionPane.showMessageDialog;
+
 import koordinati.Koordinati;
 import logika.Igra;
 
 public class IgraPanel extends JPanel{
+	private static final long serialVersionUID = 1L;
+	
 	private Okno okno;
 	private Igra igra;
 	private JPanel menuBar;
@@ -56,9 +64,11 @@ public class IgraPanel extends JPanel{
 		
 		JPanel labelsPanel = new JPanel(new GridLayout(2,1));
 		stanjeLabel = new CenterLabel(potezaStanje);
+		stanjeLabel.setRatio(5);
 		labelsPanel.add(stanjeLabel);
 		
 		igralecLabel = new CenterLabel("Igralec1");
+		igralecLabel.setRatio(4);
 		labelsPanel.add(igralecLabel);
 		
 		menuBar.add(labelsPanel);
@@ -102,51 +112,82 @@ public class IgraPanel extends JPanel{
 		platno.refreshPlatno();
 	}
 	
-	private class CenterLabel extends JLabel{
+	public class Platno extends JPanel implements MouseListener, ComponentListener {
 		private static final long serialVersionUID = 1L;
-
-		public CenterLabel(String text) {
-			super(text,SwingConstants.CENTER);
-		}
-	}
-	
-	public class Platno extends JPanel implements MouseListener{
+		
 		private ArrayList<Sestkotnik> sestkotniki;
 		private Sestkotnik hex;
 		private int N;
-		private int R;
-		private int visina;
-		private int sirina;
-		private double v;
+		private int height;
+		private int width;
+		private int odmikX;
+		private int odmikY;
+		
+		private int igralnoX;
+		private int igralnoY;
+		
+		private int radij;
+		private double visina;
+
+		
 		private Okno okno;
 		private ArrayList<Polygon> polygoni;
 		
 		public Platno() {
 			polygoni = new ArrayList<Polygon>();
 			sestkotniki = new ArrayList<Sestkotnik>();
+			height = 550;
+			width = 900;
 			initialize();
 			this.addMouseListener(this);
+			this.addComponentListener(this);
+		}
+		
+		private void izracunajVrednosti() {
+			System.out.println("racunamVrednosti");
+			N = igra.getVelikost();
+			
+			if (N > 6) {
+				odmikY = 40;
+				odmikX = 40;
+			} else {
+				odmikY = 80;
+				odmikX = 40;
+			}
+			
+			while(true) {
+				odmikY += 5;
+				igralnoY = height - 2 * odmikY;
+				radij = (2 * igralnoY) / (3 * N);
+				igralnoX = (int) ((Math.sqrt(3) * radij * (3 * N - 1)) / 2);
+				if ( (width - igralnoX - odmikX) > 0 ) {
+					odmikX = (width - igralnoX) / 2;
+					break;
+				}
+			}
+			visina = Math.sqrt(3) * radij / 2;
+			
+			System.out.println(visina);
+			System.out.println(height);
+			System.out.println(width);
+			System.out.println(odmikX);
 		}
 		
 		private void initialize() {
 			if (igra != null) {
-				int i; int j;
-				N = igra.getVelikost();
-				R = 28;
-				visina = 550;
-				sirina = 900;
-				int odmikX = 100;
-				int odmikY = 80;
-				v = Math.sqrt(3) * R / 2;
+				
+				izracunajVrednosti();
+				
 				ArrayList<ArrayList<Koordinati>> koordinate = igra.vrniKoordinate();
 				HashMap<Koordinati, Color> stanje = igra.vrniStanje();
-				for( i = 0; i < N; i++) {
-					for ( j = 0; j < N; j++) {
+				
+				for(int i = 0; i < N; i++) {
+					for (int j = 0; j < N; j++) {
 						Koordinati koordinati = koordinate.get(i).get(j);
 						Color barva = stanje.get(koordinati);
-						double x = odmikX + N*v - i * v + j * 2* v;
-						double y = - odmikY + visina - i * 3 * R / 2;
-						sestkotniki.add(new Sestkotnik(x,y,R,koordinati,barva));
+						double x = odmikX + N * visina - i * visina + j * 2* visina;
+						double y = odmikY - radij + igralnoY - i * 3 * radij / 2;
+						sestkotniki.add(new Sestkotnik(x,y,radij,koordinati,barva));
 					}
 				}
 			}	
@@ -163,14 +204,48 @@ public class IgraPanel extends JPanel{
 		protected void paintComponent(Graphics g) {
 			polygoni.clear();
 			super.paintComponent(g);
+			Color igralec1 = igra.getIgralecBarva(1);
+			Color igralec2 = igra.getIgralecBarva(2);
+			
 			for (Sestkotnik hex: sestkotniki) {
+				int y = hex.getKoordinati().getY();
+				int x = hex.getKoordinati().getX();
+				if (y == 0){
+					g.setColor(igralec2);
+					g.drawPolygon(hex.getOuterLine(4));
+					g.fillPolygon(hex.getOuterLine(4));
+					g.drawPolygon(hex.getOuterLine(5));
+					g.fillPolygon(hex.getOuterLine(5));
+				}
+				if (y == igra.getVelikost() - 1) {
+					g.setColor(igralec2);
+					g.drawPolygon(hex.getOuterLine(1));
+					g.fillPolygon(hex.getOuterLine(1));
+					g.drawPolygon(hex.getOuterLine(2));
+					g.fillPolygon(hex.getOuterLine(2));
+				}
+				if (x == 0){
+					g.setColor(igralec1);
+					g.drawPolygon(hex.getOuterLine(5));
+					g.fillPolygon(hex.getOuterLine(5));
+					g.drawPolygon(hex.getOuterLine(6));
+					g.fillPolygon(hex.getOuterLine(6));
+				}
+				if (x == igra.getVelikost() - 1) {
+					g.setColor(igralec1);
+					g.drawPolygon(hex.getOuterLine(3));
+					g.fillPolygon(hex.getOuterLine(3));
+					g.drawPolygon(hex.getOuterLine(2));
+					g.fillPolygon(hex.getOuterLine(2));
+				}
+				Polygon osnovniHex = hex.getHexagon();
 				g.setColor(Color.black);
-				g.drawPolygon(hex.getHexagon());
-				g.fillPolygon(hex.getHexagon());
+				g.drawPolygon(osnovniHex);
+				g.fillPolygon(osnovniHex);
 				g.setColor(hex.getBarva());
 				polygoni.add(hex.getHexagon());
 				
-				Polygon smallerHex = hex.getSmallerHexagon(2);
+				Polygon smallerHex = hex.getResizedHexagon(-2);
 				g.drawPolygon(smallerHex);
 				g.fillPolygon(smallerHex);
 			}
@@ -207,6 +282,31 @@ public class IgraPanel extends JPanel{
 		}
 
 		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void componentResized(ComponentEvent e) {
+			System.out.println("delamResize");
+			this.removeAll();
+			sestkotniki.clear();
+			this.height = this.getHeight();
+			this.width = this.getWidth();
+			initialize();
+			repaint();
+		}
+
+		public void componentMoved(ComponentEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void componentShown(ComponentEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void componentHidden(ComponentEvent e) {
 			// TODO Auto-generated method stub
 			
 		}
