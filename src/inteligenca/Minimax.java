@@ -18,6 +18,7 @@ public class Minimax {
 	private int statusDva;
 	private Color barvaEna;
 	private Color barvaDva;
+	private ArrayList<Koordinati> pot;
 	
 	// prvi igralec bo imel cilj čimbolj povečati vrednost, drugi pa čimbolj zmanjšati, torej
 	// nastavimo prvemu na nekaj zelo malega, drugemu pa na nekaj zelo velikega (zagotovimo, da bo
@@ -83,7 +84,6 @@ public class Minimax {
 		for (int i = 0; i <= velikostMape * velikostMape; i++) {
 			ArrayList<Integer> vrstica = new ArrayList<Integer>(); 
 			if (i % velikostMape == 0) {
-				System.out.println(vrstica);
 				matrika.add(vrstica);
 				vrstica = new ArrayList<Integer>();
 			}
@@ -92,6 +92,46 @@ public class Minimax {
 			}
 		}
 		return matrika;
+	}
+	
+	public ArrayList<Integer> sosediMatrika (int x, int y) {
+		ArrayList<Integer> sosedi = new ArrayList<Integer>();
+		int velikost = Plosca.getVelikost();
+		ArrayList<ArrayList<Integer>> matrika = getMatrika();
+		sosedi.add(matrika.get(y - 1).get(x-1));
+		sosedi.add(matrika.get(y - 1).get(x));
+		sosedi.add(matrika.get(y - 1).get(x+1));
+		sosedi.add(matrika.get(y).get(x-1));
+		sosedi.add(matrika.get(y).get(x+1));
+		sosedi.add(matrika.get(y+1).get(x-1));
+		sosedi.add(matrika.get(y+1).get(x));
+		sosedi.add(matrika.get(y+1).get(x+1));
+		while (sosedi.remove(null));
+		return sosedi;
+	}
+	
+	public void findPath (int igralec, int x, int y) {
+		ArrayList<Koordinati> pot = this.pot;
+		ArrayList<ArrayList<Integer>> matrika = getMatrika();
+		int velikost = Plosca.getVelikost();
+		ArrayList<Integer> sosedi = new ArrayList<Integer>();
+		Koordinati začetnaTočka = new Koordinati(x, y);
+		pot.add(začetnaTočka);
+		while (x > velikost-1 && y > velikost-1) {
+			Koordinati točka = new Koordinati(x, y);
+			if ((x > velikost - 1 || y > velikost - 1) && !pot.contains(točka)) {
+				pot.add(točka);
+			} else {
+				findPath (igralec, x - 1, y - 1);
+				findPath (igralec, x, y - 1);
+				findPath (igralec, x+1, y-1);
+				findPath (igralec, x-1, y);
+				findPath (igralec, x+1, y);
+				findPath (igralec, x-1, y+1);
+				findPath (igralec, x, y+1);
+				findPath (igralec, x+1, y+1);
+			}
+		}
 	}
 	
 	public void shortestPath (int igralec) {
