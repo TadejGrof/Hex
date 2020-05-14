@@ -110,16 +110,16 @@ public class Minimax {
 		return sosedi;
 	}
 	
+	//popravi findPath
 	public void findPath (int igralec, int x, int y) {
 		ArrayList<Koordinati> pot = this.pot;
 		ArrayList<ArrayList<Integer>> matrika = getMatrika();
 		int velikost = Plosca.getVelikost();
-		ArrayList<Integer> sosedi = new ArrayList<Integer>();
 		Koordinati začetnaTočka = new Koordinati(x, y);
 		pot.add(začetnaTočka);
-		while (x > velikost-1 && y > velikost-1) {
+		while (x < velikost-1 && y < velikost-1) {
 			Koordinati točka = new Koordinati(x, y);
-			if ((x > velikost - 1 || y > velikost - 1) && !pot.contains(točka)) {
+			if ((x < velikost - 1 || y < velikost - 1) && !pot.contains(točka)) {
 				pot.add(točka);
 			} else {
 				findPath (igralec, x - 1, y - 1);
@@ -132,6 +132,11 @@ public class Minimax {
 				findPath (igralec, x+1, y+1);
 			}
 		}
+	}
+	
+	public LinkedHashMap<ArrayList<Koordinati>, Integer> dolzineInPoti (ArrayList<Koordinati> pot) {
+		LinkedHashMap<ArrayList<Koordinati>, Integer> slovar = new LinkedHashMap<ArrayList<Koordinati>, Integer>();
+		
 	}
 	
 	public void shortestPath (int igralec) {
