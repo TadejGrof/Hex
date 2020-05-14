@@ -17,8 +17,8 @@ public class Igra {
 	private Plosca plosca;
 	private Igralec igralecNaPotezi;
 	
-	private Igralec igralec1;
-	private Igralec igralec2;
+	private static Igralec igralec1;
+	private static Igralec igralec2;
 	private ArrayList<Igralec> igralca;
 	private Igralec zmagovalec;
 	private boolean konec;
@@ -65,7 +65,7 @@ public class Igra {
 		 
 	 }
 	 
-	 public Color getIgralecBarva(int index) {
+	 public static Color getIgralecBarva(int index) {
 		 if (index == 1) {
 			 return igralec1.getBarva();
 		 } else if (index == 2) {

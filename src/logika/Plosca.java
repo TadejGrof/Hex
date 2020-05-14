@@ -2,7 +2,7 @@ package logika;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import koordinati.Koordinati;
 
@@ -11,11 +11,11 @@ public class Plosca {
 	
 	private ArrayList<Koordinati> koordinate;
 	private ArrayList<ArrayList<Koordinati>> plosca;
-	private HashMap<Koordinati, Color> stanje;
-	private int velikost;
+	private static LinkedHashMap<Koordinati, Color> stanje;
+	private static int velikost;
 	private Color zmagovalec;
-	private Color igralec1;
-	private Color igralec2;
+	private static Color igralec1;
+	private static Color igralec2;
 	
 	public Plosca(int velikost, Color igralec1, Color igralec2) {
 		this.igralec1 = igralec1;
@@ -41,7 +41,7 @@ public class Plosca {
 			}
 		}
 		
-		stanje = new HashMap<Koordinati,Color>();
+		stanje = new LinkedHashMap<Koordinati,Color>();
 			for(Koordinati koordinati: koordinate) {
 				stanje.put(koordinati, Igra.PRAZNO);
 			}
@@ -66,7 +66,7 @@ public class Plosca {
 		stanje.replace(koordinati, barva);
 	}
 	
-	public HashMap<Koordinati, Color> getStanje(){
+	public static LinkedHashMap<Koordinati, Color> getStanje(){
 		return stanje;
 	}
 	
@@ -146,5 +146,9 @@ public class Plosca {
 		sosednje.add(koordinati(i + 1, j + 1));
 		while (sosednje.remove(null));
 		return sosednje;
+	}
+	
+	public static int getVelikost () {
+		return velikost;
 	}
 }
