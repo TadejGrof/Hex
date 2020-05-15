@@ -94,23 +94,23 @@ public class Minimax {
 		return matrika;
 	}
 	
-	public ArrayList<Integer> sosediMatrika (int x, int y) {
-		ArrayList<Integer> sosedi = new ArrayList<Integer>();
-		int velikost = Plosca.getVelikost();
-		ArrayList<ArrayList<Integer>> matrika = getMatrika();
-		sosedi.add(matrika.get(y - 1).get(x-1));
-		sosedi.add(matrika.get(y - 1).get(x));
-		sosedi.add(matrika.get(y - 1).get(x+1));
-		sosedi.add(matrika.get(y).get(x-1));
-		sosedi.add(matrika.get(y).get(x+1));
-		sosedi.add(matrika.get(y+1).get(x-1));
-		sosedi.add(matrika.get(y+1).get(x));
-		sosedi.add(matrika.get(y+1).get(x+1));
-		while (sosedi.remove(null));
-		return sosedi;
-	}
+	//public ArrayList<Integer> sosediMatrika (int x, int y) {
+		//ArrayList<Integer> sosedi = new ArrayList<Integer>();
+		//int velikost = Plosca.getVelikost();
+		//ArrayList<ArrayList<Integer>> matrika = getMatrika();
+		//sosedi.add(matrika.get(y - 1).get(x-1));
+		//sosedi.add(matrika.get(y - 1).get(x));
+		//sosedi.add(matrika.get(y - 1).get(x+1));
+		//sosedi.add(matrika.get(y).get(x-1));
+		//sosedi.add(matrika.get(y).get(x+1));
+		//sosedi.add(matrika.get(y+1).get(x-1));
+		//sosedi.add(matrika.get(y+1).get(x));
+		//sosedi.add(matrika.get(y+1).get(x+1));
+		//while (sosedi.remove(null));
+		//return sosedi;
+	//}
 	
-	//popravi findPath
+	
 	public void findPath (int igralec, int x, int y) {
 		ArrayList<Koordinati> pot = this.pot;
 		ArrayList<ArrayList<Integer>> matrika = getMatrika();
@@ -119,7 +119,7 @@ public class Minimax {
 		pot.add(začetnaTočka);
 		while (x < velikost-1 && y < velikost-1) {
 			Koordinati točka = new Koordinati(x, y);
-			if ((x < velikost - 1 || y < velikost - 1) && !pot.contains(točka)) {
+			if ((x < velikost - 1 || y < velikost - 1) && !pot.contains(točka) && matrika.get(y).get(x) == igralec || matrika.get(y).get(x) == 0) {
 				pot.add(točka);
 			} else {
 				findPath (igralec, x - 1, y - 1);
@@ -134,10 +134,6 @@ public class Minimax {
 		}
 	}
 	
-	public LinkedHashMap<ArrayList<Koordinati>, Integer> dolzineInPoti (ArrayList<Koordinati> pot) {
-		LinkedHashMap<ArrayList<Koordinati>, Integer> slovar = new LinkedHashMap<ArrayList<Koordinati>, Integer>();
-		
-	}
 	
 	public void shortestPath (int igralec) {
 		
