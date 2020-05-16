@@ -8,22 +8,37 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Set;
 
 import koordinati.Koordinati;
 
 public class Minimax {
 	
-	private LinkedHashMap<Koordinati, Integer> stanje;
+	private static LinkedHashMap<Koordinati, Integer> stanje;
 	private int statusEna;
 	private int statusDva;
-	private Color barvaEna;
-	private Color barvaDva;
+	private static Color barvaEna;
+	private static Color barvaDva;
 	private ArrayList<Koordinati> pot;
 	
 	// prvi igralec bo imel cilj čimbolj povečati vrednost, drugi pa čimbolj zmanjšati, torej
 	// nastavimo prvemu na nekaj zelo malega, drugemu pa na nekaj zelo velikega (zagotovimo, da bo
 	// na začetku računalnik pravilno začel)
 	
+	public static void main(String[] args) {
+		LinkedHashMap<Koordinati, Integer> dict = new LinkedHashMap<Koordinati, Integer>();
+		Koordinati ena = new Koordinati(1, 1);
+		Koordinati dva = new Koordinati(2, 2);
+		Koordinati tri = new Koordinati(3, 3);
+		dict.put(ena, 1);
+		dict.put(dva, 2);
+		dict.put(tri, 3);
+		System.out.println(dict.values());
+		System.out.println(dict.keySet());
+		for (int i = 0; i < dict.size(); i++) {
+			System.out.println(dict.values().toArray()[i]);
+		}
+	}
 	public void nastaviZacetnoVrednost () {
 		this.statusEna = -10000;
 		this.statusDva = 10000;
@@ -34,13 +49,13 @@ public class Minimax {
 		this.barvaDva = Igra.getIgralecBarva(2);
 	}
 	
-	public ArrayList<Koordinati> toList (LinkedHashMap<Koordinati, Color> hmp) {
+	public static ArrayList<Koordinati> toList (LinkedHashMap<Koordinati, Color> hmp) {
 		ArrayList<Koordinati> koordinate = new ArrayList<Koordinati>(hmp.keySet());
 		return koordinate;
 	}
 	
 	
-	public LinkedHashMap<Koordinati, Integer> preklopiStanje (LinkedHashMap<Koordinati, Color> staroStanje) {
+	public static LinkedHashMap<Koordinati, Integer> preklopiStanje (LinkedHashMap<Koordinati, Color> staroStanje) {
 		LinkedHashMap<Koordinati, Integer> novoStanje = new LinkedHashMap<Koordinati, Integer>();
 		ArrayList koordinate = toList(staroStanje);
 		for (int i = 0; i < koordinate.size(); i++) {
@@ -75,7 +90,7 @@ public class Minimax {
 		return moznosti;
 	}
 	
-	public ArrayList<ArrayList<Integer>> getMatrika () {
+	public static ArrayList<ArrayList<Integer>> getMatrika () {
 		int velikostMape = Plosca.getVelikost();
 		LinkedHashMap<Koordinati, Integer> stanje = preklopiStanje(Plosca.getStanje());
 		Collection<Integer> mapa = stanje.values();
@@ -92,6 +107,20 @@ public class Minimax {
 			}
 		}
 		return matrika;
+	}
+	
+	public static void getIntMatrx() {
+		ArrayList<ArrayList<Integer>> mtrx = getMatrika();
+		int velikost = Plosca.getVelikost();
+		int[][] intmtrx = new int[velikost][velikost];
+		for (int i = 0; i < velikost; i++) {
+			int[] vrstica = new int[velikost];
+			for (int j = 0; j < velikost; j++) {
+				vrstica[j] = mtrx.get(i).get(j);
+			}
+			intmtrx[i] = vrstica;
+		}
+		System.out.println(intmtrx);
 	}
 	
 	//public ArrayList<Integer> sosediMatrika (int x, int y) {

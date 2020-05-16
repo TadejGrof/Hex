@@ -1,19 +1,19 @@
 package koordinati;
 
 public class Koordinati {
-	private int x;
-	private int y;
+	private static int x;
+	private static int y;
 	
 	public Koordinati(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	public int getX() { 
+	public static int getX() { 
 		return x; 
 	}
 
-	public int getY() {
+	public static int getY() {
 		return y;
 	}
 

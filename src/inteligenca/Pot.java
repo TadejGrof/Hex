@@ -1,8 +1,12 @@
 package inteligenca;
 
+import java.util.ArrayList;
+import logika.Plosca;
+
 public class Pot {
 
-	public int[][] resitev;
+	public static int[][] resitev;
+	public int[] velikost;
 
 	public Pot(int velikost) {
 		resitev = new int[velikost][velikost];
@@ -53,6 +57,7 @@ public class Pot {
 		}
 		return false;
 	}
+	
 	public void print(int [][] resitev, int velikost){
 		for (int i = 0; i < velikost; i++) {
 			for (int j = 0; j < velikost; j++) {
@@ -61,12 +66,24 @@ public class Pot {
 			System.out.println();
 		}
 	}
+	
+	public static int dolzina(int [][] resitev, int velikost){
+		int dolzina = 0;
+		for (int i = 0; i < velikost; i++) {
+			for (int j = 0; j < velikost; j++) {
+				if (resitev[i][j] == 1) dolzina++;
+			}
+		}
+		return dolzina;
+	}	
+		
 	public static void main(String[] args) {
 		int velikost = 5;
-		int[][] matrika = { { 1, 1, 1, 1,1 }, { 1, 1, 1, 0,1 }, { 0, 0,0, 1, 1 },
-				{ 0, 0, 0, 1,0 },{ 0, 0,0, 1, 1 } };
+		int[][] matrika = { { 1, 1, 1, 1, 1}, { 0, 0, 0, 0, 1}, { 0, 1, 0, 1, 1 },
+				{ 0, 0, 0, 1, 0 },{ 0, 0, 0, 1, 1 } };
 		Pot r = new Pot(velikost);
 		r.resiMatriko(matrika, velikost);
+		System.out.println(dolzina(resitev, velikost));
 	}
 
 }
