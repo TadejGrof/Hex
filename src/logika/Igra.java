@@ -187,5 +187,24 @@ public class Igra {
 		 }
 		 return null;
 	 }
+	 
+	 public static Igra kopirajIgro (Igra original) {
+		 Igra kopija = new Igra();
+		 
+		 kopija.mtrx = original.mtrx;
+		 
+		 kopija.velikost = original.velikost;
+		 kopija.plosca = original.plosca;
+		 kopija.igralecNaPotezi = original.igralecNaPotezi;
+		 
+		 
+		 kopija.igralec1 = original.igralec1;
+		 kopija.igralec2 = original.igralec2;
+		 kopija.igralca = original.igralca;
+		 kopija.zmagovalec = original.zmagovalec;
+		 kopija.konec = original.konec;
+		 
+		 return kopija;
+	 }
 
 }

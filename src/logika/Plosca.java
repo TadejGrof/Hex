@@ -52,7 +52,7 @@ public class Plosca {
 		this.igralec2 = igralec2;
 	}
 	
-	public ArrayList<Koordinati> prazne() {
+	public static ArrayList<Koordinati> prazne() {
 		ArrayList<Koordinati> prazne = new ArrayList<Koordinati>();
 		for(Koordinati koordinati: koordinate) {
 			if (stanje.get(koordinati) == Igra.PRAZNO) {
