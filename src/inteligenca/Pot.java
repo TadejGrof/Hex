@@ -96,19 +96,28 @@ public class Pot {
 	}
 	
 	public static void printIntMtrx (int[][] matrika) {
-		for (int i = 0; i < matrika[0].length; i++) {
+		for (int i = 0; i < matrika.length; i++) {
 			System.out.println();
-			for (int j = 0; j < matrika[0].length; j++) {
-				System.out.print(matrika[i][j]);
+			for (int j = 0; j < matrika.length; j++) {
+				System.out.print(" " + matrika[i][j] + " ");
 			}
 		}
+	}
+	//(x, y) -> začetna pozicija
+	//igralec -> pove, ali gledamo levo-desno ali gor-dol
+	public static int evaluate (int[][] matrika, int igralec, int x, int y) {
+		int score = 0;
+		//
+		
+		return score;
 	}
 	
 	public static void main(String[] args) {
 		int velikost = 5;
-		//int[][] matrika = { { 1, 1, 1, 1, 1}, { 0, 0, 0, 0, 1}, { 0, 1, 0, 1, 1 },
-		//		{ 0, 0, 0, 1, 0 },{ 0, 0, 0, 1, 1 } };
+		int[][] test = { { 1, 1, 0, 0, 0 },{ 0, 0, 0, 0, 0 },{ 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0 },{ 0, 0, 0, 0, 0 } };
 		int[][] matrika = generateIntMtrx(5);
+		System.out.println();
 		Pot r = new Pot(velikost);
 		r.resiMatriko(matrika, velikost);
 		System.out.println(dolzina(resitev, velikost));
