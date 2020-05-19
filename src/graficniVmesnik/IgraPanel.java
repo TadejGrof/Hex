@@ -180,7 +180,6 @@ public class IgraPanel extends JPanel{
 			if (igra != null) {
 				
 				izracunajVrednosti();
-				System.out.println("Velikost je "+ N);
 				
 				int[][] matrika = Igra.setIntMtrx(N);
 				
