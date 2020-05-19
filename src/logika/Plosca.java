@@ -9,7 +9,7 @@ import koordinati.Koordinati;
 public class Plosca {
 
 	
-	private ArrayList<Koordinati> koordinate;
+	public static ArrayList<Koordinati> koordinate;
 	private ArrayList<ArrayList<Koordinati>> plosca;
 	private static LinkedHashMap<Koordinati, Color> stanje;
 	private static int velikost;

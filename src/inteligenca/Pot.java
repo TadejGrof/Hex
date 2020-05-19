@@ -1,6 +1,11 @@
 package inteligenca;
 
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
+import koordinati.Koordinati;
+import logika.Igra;
 import logika.Plosca;
 
 public class Pot {
@@ -76,11 +81,34 @@ public class Pot {
 		}
 		return dolzina;
 	}	
-		
+	
+	public static int[][] generateIntMtrx (int velikost) {
+		int[][] intmtrx = new int[velikost][velikost];
+		int[] vrstica = new int[velikost];
+		for (int i = 0; i < velikost; i++) {
+			vrstica = new int[velikost];
+			for (int j = 0; j < velikost; j++) {
+				vrstica[j] = 1;
+			}
+			intmtrx[i] = vrstica;
+		}
+		return intmtrx;
+	}
+	
+	public static void printIntMtrx (int[][] matrika) {
+		for (int i = 0; i < matrika[0].length; i++) {
+			System.out.println();
+			for (int j = 0; j < matrika[0].length; j++) {
+				System.out.print(matrika[i][j]);
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		int velikost = 5;
-		int[][] matrika = { { 1, 1, 1, 1, 1}, { 0, 0, 0, 0, 1}, { 0, 1, 0, 1, 1 },
-				{ 0, 0, 0, 1, 0 },{ 0, 0, 0, 1, 1 } };
+		//int[][] matrika = { { 1, 1, 1, 1, 1}, { 0, 0, 0, 0, 1}, { 0, 1, 0, 1, 1 },
+		//		{ 0, 0, 0, 1, 0 },{ 0, 0, 0, 1, 1 } };
+		int[][] matrika = generateIntMtrx(5);
 		Pot r = new Pot(velikost);
 		r.resiMatriko(matrika, velikost);
 		System.out.println(dolzina(resitev, velikost));

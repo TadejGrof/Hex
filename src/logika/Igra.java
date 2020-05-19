@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 
+import inteligenca.Minimax;
 import koordinati.Koordinati;
 
 public class Igra {
@@ -13,8 +15,10 @@ public class Igra {
 	public static final Color RDECA = Color.RED;
 	public static final Color MODRA = Color.BLUE;
 	
-	private int velikost;
-	private Plosca plosca;
+	public static int[][] mtrx;
+	
+	private static int velikost = Plosca.getVelikost();
+	private static Plosca plosca;
 	private Igralec igralecNaPotezi;
 	
 	private static Igralec igralec1;
@@ -60,9 +64,7 @@ public class Igra {
 		 igralca.add(igralec2);
 		 
 		 plosca = new Plosca(velikost, igralec1.getBarva(), igralec2.getBarva());
-		 
-		 igralecNaPotezi = igralec1;
-		 
+		 igralecNaPotezi = igralec1; 
 	 }
 	 
 	 public static Color getIgralecBarva(int index) {
@@ -88,7 +90,42 @@ public class Igra {
 		 plosca.setIgralca(igralec1.getBarva(),igralec2.getBarva());
 	 }
 	 
-	 public int getVelikost() {return velikost;}
+	 
+	 public static int[][] setIntMtrx (int velikost) {
+		 int[][] mtrx = new int[getVelikost()][getVelikost()];
+		 LinkedHashMap<Koordinati, Color> stanje = Plosca.getStanje();
+		 int[] vrstica = new int[velikost];
+		 for (int i = 1; i < velikost; i++) {
+			 for (int j = 1; j < velikost; j++) {
+				 Color barva = stanje.get((i - 1) * velikost + j - 1);
+				 if (barva == Color.WHITE) {
+					 vrstica[j] = 0;
+				 } else {
+					 if (barva == getIgralecBarva(1)) {
+						 vrstica[j] = 1;
+					 } else {
+						 if (barva == getIgralecBarva(2)) {
+							 vrstica[j] = 2;
+						 }
+					 }
+				 }
+			 }
+			 mtrx[i] = vrstica;
+			 vrstica = new int[velikost];
+		 }
+		 return mtrx;
+	 }
+	 
+	 public static void printIntMtrx(int[][] mtrx) {
+		 for (int i = 0; i < mtrx[0].length; i++) {
+			 for (int j = 0; j < mtrx[0].length; j++) {
+				 System.out.print(" " +mtrx[i][j] + " ");
+			 }
+			 System.out.println();
+		 }
+	 }
+	 
+	 public static int getVelikost() {return velikost;}
 	 
 	 public Igralec getIgralecNaPotezi() {return igralecNaPotezi;}
 	 
@@ -125,7 +162,7 @@ public class Igra {
 		 return plosca.getPlosca();
 	 }
 	 
-	 public HashMap<Koordinati,Color> vrniStanje() {
+	 public static LinkedHashMap<Koordinati,Color> vrniStanje() {
 		 return plosca.getStanje();
 	 }
 	 public boolean konecIgre() {

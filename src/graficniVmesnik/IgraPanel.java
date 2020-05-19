@@ -27,6 +27,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 import koordinati.Koordinati;
 import logika.Igra;
+import logika.Plosca;
 
 public class IgraPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
@@ -123,6 +124,8 @@ public class IgraPanel extends JPanel{
 		private int odmikX;
 		private int odmikY;
 		
+		private int[][] matrika;
+		
 		private int igralnoX;
 		private int igralnoY;
 		
@@ -177,6 +180,12 @@ public class IgraPanel extends JPanel{
 			if (igra != null) {
 				
 				izracunajVrednosti();
+				System.out.println("Velikost je "+ N);
+				
+				int[][] matrika = Igra.setIntMtrx(N);
+				
+				Color barvaEna = Igra.getIgralecBarva(1);
+				Color barvaDva = Igra.getIgralecBarva(2);
 				
 				ArrayList<ArrayList<Koordinati>> koordinate = igra.vrniKoordinate();
 				HashMap<Koordinati, Color> stanje = igra.vrniStanje();
@@ -185,11 +194,21 @@ public class IgraPanel extends JPanel{
 					for (int j = 0; j < N; j++) {
 						Koordinati koordinati = koordinate.get(i).get(j);
 						Color barva = stanje.get(koordinati);
+						
+						if (barva == barvaEna) {
+							matrika[i][j] = 1;
+						} else if (barva == barvaDva) {
+							matrika[i][j] = 2;
+						} else {
+							matrika[i][j] = 0;
+						}
 						double x = odmikX + N * visina - i * visina + j * 2* visina;
 						double y = odmikY - radij + igralnoY - i * 3 * radij / 2;
 						sestkotniki.add(new Sestkotnik(x,y,radij,koordinati,barva));
 					}
 				}
+				System.out.println();
+				Igra.printIntMtrx(matrika);
 			}	
 		}
 		

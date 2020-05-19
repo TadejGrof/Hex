@@ -20,12 +20,15 @@ public class Minimax {
 	private static Color barvaEna;
 	private static Color barvaDva;
 	private ArrayList<Koordinati> pot;
+	public ArrayList<Koordinati> koordinate = Plosca.koordinate;
 	
 	// prvi igralec bo imel cilj čimbolj povečati vrednost, drugi pa čimbolj zmanjšati, torej
 	// nastavimo prvemu na nekaj zelo malega, drugemu pa na nekaj zelo velikega (zagotovimo, da bo
 	// na začetku računalnik pravilno začel)
 	
 	public static void main(String[] args) {
+		System.out.print("Stanje je ");
+		System.out.println(Plosca.getStanje());
 		LinkedHashMap<Koordinati, Integer> dict = new LinkedHashMap<Koordinati, Integer>();
 		Koordinati ena = new Koordinati(1, 1);
 		Koordinati dva = new Koordinati(2, 2);
@@ -34,11 +37,13 @@ public class Minimax {
 		dict.put(dva, 2);
 		dict.put(tri, 3);
 		System.out.println(dict.values());
-		System.out.println(dict.keySet());
+		System.out.println(dict.keySet());		
 		for (int i = 0; i < dict.size(); i++) {
 			System.out.println(dict.values().toArray()[i]);
+			System.out.println(dict.keySet().toArray()[i]);
 		}
 	}
+	
 	public void nastaviZacetnoVrednost () {
 		this.statusEna = -10000;
 		this.statusDva = 10000;
