@@ -181,7 +181,7 @@ public class IgraPanel extends JPanel{
 				
 				izracunajVrednosti();
 				
-				int[][] matrika = Igra.setIntMtrx(N);
+				int[][] matrika = Igra.setIntMtrx();
 				
 				Color barvaEna = Igra.getIgralecBarva(1);
 				Color barvaDva = Igra.getIgralecBarva(2);

@@ -10,7 +10,7 @@ public class Plosca {
 
 	
 	public static ArrayList<Koordinati> koordinate;
-	private ArrayList<ArrayList<Koordinati>> plosca;
+	private static ArrayList<ArrayList<Koordinati>> plosca;
 	private static LinkedHashMap<Koordinati, Color> stanje;
 	private static int velikost;
 	private Color zmagovalec;
@@ -62,7 +62,7 @@ public class Plosca {
 		return prazne;
 	}
 	
-	public void odigraj(Koordinati koordinati, Color barva) {
+	public static void odigraj(Koordinati koordinati, Color barva) {
 		stanje.replace(koordinati, barva);
 	}
 	
@@ -127,7 +127,7 @@ public class Plosca {
 		return rdeca | modra;
 	}
 	
-	public Koordinati koordinati(int i, int j) {
+	public static Koordinati koordinati(int i, int j) {
 		if (i < 0 | j < 0 | i >= velikost | j >= velikost) {
 			return null;
 		} else {
@@ -136,7 +136,7 @@ public class Plosca {
 		
 	}
 	
-	public ArrayList<Koordinati> sosednje(int i, int j){
+	public static ArrayList<Koordinati> sosednje(int i, int j){
 		ArrayList<Koordinati> sosednje = new ArrayList<Koordinati>();
 		sosednje.add(koordinati(i - 1, j - 1));
 		sosednje.add(koordinati(i - 1, j));

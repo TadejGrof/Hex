@@ -91,7 +91,8 @@ public class Igra {
 	 }
 	 
 	 
-	 public static int[][] setIntMtrx (int velikost) {
+	 public static int[][] setIntMtrx () {
+		 int velikost = Plosca.getVelikost();
 		 int[][] mtrx = new int[getVelikost()][getVelikost()];
 		 LinkedHashMap<Koordinati, Color> stanje = Plosca.getStanje();
 		 int[] vrstica = new int[velikost];
