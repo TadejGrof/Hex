@@ -1,5 +1,6 @@
-package inteligenca;
+	package inteligenca;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -18,6 +19,9 @@ public class Inteligenca extends KdoIgra {
 	
 	private int scoreMax = 10000;
 	private int scoreMin = -10000;
+	
+	// da se nastavi, ali je racunalnik prvi ali drugi igralec
+	private int racunalnik;
 	
 	private int globina;
 	
@@ -42,8 +46,9 @@ public class Inteligenca extends KdoIgra {
 	}
 	
 	// Tukaj mora izbrati potezo.
-	public Koordinati izberiPotezo(Igra igra) {
-		return null;
+	public Koordinati izberiPotezo(Igra igra, int igralec) {
+		Koordinati naslednjaPoteza = MiniMax(igra, igralec);
+		return naslednjaPoteza;
 	}
 
 	//private void setGlobina (int globina) {
@@ -78,9 +83,10 @@ public class Inteligenca extends KdoIgra {
 	}
 	
 	// Minimax algoritem
-	private void MiniMax(Igra igra, int igralec) {
+	private Koordinati MiniMax(Igra igra, int igralec) {
 		int najboljšiScore = 0;
 		Koordinati prefKoordinata = new Koordinati(0, 0);
+		
 		
 		ArrayList<Koordinati> prazne = igra.veljavnePoteze();
 		
@@ -109,7 +115,44 @@ public class Inteligenca extends KdoIgra {
 				prefKoordinata = k;
 			}
 		}
-		igra.plosca.odigraj(prefKoordinata, igralec);
+		return prefKoordinata;
+	}
+	
+	// še vedno Minimax (ni še alfa-beta prunning-a), 
+	// ampak izbere naslednjo koordinato učinkoviteje, kot prvi
+	private Koordinati izboljšanMinimax(Igra igra, int igralec) {
+		int score = 0;
+		Koordinati prefKoordinata = new Koordinati(0,0);
+		
+		int velikostPlosce = Plosca.getVelikost();
+		// Color igralecBarva = igra.getIgralecBarva(igralec);
+		
+		ArrayList<Koordinati> prazne = igra.veljavnePoteze();
+		LinkedHashMap<Koordinati, Integer> ovrednotenePoteze = new LinkedHashMap<Koordinati, Integer>();
+		
+		ArrayList<Koordinati> igralčevePoteze = new ArrayList<Koordinati>();
+		ArrayList<Koordinati> nasprotnikovePoteze = new ArrayList<Koordinati>();
+		
+		if (igralec == 1) {
+			int nasprotnik = 2;
+		} else if (igralec == 2) {
+			int nasprotnik = 1;
+		}
+		
+		// pri prvi izbiri koordinate naj računalnik, ki
+		// postavi nekam med sosednje točke nasprotnikove poteze (če obstaja)
+		// (če je računalnik prvi na potezi in ni še nič postavljenih blockov, 
+		// a je narobe, če je prva poteza popolnoma naključna?)
+		
+		if (Plosca.getStanje().containsValue(1) || Plosca.getStanje().containsValue(2)) {
+			prefKoordinata = Igra.naključniKoordinati();
+		} else {
+			// - funkcija, ki poišče vse že narete poteze prvega in drugega igralca (da se napolnita ArrayLista igralčevePoteze
+			// in nasprotnikovePoteze accordingly (izmed bližnjih se bo izbrala najboljša poteza
+			// - boljši algoritem bi bil, da pregleda število sosedov v točkah
+			// - pomisli, kako se bo štelo, da je bila izbrana pot v pravo smer (nova funkcija, ki glede na integer in Koordinati prišteje scoru)
+		}
+		return prefKoordinata;
 	}
 	
 }

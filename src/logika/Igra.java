@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Random;
 import java.util.Scanner;
 
 import inteligenca.Minimax;
@@ -197,6 +198,21 @@ public class Igra {
 		 kopija.konec = original.konec;
 		 
 		 return kopija;
+	 }
+	 
+	 public static Koordinati naključniKoordinati () {
+		 int velikost = Plosca.getVelikost();
+		 
+		 int x = 0;
+		 int y = 0;
+		 
+		 Random naključnaIzbira = new Random();
+		 y = naključnaIzbira.nextInt(velikost + 1);
+		 x = naključnaIzbira.nextInt(velikost + 1);
+		 
+		 Koordinati naključniKoordinati = new Koordinati(x, y);
+		 
+		 return naključniKoordinati;
 	 }
 
 }
