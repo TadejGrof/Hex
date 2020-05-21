@@ -245,7 +245,7 @@ public class MenuPanel extends JPanel{
 					int tip = tipPanel.getValue();
 					if (tip == Igralec.IGRALEC) {
 						return "Igralec" + String.valueOf(index);
-					} else if ( tip == Igralec.RACUNALNIK) {
+					} else if ( Igralec.jeRacunalnik(tip)) {
 						return "Racunalnik" + String.valueOf(index);
 					}
 				}
@@ -310,7 +310,6 @@ public class MenuPanel extends JPanel{
 						Igra igra = new Igra(velikost);
 						Igralec igralec1 = igralec1Panel.getIgralec();
 						Igralec igralec2 = igralec2Panel.getIgralec();
-						igra.setIgralca(igralec1, igralec2);
 						if (igralec1.toString().contentEquals(igralec2.toString())) {
 							showMessageDialog(null,"Izberi razlicni imeni za igralca");
 						} else if( igralec1.getBarva().equals(igralec2.getBarva())) {

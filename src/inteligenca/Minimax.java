@@ -2,14 +2,9 @@ package inteligenca;
 import logika.*;
 
 import java.awt.Color;
-import java.awt.List;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Set;
-
 import splosno.Koordinati;
 
 public class Minimax {
@@ -49,10 +44,6 @@ public class Minimax {
 		this.statusDva = 10000;
 	}
 	
-	public void nastaviBarve () {
-		this.barvaEna = Igra.getIgralecBarva(1);
-		this.barvaDva = Igra.getIgralecBarva(2);
-	}
 	
 	public static ArrayList<Koordinati> toList (LinkedHashMap<Koordinati, Color> hmp) {
 		ArrayList<Koordinati> koordinate = new ArrayList<Koordinati>(hmp.keySet());

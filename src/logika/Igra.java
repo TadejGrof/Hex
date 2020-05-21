@@ -59,9 +59,9 @@ public class Igra {
 	 private void initialize() {
 		 igralca = new ArrayList<Igralec>();
 		 
-		 igralec1 = new Igralec("Igralec1", this, RDECA, Igralec.RACUNALNIK);
+		 igralec1 = new Igralec("Igralec1", this, RDECA, Igralec.IGRALEC);
 		 igralca.add(igralec1);
-		 igralec2 = new Igralec("Igralec2", this, MODRA, Igralec.RACUNALNIK);
+		 igralec2 = new Igralec("Igralec2", this, MODRA, Igralec.IGRALEC);
 		 igralca.add(igralec2);
 		 
 		 plosca = new Plosca(velikost);

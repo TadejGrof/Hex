@@ -5,40 +5,58 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import splosno.KdoIgra;
+
 import splosno.Koordinati;
 import logika.Igra;
 import logika.Plosca;
 
-public class Inteligenca {
+public class Inteligenca extends KdoIgra {
+	public static final int LAHKO = 0;
+	public static final int SREDNJE = 1;
+	public static final int TEZKO = 2;
+	
+	private int scoreMax = 10000;
+	private int scoreMin = -10000;
 	
 	private int globina;
 	
-	// 1 -> racunalnik = igralec1
-	// 2 -> racunalnik = igralec2
-	private int racunalnik;
-	
-	private static int scoreMax = 10000;
-	private static int scoreMin = -10000;
-	
-	private void setGlobina (int globina) {
-		this.globina = globina;
+	public Inteligenca(String ime) {
+		super(ime);
+	}
+
+	public Inteligenca() {
+		super("Racunalnik");
+		this.globina = 5;
 	}
 	
-	private void setRacunalnik (int igralec) {
-		if (igralec != 1 || igralec != 2) {
-		} else {
-			this.racunalnik = igralec;
+	public Inteligenca(int tip) {
+		super("Racunalnik");
+		if(tip == LAHKO) {
+			this.globina = 1;
+		} else if ( tip == SREDNJE) {
+			this.globina = 3;
+		} else if (tip == TEZKO) {
+			this.globina = 5;
 		}
 	}
 	
+	// Tukaj mora izbrati potezo.
+	public Koordinati izberiPotezo(Igra igra) {
+		return null;
+	}
+
+	//private void setGlobina (int globina) {
+	//	this.globina = globina;
+	//}
 	
-	private int evaluateSosedje(Koordinati k, int i) {
+	private int evaluateSosedje(Igra igra, Koordinati k, int i) {
 		int score = 0;
 		ArrayList<Koordinati> sosedi = Plosca.sosednje(k.getX(), k.getY());
 		
 		// rad bi za vsako točko izmed sosedov pogledal,
 		// če je ista (torej ima vrednost i) in jo prištel k oceni
-		int[][] matrika = Igra.setIntMtrx();
+		int[][] matrika = igra.setIntMtrx();
 		if (i == 1) {
 			for (Koordinati sosed : sosedi) {
 				int x = sosed.getX();
@@ -79,7 +97,7 @@ public class Inteligenca {
 			// Igra kopija = Igra.kopirajIgro(igra);
 			// kopija.odigraj(k);
 			
-			int trenutniScore = evaluateSosedje(k, igralec);
+			int trenutniScore = evaluateSosedje(igra, k, igralec);
 			ovrednotenePoteze.put(k, trenutniScore);
 		}
 		// izberemo najboljšo možnost iz vseh ocen
