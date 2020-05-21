@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import koordinati.Koordinati;
+import splosno.Koordinati;
 import logika.Igra;
 import logika.Plosca;
 

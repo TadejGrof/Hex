@@ -1,21 +1,9 @@
 package graficniVmesnik;
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.EventQueue;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
 import logika.Igra;
 
 public class Okno {

@@ -11,17 +11,16 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
 import logika.Igra;
 import logika.Igralec;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class MenuPanel extends JPanel{
+	private static final long serialVersionUID = 1L;
+	
 	private Okno okno;
 	private JPanel menuBar;
 	private JPanel nastavitve;

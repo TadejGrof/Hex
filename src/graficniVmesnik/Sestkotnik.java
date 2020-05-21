@@ -1,12 +1,8 @@
 package graficniVmesnik;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.Polygon;
-import java.util.ArrayList;
-
-import koordinati.Koordinati;
+import splosno.Koordinati;
 
 public class Sestkotnik {
         private final int radius;

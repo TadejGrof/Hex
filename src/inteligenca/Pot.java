@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import koordinati.Koordinati;
+import splosno.Koordinati;
 import logika.Igra;
 import logika.Plosca;
 

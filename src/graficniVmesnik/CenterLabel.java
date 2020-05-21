@@ -1,9 +1,6 @@
 package graficniVmesnik;
 
 import java.awt.Font;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 

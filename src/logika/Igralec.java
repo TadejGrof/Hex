@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
-import koordinati.Koordinati;
+import splosno.Koordinati;
 
 public class Igralec {
 	public static final int IGRALEC = 0;

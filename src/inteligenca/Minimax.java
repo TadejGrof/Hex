@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
-import koordinati.Koordinati;
+import splosno.Koordinati;
 
 public class Minimax {
 	

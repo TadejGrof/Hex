@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 import inteligenca.Minimax;
-import koordinati.Koordinati;
+import splosno.Koordinati;
 
 public class Igra {
 	public static final Color PRAZNO = Color.WHITE;

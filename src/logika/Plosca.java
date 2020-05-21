@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import koordinati.Koordinati;
+import splosno.Koordinati;
 
 public class Plosca extends ArrayList<ArrayList<Integer>> {
 	private static final long serialVersionUID = 1L;

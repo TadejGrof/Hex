@@ -1,9 +1,7 @@
 package graficniVmesnik;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -16,18 +14,11 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import splosno.Koordinati;
 
-import static javax.swing.JOptionPane.showMessageDialog;
-
-import koordinati.Koordinati;
 import logika.Igra;
-import logika.Plosca;
 
 public class IgraPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
