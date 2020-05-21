@@ -91,7 +91,7 @@ public class Inteligenca {
 				prefKoordinata = k;
 			}
 		}
-		Plosca.odigraj(prefKoordinata, Igra.getIgralecBarva(igralec));
+		igra.plosca.odigraj(prefKoordinata, igralec);
 	}
 	
 }

@@ -17,8 +17,9 @@ public class Igra {
 	
 	public static int[][] mtrx;
 	
-	private static int velikost = Plosca.getVelikost();
-	private static Plosca plosca;
+	private int velikost = Plosca.getVelikost();
+	
+	public Plosca plosca;
 	private Igralec igralecNaPotezi;
 	
 	private static Igralec igralec1;
@@ -35,7 +36,7 @@ public class Igra {
 			igra.nakljucnaPoteza();
 		}
 		myObj.close();
-		System.out.println(igra.plosca.getStanje());
+		System.out.println(igra.plosca);
 	}
 	
 	
@@ -63,17 +64,26 @@ public class Igra {
 		 igralec2 = new Igralec("Igralec2", this, MODRA, Igralec.RACUNALNIK);
 		 igralca.add(igralec2);
 		 
-		 plosca = new Plosca(velikost, igralec1.getBarva(), igralec2.getBarva());
+		 plosca = new Plosca(velikost);
 		 igralecNaPotezi = igralec1; 
 	 }
 	 
-	 public static Color getIgralecBarva(int index) {
+	 public Integer getIgralecIndex(Igralec igralec) {
+		 if(igralec.equals(igralec1)){
+			 return 1;
+		 } else if (igralec.equals(igralec2)) {
+			 return 2;
+		 }
+		 return 0;
+	 }
+	 
+	 public Color getIgralecBarva(int index) {
 		 if (index == 1) {
 			 return igralec1.getBarva();
 		 } else if (index == 2) {
 			 return igralec2.getBarva();
 		 }
-		 return null;
+		 return PRAZNO;
 	 }
 	 
 	 public void setIgralca(Igralec igralec1, Igralec igralec2) {
@@ -86,35 +96,11 @@ public class Igra {
 		 igralca.clear();
 		 igralca.add(igralec1);
 		 igralca.add(igralec2);
-		 
-		 plosca.setIgralca(igralec1.getBarva(),igralec2.getBarva());
 	 }
 	 
 	 
-	 public static int[][] setIntMtrx () {
-		 int velikost = Plosca.getVelikost();
-		 int[][] mtrx = new int[getVelikost()][getVelikost()];
-		 LinkedHashMap<Koordinati, Color> stanje = Plosca.getStanje();
-		 int[] vrstica = new int[velikost];
-		 for (int i = 1; i < velikost; i++) {
-			 for (int j = 1; j < velikost; j++) {
-				 Color barva = stanje.get((i - 1) * velikost + j - 1);
-				 if (barva == Color.WHITE) {
-					 vrstica[j] = 0;
-				 } else {
-					 if (barva == getIgralecBarva(1)) {
-						 vrstica[j] = 1;
-					 } else {
-						 if (barva == getIgralecBarva(2)) {
-							 vrstica[j] = 2;
-						 }
-					 }
-				 }
-			 }
-			 mtrx[i] = vrstica;
-			 vrstica = new int[velikost];
-		 }
-		 return mtrx;
+	 public int[][] setIntMtrx () {
+		 return plosca.getMatrika();
 	 }
 	 
 	 public static void printIntMtrx(int[][] mtrx) {
@@ -126,15 +112,13 @@ public class Igra {
 		 }
 	 }
 	 
-	 public static int getVelikost() {return velikost;}
+	 public int getVelikost() {return velikost;}
 	 
 	 public Igralec getIgralecNaPotezi() {return igralecNaPotezi;}
 	 
 	 public boolean odigraj(Koordinati koordinati) {
 		 if(jeVeljavnaPoteza(koordinati)) {
-			 plosca.odigraj(koordinati,igralecNaPotezi.getBarva());
-			 System.out.println(igralecNaPotezi.toString() + " je odigral " + koordinati.toString());
-			 System.out.println(plosca.getPlosca());
+			 plosca.odigraj(koordinati,getIgralecIndex(igralecNaPotezi));
 			 naslednjiNaPotezi();
 			 return true;
 		 } 
@@ -150,12 +134,15 @@ public class Igra {
 		 }
 	 }
 	 
+	 
 	 private boolean jeVeljavnaPoteza(Koordinati koordinati) {
 		 ArrayList<Koordinati> veljavne = veljavnePoteze();
+		 System.out.println(veljavne);
 		 return veljavne.contains(koordinati);
 	 }
 	 
 	 public ArrayList<Koordinati> veljavnePoteze(){
+		 System.out.println("iscemVedljavne");
 		 return plosca.prazne();
 	 }
 	 
@@ -163,9 +150,10 @@ public class Igra {
 		 return plosca.getPlosca();
 	 }
 	 
-	 public static LinkedHashMap<Koordinati,Color> vrniStanje() {
+	 public LinkedHashMap<Koordinati,Color> vrniStanje() {
 		 return plosca.getStanje();
 	 }
+	 
 	 public boolean konecIgre() {
 		konec = plosca.konecIgre();
 		if(konec) {
@@ -176,8 +164,11 @@ public class Igra {
 	 }
 	 
 	 public Igralec zmagovalecIgre() {
-		Color barva = plosca.getZmagovalec();
-		return getIgralec(barva); 
+		int zmagovalec = plosca.getZmagovalec();
+		if (zmagovalec > 0) {
+			return igralca.get(zmagovalec - 1);
+		}
+		return null;
 	 }
 	 
 	 private Igralec getIgralec(Color barva) {

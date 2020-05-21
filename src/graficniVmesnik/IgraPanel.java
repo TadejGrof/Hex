@@ -169,11 +169,6 @@ public class IgraPanel extends JPanel{
 				}
 			}
 			visina = Math.sqrt(3) * radij / 2;
-			
-			System.out.println(visina);
-			System.out.println(height);
-			System.out.println(width);
-			System.out.println(odmikX);
 		}
 		
 		private void initialize() {
@@ -181,33 +176,17 @@ public class IgraPanel extends JPanel{
 				
 				izracunajVrednosti();
 				
-				int[][] matrika = Igra.setIntMtrx();
-				
-				Color barvaEna = Igra.getIgralecBarva(1);
-				Color barvaDva = Igra.getIgralecBarva(2);
-				
-				ArrayList<ArrayList<Koordinati>> koordinate = igra.vrniKoordinate();
-				HashMap<Koordinati, Color> stanje = igra.vrniStanje();
-				
 				for(int i = 0; i < N; i++) {
 					for (int j = 0; j < N; j++) {
-						Koordinati koordinati = koordinate.get(i).get(j);
-						Color barva = stanje.get(koordinati);
+						Koordinati koordinati = new Koordinati(i,j);
+						int vrednost = igra.plosca.get(i).get(j);
 						
-						if (barva == barvaEna) {
-							matrika[i][j] = 1;
-						} else if (barva == barvaDva) {
-							matrika[i][j] = 2;
-						} else {
-							matrika[i][j] = 0;
-						}
 						double x = odmikX + N * visina - i * visina + j * 2* visina;
+			
 						double y = odmikY - radij + igralnoY - i * 3 * radij / 2;
-						sestkotniki.add(new Sestkotnik(x,y,radij,koordinati,barva));
+						sestkotniki.add(new Sestkotnik(x,y,radij,koordinati,igra.getIgralecBarva(vrednost)));
 					}
 				}
-				System.out.println();
-				Igra.printIntMtrx(matrika);
 			}	
 		}
 		
