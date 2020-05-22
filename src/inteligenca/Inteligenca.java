@@ -82,6 +82,35 @@ public class Inteligenca extends KdoIgra {
 		return score;
 	}
 	
+	private int boljšiEvaluate (Igra igra, Koordinati k, int igralec) {
+		int score = 0;
+		int velikost = Plosca.getVelikost();
+		// glede na int igralca (torej 1 ali 2) je odvisno, katere poteze bodo bolje ovrednotene
+		// 1 = gor <-> dol
+		// 2 = levo <-> desno
+		if (igralec == 1) {
+			for (Koordinati sosed : Plosca.sosednje(k.getX(), k.getY())) {
+				int x = sosed.getX();
+				int y = sosed.getY();
+				
+				// ker je cilj prvega igralca narediti pot gor - dol, je v redu, če pri scoru upoštevamo,
+				// da je razlika po y čim manjša 
+				// vprašanje: ali je ugodno, da se block postavi med nasprotnikove?
+				
+				int razlika = k.getY() - y;
+				if (razlika < 0) {
+					razlika *= (-1);
+				}
+				
+				// -----------od tu nadaljujem--------------------
+				
+			}
+		} else if (igralec == 2) {
+			
+		}
+		return score;
+	}
+	
 	// Minimax algoritem
 	private Koordinati MiniMax(Igra igra, int igralec) {
 		int najboljšiScore = 0;
@@ -122,6 +151,7 @@ public class Inteligenca extends KdoIgra {
 	// ampak izbere naslednjo koordinato učinkoviteje, kot prvi
 	private Koordinati izboljšanMinimax(Igra igra, int igralec) {
 		int score = 0;
+		int nasprotnik = 0;
 		Koordinati prefKoordinata = new Koordinati(0,0);
 		
 		int velikostPlosce = Plosca.getVelikost();
@@ -130,14 +160,14 @@ public class Inteligenca extends KdoIgra {
 		ArrayList<Koordinati> prazne = igra.veljavnePoteze();
 		LinkedHashMap<Koordinati, Integer> ovrednotenePoteze = new LinkedHashMap<Koordinati, Integer>();
 		
-		ArrayList<Koordinati> igralčevePoteze = new ArrayList<Koordinati>();
-		ArrayList<Koordinati> nasprotnikovePoteze = new ArrayList<Koordinati>();
-		
 		if (igralec == 1) {
-			int nasprotnik = 2;
+			nasprotnik = 2;
 		} else if (igralec == 2) {
-			int nasprotnik = 1;
+			nasprotnik = 1;
 		}
+		
+		ArrayList<Koordinati> igralčevePoteze = Igra.poisciVsePoteze(igralec);
+		ArrayList<Koordinati> nasprotnikovePoteze = Igra.poisciVsePoteze(nasprotnik);
 		
 		// pri prvi izbiri koordinate naj računalnik, ki
 		// postavi nekam med sosednje točke nasprotnikove poteze (če obstaja)
@@ -147,10 +177,20 @@ public class Inteligenca extends KdoIgra {
 		if (Plosca.getStanje().containsValue(1) || Plosca.getStanje().containsValue(2)) {
 			prefKoordinata = Igra.naključniKoordinati();
 		} else {
-			// - funkcija, ki poišče vse že narete poteze prvega in drugega igralca (da se napolnita ArrayLista igralčevePoteze
+			
+			// * funkcija, ki poišče vse že narete poteze prvega in drugega igralca (da se napolnita ArrayLista igralčevePoteze
 			// in nasprotnikovePoteze accordingly (izmed bližnjih se bo izbrala najboljša poteza
 			// - boljši algoritem bi bil, da pregleda število sosedov v točkah
 			// - pomisli, kako se bo štelo, da je bila izbrana pot v pravo smer (nova funkcija, ki glede na integer in Koordinati prišteje scoru)
+				if (Plosca.getStanje().containsValue(igralec)) {
+					for (Koordinati k : igralčevePoteze) {
+						
+					}
+				} else {
+					for (Koordinati k : nasprotnikovePoteze) {
+						
+					}
+				}
 		}
 		return prefKoordinata;
 	}

@@ -5,8 +5,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 
 import inteligenca.Minimax;
 import splosno.Koordinati;
@@ -215,4 +217,26 @@ public class Igra {
 		 return naključniKoordinati;
 	 }
 
+	 public static ArrayList<Koordinati> poisciVsePoteze (int igralec) {
+		 ArrayList<Koordinati> vsePoteze = new ArrayList<Koordinati>();
+		 LinkedHashMap<Koordinati, Color> mapa = Plosca.getStanje();
+		 Set<Koordinati> koordinate = mapa.keySet();
+		 
+		 Color barva = Color.WHITE;
+		 
+		 if (igralec == 1) {
+			 barva = igralec1.getBarva();
+		 } else if (igralec == 2) {
+			 barva = igralec2.getBarva();
+		 }
+		 
+		 for (Koordinati koordinata : koordinate) {
+			 Color lokalnaBarva = mapa.get(koordinata);
+			 
+			 if (lokalnaBarva == barva) {
+				 vsePoteze.add(koordinata);
+			 }
+		 }
+		 return vsePoteze;
+	 }
 }
