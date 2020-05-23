@@ -85,12 +85,35 @@ public class Inteligenca extends KdoIgra {
 		return score;
 	}
 	
+	private Koordinati praviPath (Koordinati k, int i) {
+		int score = 0;
+		Koordinati prefKoordinata = new Koordinati(0, 0);
+		ArrayList<Koordinati> sosedi = Plosca.sosednje(k.getX(), k.getY());
+		LinkedHashMap<Koordinati, Integer> ovrednotenePoteze = new LinkedHashMap<Koordinati, Integer>();
+		
+		// 1 = gor <-> dol
+		// 2 = levo <-> desno
+		
+		if (i == 1) {
+			for (Koordinati sosed : sosedi) {
+				int x = sosed.getX();
+				int y = sosed.getY();
+				
+				int razlika = k.getX() - x;
+				if (razlika < 0) razlika *= (-1);
+				
+				
+			}
+		} else if (i == 2) {
+			
+		}
+		return prefKoordinata;
+	}
 	private int boljšiEvaluate (Igra igra, Koordinati k, int igralec) {
 		int score = 0;
 		int velikost = Plosca.getVelikost();
 		// glede na int igralca (torej 1 ali 2) je odvisno, katere poteze bodo bolje ovrednotene
-		// 1 = gor <-> dol
-		// 2 = levo <-> desno
+		
 		if (igralec == 1) {
 			for (Koordinati sosed : Plosca.sosednje(k.getX(), k.getY())) {
 				int x = sosed.getX();

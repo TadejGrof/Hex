@@ -250,4 +250,7 @@ public class Igra {
 		 }
 		 return vsePoteze;
 	 }
+	 
+	 // izračuna najdaljšo povezano pot danega igralca
+	 
 }

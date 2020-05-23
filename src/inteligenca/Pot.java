@@ -30,7 +30,7 @@ public class Pot {
 		}
 		
 	}
-
+	
 	public boolean najdiPot(int[][] matrika, int x, int y, int velikost, String smer) {
 		if(x==velikost-1 && y==velikost-1){
 			resitev[x][y] = 1;
@@ -103,18 +103,13 @@ public class Pot {
 			}
 		}
 	}
-	//(x, y) -> začetna pozicija
-	//igralec -> pove, ali gledamo levo-desno ali gor-dol
-	public static int evaluate (int[][] matrika, int igralec, int x, int y) {
-		int score = 0;
-		//
-		
-		return score;
+	
+	public static void najkrajšiPath (int[][] matrika, int igralec) {
 	}
 	
 	public static void main(String[] args) {
 		int velikost = 5;
-		int[][] test = { { 1, 1, 0, 0, 0 },{ 0, 0, 0, 0, 0 },{ 0, 0, 0, 0, 0 },
+		int[][] test = { { 1, 1, 1, 1, 1 },{ 0, 0, 0, 0, 0 },{ 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 0, 0 },{ 0, 0, 0, 0, 0 } };
 		int[][] matrika = generateIntMtrx(5);
 		System.out.println();
