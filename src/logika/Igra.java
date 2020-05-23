@@ -228,7 +228,7 @@ public class Igra {
 		 return naključniKoordinati;
 	 }
 
-	 public static ArrayList<Koordinati> poisciVsePoteze (int igralec) {
+	 public ArrayList<Koordinati> poisciVsePoteze (int igralec) {
 		 ArrayList<Koordinati> vsePoteze = new ArrayList<Koordinati>();
 		 LinkedHashMap<Koordinati, Color> mapa = Plosca.getStanje();
 		 Set<Koordinati> koordinate = mapa.keySet();

@@ -169,8 +169,8 @@ public class Inteligenca extends KdoIgra {
 			nasprotnik = 1;
 		}
 		
-		ArrayList<Koordinati> igralčevePoteze = Igra.poisciVsePoteze(igralec);
-		ArrayList<Koordinati> nasprotnikovePoteze = Igra.poisciVsePoteze(nasprotnik);
+		ArrayList<Koordinati> igralčevePoteze = igra.poisciVsePoteze(igralec);
+		ArrayList<Koordinati> nasprotnikovePoteze = igra.poisciVsePoteze(nasprotnik);
 		
 		// pri prvi izbiri koordinate naj računalnik, ki
 		// postavi nekam med sosednje točke nasprotnikove poteze (če obstaja)
