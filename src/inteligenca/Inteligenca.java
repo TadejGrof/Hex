@@ -1,5 +1,6 @@
-package inteligenca;
+	package inteligenca;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -19,6 +20,9 @@ public class Inteligenca extends KdoIgra {
 	
 	private int scoreMax = 10000;
 	private int scoreMin = -10000;
+	
+	// da se nastavi, ali je racunalnik prvi ali drugi igralec
+	private int racunalnik;
 	
 	private int globina;
 	
@@ -50,7 +54,9 @@ public class Inteligenca extends KdoIgra {
 		int index = random.nextInt(moznePoteze.size());
 		Koordinati poteza = moznePoteze.get(index);
 		return poteza;
-	}
+		//Koordinati naslednjaPoteza = MiniMax(igra, igralec);
+		//return naslednjaPoteza;
+
 	
 	private int evaluateSosedje(Igra igra, Koordinati k, int i) {
 		int score = 0;
@@ -79,10 +85,40 @@ public class Inteligenca extends KdoIgra {
 		return score;
 	}
 	
+	private int boljšiEvaluate (Igra igra, Koordinati k, int igralec) {
+		int score = 0;
+		int velikost = Plosca.getVelikost();
+		// glede na int igralca (torej 1 ali 2) je odvisno, katere poteze bodo bolje ovrednotene
+		// 1 = gor <-> dol
+		// 2 = levo <-> desno
+		if (igralec == 1) {
+			for (Koordinati sosed : Plosca.sosednje(k.getX(), k.getY())) {
+				int x = sosed.getX();
+				int y = sosed.getY();
+				
+				// ker je cilj prvega igralca narediti pot gor - dol, je v redu, če pri scoru upoštevamo,
+				// da je razlika po y čim manjša 
+				// vprašanje: ali je ugodno, da se block postavi med nasprotnikove?
+				
+				int razlika = k.getY() - y;
+				if (razlika < 0) {
+					razlika *= (-1);
+				}
+				
+				// -----------od tu nadaljujem--------------------
+				
+			}
+		} else if (igralec == 2) {
+			
+		}
+		return score;
+	}
+	
 	// Minimax algoritem
-	private void MiniMax(Igra igra, int igralec) {
+	private Koordinati MiniMax(Igra igra, int igralec) {
 		int najboljšiScore = 0;
 		Koordinati prefKoordinata = new Koordinati(0, 0);
+		
 		
 		ArrayList<Koordinati> prazne = igra.veljavnePoteze();
 		
@@ -111,7 +147,55 @@ public class Inteligenca extends KdoIgra {
 				prefKoordinata = k;
 			}
 		}
-		igra.plosca.odigraj(prefKoordinata, igralec);
+		return prefKoordinata;
+	}
+	
+	// še vedno Minimax (ni še alfa-beta prunning-a), 
+	// ampak izbere naslednjo koordinato učinkoviteje, kot prvi
+	private Koordinati izboljšanMinimax(Igra igra, int igralec) {
+		int score = 0;
+		int nasprotnik = 0;
+		Koordinati prefKoordinata = new Koordinati(0,0);
+		
+		int velikostPlosce = Plosca.getVelikost();
+		// Color igralecBarva = igra.getIgralecBarva(igralec);
+		
+		ArrayList<Koordinati> prazne = igra.veljavnePoteze();
+		LinkedHashMap<Koordinati, Integer> ovrednotenePoteze = new LinkedHashMap<Koordinati, Integer>();
+		
+		if (igralec == 1) {
+			nasprotnik = 2;
+		} else if (igralec == 2) {
+			nasprotnik = 1;
+		}
+		
+		ArrayList<Koordinati> igralčevePoteze = Igra.poisciVsePoteze(igralec);
+		ArrayList<Koordinati> nasprotnikovePoteze = Igra.poisciVsePoteze(nasprotnik);
+		
+		// pri prvi izbiri koordinate naj računalnik, ki
+		// postavi nekam med sosednje točke nasprotnikove poteze (če obstaja)
+		// (če je računalnik prvi na potezi in ni še nič postavljenih blockov, 
+		// a je narobe, če je prva poteza popolnoma naključna?)
+		
+		if (Plosca.getStanje().containsValue(1) || Plosca.getStanje().containsValue(2)) {
+			prefKoordinata = Igra.naključniKoordinati();
+		} else {
+			
+			// * funkcija, ki poišče vse že narete poteze prvega in drugega igralca (da se napolnita ArrayLista igralčevePoteze
+			// in nasprotnikovePoteze accordingly (izmed bližnjih se bo izbrala najboljša poteza
+			// - boljši algoritem bi bil, da pregleda število sosedov v točkah
+			// - pomisli, kako se bo štelo, da je bila izbrana pot v pravo smer (nova funkcija, ki glede na integer in Koordinati prišteje scoru)
+				if (Plosca.getStanje().containsValue(igralec)) {
+					for (Koordinati k : igralčevePoteze) {
+						
+					}
+				} else {
+					for (Koordinati k : nasprotnikovePoteze) {
+						
+					}
+				}
+		}
+		return prefKoordinata;
 	}
 	
 }
