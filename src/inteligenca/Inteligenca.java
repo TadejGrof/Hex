@@ -3,6 +3,7 @@
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
@@ -85,30 +86,60 @@ public class Inteligenca extends KdoIgra {
 		return score;
 	}
 	
-	private Koordinati praviPath (Koordinati k, int i) {
-		int score = 0;
-		Koordinati prefKoordinata = new Koordinati(0, 0);
-		ArrayList<Koordinati> sosedi = Plosca.sosednje(k.getX(), k.getY());
-		LinkedHashMap<Koordinati, Integer> ovrednotenePoteze = new LinkedHashMap<Koordinati, Integer>();
-		
-		// 1 = gor <-> dol
-		// 2 = levo <-> desno
-		
-		if (i == 1) {
-			for (Koordinati sosed : sosedi) {
-				int x = sosed.getX();
-				int y = sosed.getY();
-				
-				int razlika = k.getX() - x;
-				if (razlika < 0) razlika *= (-1);
-				
-				
+	// bolje, da gremo po tako generiranem seznamu, da bomo po vrsti pregledovali
+	// polja, ki so po absolutni vrednosti najmanj oddaljena od pravokotne projekcije
+	// na željeno stran
+	private static ArrayList<Integer> možniIndeksi (int indeks, int velikost) {
+		ArrayList<Integer> vrstniRedIndeksov = new ArrayList();
+		ArrayList<Integer> večjiIndeksi = new ArrayList();
+		ArrayList<Integer> manjšiIndeksi = new ArrayList();
+		for (int i = 0; i < velikost; i++) {
+			if (i == indeks) {
+				vrstniRedIndeksov.add(i);
+			} else if (i < indeks) {
+				manjšiIndeksi.add(i);
+			} else if (i > indeks) {
+				večjiIndeksi.add(i);
 			}
-		} else if (i == 2) {
+		}
+		Collections.reverse(manjšiIndeksi);
+		
+		for (int i = 0; i < večjiIndeksi.size() && i < manjšiIndeksi.size(); i++) {
+			vrstniRedIndeksov.add(večjiIndeksi.get(i));
+			vrstniRedIndeksov.add(manjšiIndeksi.get(i));
+		}
+		
+		if (večjiIndeksi.size() > manjšiIndeksi.size()) {
+			int razlika = večjiIndeksi.size() - manjšiIndeksi.size();
+			for (int i = 1; manjšiIndeksi.size() + i <= večjiIndeksi.size(); i++) {
+				vrstniRedIndeksov.add(večjiIndeksi.get(manjšiIndeksi.size() + i - 1));
+			}
+		} else if (manjšiIndeksi.size() > večjiIndeksi.size()) {
+			int razlika = manjšiIndeksi.size() - večjiIndeksi.size();
+			for (int i = 0; (večjiIndeksi.size() + i) != manjšiIndeksi.size(); i++) {
+				vrstniRedIndeksov.add(manjšiIndeksi.get(večjiIndeksi.size() + i));
+			}
+		}
+		return vrstniRedIndeksov;
+	}
+	
+	private ArrayList<Koordinati> najkrajšaPot (Igra igra, Koordinati k, int igralec) {
+		ArrayList<Koordinati> najkrajšaPot = new ArrayList<Koordinati>();
+		int velikost = igra.plosca.getVelikost();
+		int[][] matrika = igra.plosca.getMatrika();
+		int[] začetnoPolje = {k.getX(), k.getY()};
+		// igralec1 -> (gor - dol)
+		// najkrajša pot bo od začetnegaPolja do gor + najkrajša pot od začetnegaPolja dol
+		if (igralec == 1) {
+			
+		} 
+		// igralec2 -> (levo - desno)
+		else if (igralec == 2) {
 			
 		}
-		return prefKoordinata;
+		return najkrajšaPot;
 	}
+	
 	private int boljšiEvaluate (Igra igra, Koordinati k, int igralec) {
 		int score = 0;
 		int velikost = Plosca.getVelikost();
@@ -118,17 +149,6 @@ public class Inteligenca extends KdoIgra {
 			for (Koordinati sosed : Plosca.sosednje(k.getX(), k.getY())) {
 				int x = sosed.getX();
 				int y = sosed.getY();
-				
-				// ker je cilj prvega igralca narediti pot gor - dol, je v redu, če pri scoru upoštevamo,
-				// da je razlika po y čim manjša 
-				// vprašanje: ali je ugodno, da se block postavi med nasprotnikove?
-				
-				int razlika = k.getY() - y;
-				if (razlika < 0) {
-					razlika *= (-1);
-				}
-				
-				// -----------od tu nadaljujem--------------------
 				
 			}
 		} else if (igralec == 2) {

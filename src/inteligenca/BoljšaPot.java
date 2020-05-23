@@ -6,6 +6,7 @@ import logika.Igra;
 import logika.Plosca;
 import splosno.Koordinati;
 
+// po 0 se ne moreš premikat, po enkah pa lahko
 public class BoljšaPot {
        int x;
        int y;
