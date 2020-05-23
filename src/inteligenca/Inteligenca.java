@@ -56,7 +56,7 @@ public class Inteligenca extends KdoIgra {
 		return poteza;
 		//Koordinati naslednjaPoteza = MiniMax(igra, igralec);
 		//return naslednjaPoteza;
-
+	}
 	
 	private int evaluateSosedje(Igra igra, Koordinati k, int i) {
 		int score = 0;
