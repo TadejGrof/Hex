@@ -14,11 +14,15 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import splosno.Koordinati;
 
 import logika.Igra;
+import logika.Igralec;
+import logika.NadzornikIgre;
 
 public class IgraPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
@@ -89,16 +93,26 @@ public class IgraPanel extends JPanel{
 	
 	public void setIgra(Igra igra) {
 		this.igra = igra;
-		refreshPanel();
+		
+		NadzornikIgre.tipaIgralcev = new HashMap<Igralec,Integer>();
+		NadzornikIgre.tipaIgralcev.put(igra.igralec1, igra.igralec1.tip);
+		NadzornikIgre.tipaIgralcev.put(igra.igralec2,igra.igralec2.tip);
+		
+		NadzornikIgre.igraPanel = this;
+		NadzornikIgre.novaIgra(igra);
 	}
 	
 	
-	private void refreshPanel() {
-		if(igra.konecIgre()) {
-			igralecLabel.setText(igra.zmagovalecIgre().toString());
+	public void refreshPanel() {
+		int stanje = igra.getStanje();
+		if ( stanje == Igra.ZMAGA1) {
+			igralecLabel.setText(igra.igralec1.toString());
 			stanjeLabel.setText(zmagaStanje);
-		} else {
-			igralecLabel.setText(igra.getIgralecNaPotezi().toString());
+		} else if ( stanje == Igra.ZMAGA2) {
+			igralecLabel.setText(igra.igralec2.toString());
+			stanjeLabel.setText(zmagaStanje);
+		} else if ( stanje == Igra.IGRA) {
+			igralecLabel.setText(igra.igralecNaPotezi.toString());
 			stanjeLabel.setText(potezaStanje);
 		}
 		platno.refreshPlatno();
@@ -139,7 +153,7 @@ public class IgraPanel extends JPanel{
 		
 		private void izracunajVrednosti() {
 			System.out.println("racunamVrednosti");
-			N = igra.getVelikost();
+			N = igra.velikost;
 			
 			if (N > 6) {
 				odmikY = 40;
@@ -205,7 +219,7 @@ public class IgraPanel extends JPanel{
 					g.drawPolygon(hex.getOuterLine(5));
 					g.fillPolygon(hex.getOuterLine(5));
 				}
-				if (y == igra.getVelikost() - 1) {
+				if (y == igra.velikost - 1) {
 					g.setColor(igralec2);
 					g.drawPolygon(hex.getOuterLine(1));
 					g.fillPolygon(hex.getOuterLine(1));
@@ -219,7 +233,7 @@ public class IgraPanel extends JPanel{
 					g.drawPolygon(hex.getOuterLine(6));
 					g.fillPolygon(hex.getOuterLine(6));
 				}
-				if (x == igra.getVelikost() - 1) {
+				if (x == igra.velikost - 1) {
 					g.setColor(igralec1);
 					g.drawPolygon(hex.getOuterLine(3));
 					g.fillPolygon(hex.getOuterLine(3));
@@ -243,14 +257,15 @@ public class IgraPanel extends JPanel{
 		public void mouseClicked(MouseEvent e) {
 			Point p = e.getPoint();
 			if (!igra.konecIgre()) {
-		        for(Sestkotnik hex:sestkotniki) {
-		        	if (hex.getHexagon().contains(p)) {
-		        		if ( igra.odigraj(hex.getKoordinati())) {
-		        			refreshPanel();
-		        		}
-		        		break;
-		        	}
-		        }
+				if(NadzornikIgre.clovekNaPotezi) {
+					for(Sestkotnik hex:sestkotniki) {
+			        	if (hex.getHexagon().contains(p)) {
+			        		Koordinati poteza = hex.getKoordinati();
+			        		NadzornikIgre.clovekovaPoteza(poteza);
+			        		break;
+			        	}
+			        }
+				} 
 			}
 		}
 

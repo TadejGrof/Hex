@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
 
 import splosno.KdoIgra;
 
@@ -26,7 +27,7 @@ public class Inteligenca extends KdoIgra {
 	}
 
 	public Inteligenca() {
-		super("Racunalnik");
+		super("ImeNajineSkupine");
 		this.globina = 5;
 	}
 	
@@ -42,13 +43,14 @@ public class Inteligenca extends KdoIgra {
 	}
 	
 	// Tukaj mora izbrati potezo.
+	// Zaenkrat sem dal random za vse, da sem preveril delovanje
 	public Koordinati izberiPotezo(Igra igra) {
-		return null;
+		Random random = new Random();
+		ArrayList<Koordinati> moznePoteze = igra.veljavnePoteze();
+		int index = random.nextInt(moznePoteze.size());
+		Koordinati poteza = moznePoteze.get(index);
+		return poteza;
 	}
-
-	//private void setGlobina (int globina) {
-	//	this.globina = globina;
-	//}
 	
 	private int evaluateSosedje(Igra igra, Koordinati k, int i) {
 		int score = 0;

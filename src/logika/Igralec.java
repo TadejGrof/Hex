@@ -13,7 +13,7 @@ public class Igralec {
 	public static final int SREDNJI_RACUNALNIK = 2;
 	public static final int TEZEK_RACUNALNIK = 3;
 	
-	private int tip;
+	public int tip;
 	
 	private String ime;
 	private Color barva;
@@ -40,6 +40,7 @@ public class Igralec {
 		this.ime = ime;
 		this.barva = barva;
 		this.tip = tip;
+		setInteligenca();
 	}
 	
 	public void setIgra(Igra igra) {

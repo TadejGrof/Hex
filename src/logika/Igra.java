@@ -15,15 +15,19 @@ public class Igra {
 	public static final Color RDECA = Color.RED;
 	public static final Color MODRA = Color.BLUE;
 	
+	public static final int IGRA = 0;
+	public static final int ZMAGA1 = 1;
+	public static final int ZMAGA2 = 2;
+	
 	public static int[][] mtrx;
 	
-	private int velikost = Plosca.getVelikost();
+	public int velikost;
 	
 	public Plosca plosca;
-	private Igralec igralecNaPotezi;
+	public Igralec igralecNaPotezi;
 	
-	private static Igralec igralec1;
-	private static Igralec igralec2;
+	public Igralec igralec1;
+	public Igralec igralec2;
 	private ArrayList<Igralec> igralca;
 	private Igralec zmagovalec;
 	private boolean konec;
@@ -112,10 +116,6 @@ public class Igra {
 		 }
 	 }
 	 
-	 public int getVelikost() {return velikost;}
-	 
-	 public Igralec getIgralecNaPotezi() {return igralecNaPotezi;}
-	 
 	 public boolean odigraj(Koordinati koordinati) {
 		 if(jeVeljavnaPoteza(koordinati)) {
 			 plosca.odigraj(koordinati,getIgralecIndex(igralecNaPotezi));
@@ -163,6 +163,17 @@ public class Igra {
 		return konec;
 	 }
 	 
+	 public int getStanje() {
+		 if (konecIgre()) {
+			 if(zmagovalecIgre() == igralec1) {
+				 return ZMAGA1;
+			 } else if(zmagovalecIgre() == igralec2) {
+				 return ZMAGA2;
+			 }
+		 }
+		 return IGRA;
+	 }
+	 
 	 public Igralec zmagovalecIgre() {
 		int zmagovalec = plosca.getZmagovalec();
 		if (zmagovalec > 0) {
@@ -171,7 +182,7 @@ public class Igra {
 		return null;
 	 }
 	 
-	 private Igralec getIgralec(Color barva) {
+	 public Igralec getIgralec(Color barva) {
 		 for(Igralec igralec: igralca) {
 			 if (igralec.getBarva().equals(barva)) {
 				 return igralec;

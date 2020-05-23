@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import logika.Igra;
+import logika.NadzornikIgre;
 
 public class Okno {
 	public JFrame frame;

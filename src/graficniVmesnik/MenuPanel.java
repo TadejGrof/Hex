@@ -32,7 +32,6 @@ public class MenuPanel extends JPanel{
 	
 	private GridBagConstraints gbc;
 	private JPanel gumbiPanel;
-	private JButton novoButton;
 
 	public MenuPanel(Okno okno) {
 		this.okno = okno;
@@ -95,6 +94,10 @@ public class MenuPanel extends JPanel{
 	}
 	
 	private class VelikostInput extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private CenterLabel velikostLabel;
 		private JTextField velikostInput;
 		
@@ -201,6 +204,8 @@ public class MenuPanel extends JPanel{
 		
 		
 		private class TipInput extends JPanel {
+			private static final long serialVersionUID = 1L;
+			
 			private CenterLabel tipLabel;
 			private DefaultListCellRenderer listRenderer;
 			private JComboBox<String> tipBox;
@@ -220,11 +225,23 @@ public class MenuPanel extends JPanel{
 			}
 			
 			public int getValue() {
-				return 0;
+				int index = tipBox.getSelectedIndex();
+				if (index == 0) {
+					return Igralec.IGRALEC;
+				} else if(index == 1) {
+					return Igralec.LAHEK_RACUNALNIK;
+				} else if(index == 2) {
+					return Igralec.SREDNJI_RACUNALNIK;
+				} else if(index == 3) {
+					return Igralec.TEZEK_RACUNALNIK;
+				}
+				return Igralec.IGRALEC;
 			}
 		}
 		
 		private class ImeInput extends JPanel  {
+			private static final long serialVersionUID = 1L;
+			
 			private CenterLabel imeLabel;
 			private JTextField imeInput;
 			
@@ -254,6 +271,8 @@ public class MenuPanel extends JPanel{
 		}
 		
 		private class BarvaInput extends JPanel {
+			private static final long serialVersionUID = 1L;
+			
 			private CenterLabel barvaLabel;
 			private JPanel barvaInput;
 			private Color barva;
@@ -284,6 +303,8 @@ public class MenuPanel extends JPanel{
 		}
 		
 		private class BarvaButton extends JButton{
+			private static final long serialVersionUID = 1L;
+			
 			private Color barva;
 			
 			public BarvaButton(Color color) {
