@@ -284,6 +284,22 @@ public class Inteligenca extends KdoIgra {
 		return prefKoordinata;
 	}
 	
-	
+	// novaMatrika označuje matriko, ki je pripravljena, da se jo spusti čez class BoljšaPot,
+	// kjer se za najkrajšo pot upoštevajo zgolj celice, ki so označene z 1, mimo tistih, ki so 0,
+	// pa funkcija ne more (na poljih z 0 so ovire na poti, torej soigralčevi že postavljeni blocki)
+	public static int[][] pretvoriMatriko (Igra igra, int igralec) {
+		int[][] novaMatrika = new int[igra.plosca.getVelikost()][igra.plosca.getVelikost()];
+		int[][] matrika = igra.plosca.getMatrika();
+		for (int i = 0; i < igra.plosca.getVelikost(); i++) {
+			for (int j = 0; j < igra.plosca.getVelikost(); j++) {
+				if (matrika[i][j] == igralec || matrika[i][j] == 0) {
+					novaMatrika[i][j] = 1;
+				} else {
+					novaMatrika[i][j] = 0;
+				}
+			}
+		}
+		return novaMatrika;
+	}
 	
 }
