@@ -45,7 +45,7 @@ public class BoljšaPot {
     public static int[][] vMatriko (LinkedList<BoljšaPot> rešitev, int velikost) {
     	int[][] novaMatrika = generateIntMtrx(velikost);
     	for (BoljšaPot polje : rešitev) {
-    		novaMatrika[polje.getX(polje)][polje.getY(polje)] = 1; 
+    		novaMatrika[polje.getX(polje)][polje.getY(polje)] = 0; 
     	}
     	return novaMatrika;
     }
@@ -55,7 +55,7 @@ public class BoljšaPot {
 		for (int i = 0; i < velikost; i++) {
 			vrstica = new int[velikost];
 			for (int j = 0; j < velikost; j++) {
-				vrstica[j] = 0;
+				vrstica[j] = 1;
 			}
 			intmtrx[i] = vrstica;
 		}
@@ -136,11 +136,12 @@ public class BoljšaPot {
            {1, 0, 0, 0, 1, 1},
            {1, 1, 1, 1, 1, 1},
            {0, 0, 0, 0, 0, 0}};
-	   int[] začetnoPolje = {1,1};
+	   int[] začetnoPolje = {10,0};
 	   int[] končnoPolje = {3,2};
-	   LinkedList<BoljšaPot> rešitev = poiščiPot(test, začetnoPolje, končnoPolje);
+	   int[][] drugiTest = generateIntMtrx(11);
+	   LinkedList<BoljšaPot> rešitev = poiščiPot(drugiTest, začetnoPolje, končnoPolje);
 	   natisniPolja(rešitev);
-	   int[][] matrika = vMatriko(rešitev, 4);
+	   int[][] matrika = vMatriko(rešitev, 11);
 	   Igra.printIntMtrx(matrika);
 	} 
 }

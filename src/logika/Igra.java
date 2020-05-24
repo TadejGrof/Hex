@@ -145,7 +145,7 @@ public class Igra {
 	 }
 	 
 	 public ArrayList<Koordinati> veljavnePoteze(){
-		 System.out.println("iscemVedljavne");
+		 System.out.println("iscemVeljavne");
 		 return plosca.prazne();
 	 }
 	 
@@ -250,7 +250,4 @@ public class Igra {
 		 }
 		 return vsePoteze;
 	 }
-	 
-	 // izračuna najdaljšo povezano pot danega igralca
-	 
 }
