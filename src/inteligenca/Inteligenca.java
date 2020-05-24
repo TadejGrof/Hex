@@ -20,8 +20,11 @@ public class Inteligenca extends KdoIgra {
 	public static final int SREDNJE = 1;
 	public static final int TEZKO = 2;
 	
-	private int scoreMax = 10000;
-	private int scoreMin = -10000;
+	private int scoreMax = Integer.MAX_VALUE;
+	private int scoreMin = -scoreMax;
+	
+	
+	private ArrayList<Koordinati> pot;
 	
 	// da se nastavi, ali je racunalnik prvi ali drugi igralec
 	private int racunalnik;
@@ -52,7 +55,8 @@ public class Inteligenca extends KdoIgra {
 	// Zaenkrat sem dal random za vse, da sem preveril delovanje
 	public Koordinati izberiPotezo(Igra igra) {
 		Random random = new Random();
-		ArrayList<Koordinati> najkrajšaPot = najkrajšaPot(Igra igra, Koordinati k, int igralec);
+		Koordinati k = izboljšanMinimax(igra, 1);
+		ArrayList<Koordinati> najkrajšaPot = najkrajšaPot(igra, k, 1);
 		int i = random.nextInt(najkrajšaPot.size());
 		Koordinati poteza = najkrajšaPot.get(i);
 		return poteza;
@@ -184,23 +188,6 @@ public class Inteligenca extends KdoIgra {
 		return najkrajšaPot;
 	}
 	
-	private int boljšiEvaluate (Igra igra, Koordinati k, int igralec) {
-		int score = 0;
-		int velikost = Plosca.getVelikost();
-		// glede na int igralca (torej 1 ali 2) je odvisno, katere poteze bodo bolje ovrednotene
-		
-		if (igralec == 1) {
-			for (Koordinati sosed : Plosca.sosednje(k.getX(), k.getY())) {
-				int x = sosed.getX();
-				int y = sosed.getY();
-				
-			}
-		} else if (igralec == 2) {
-			
-		}
-		return score;
-	}
-	
 	// Minimax algoritem
 	private Koordinati MiniMax(Igra igra, int igralec) {
 		int najboljšiScore = 0;
@@ -240,15 +227,16 @@ public class Inteligenca extends KdoIgra {
 	// še vedno Minimax (ni še alfa-beta prunning-a), 
 	// ampak izbere naslednjo koordinato učinkoviteje, kot prvi
 	private Koordinati izboljšanMinimax(Igra igra, int igralec) {
-		int score = 0;
+		int score = Integer.MAX_VALUE;
 		int nasprotnik = 0;
 		Koordinati prefKoordinata = new Koordinati(0,0);
+		ArrayList<Koordinati> pot = new ArrayList<Koordinati>();
 		
 		int velikostPlosce = Plosca.getVelikost();
 		// Color igralecBarva = igra.getIgralecBarva(igralec);
 		
 		ArrayList<Koordinati> prazne = igra.veljavnePoteze();
-		LinkedHashMap<Koordinati, Integer> ovrednotenePoteze = new LinkedHashMap<Koordinati, Integer>();
+		LinkedHashMap<ArrayList<Koordinati>, Integer> ovrednotenePoti = new LinkedHashMap<ArrayList<Koordinati>, Integer>();
 		
 		if (igralec == 1) {
 			nasprotnik = 2;
@@ -264,17 +252,19 @@ public class Inteligenca extends KdoIgra {
 		// (če je računalnik prvi na potezi in ni še nič postavljenih blockov, 
 		// a je narobe, če je prva poteza popolnoma naključna?)
 		
-		if (Plosca.getStanje().containsValue(1) || Plosca.getStanje().containsValue(2)) {
+		if (!Plosca.getStanje().containsValue(igralec)) {
 			prefKoordinata = Igra.naključniKoordinati();
 		} else {
 			
 			// * funkcija, ki poišče vse že narete poteze prvega in drugega igralca (da se napolnita ArrayLista igralčevePoteze
 			// in nasprotnikovePoteze accordingly (izmed bližnjih se bo izbrala najboljša poteza
 			// - boljši algoritem bi bil, da pregleda število sosedov v točkah
-			// - pomisli, kako se bo štelo, da je bila izbrana pot v pravo smer (nova funkcija, ki glede na integer in Koordinati prišteje scoru)
+			// * pomisli, kako se bo štelo, da je bila izbrana pot v pravo smer (nova funkcija, ki glede na integer in Koordinati prišteje scoru)
 				if (Plosca.getStanje().containsValue(igralec)) {
 					for (Koordinati k : igralčevePoteze) {
-						ArrayList<Koordinati> najkrajšaPot = najkrajšaPot(igra, k, igralec);						
+						ArrayList<Koordinati> najkrajšaPot = najkrajšaPot(igra, k, igralec);
+						int dolžinaPoti = najkrajšaPot.size();
+						ovrednotenePoti.put(najkrajšaPot, dolžinaPoti);
 					}
 				} else {
 					for (Koordinati k : nasprotnikovePoteze) {
@@ -282,7 +272,18 @@ public class Inteligenca extends KdoIgra {
 					}
 				}
 		}
+		
+		for (ArrayList<Koordinati> trenutnaPot : ovrednotenePoti.keySet()) {
+			if (trenutnaPot.size() < score) {
+				score = trenutnaPot.size();
+				this.pot = trenutnaPot;
+			}
+		}
+		
+		prefKoordinata = this.pot.get(0);
 		return prefKoordinata;
 	}
+	
+	
 	
 }
