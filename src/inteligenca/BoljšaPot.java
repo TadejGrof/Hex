@@ -35,9 +35,9 @@ public class BoljšaPot {
     	return b.y;
     }
     
-    public static Koordinati vKoordinati (int[] polje) {
-    	int x = polje[0];
-    	int y = polje[1];
+    public static Koordinati vKoordinati (BoljšaPot b) {
+    	int x = b.getX(b);
+    	int y = b.getY(b);
     	Koordinati koordinata = new Koordinati(x, y);
     	return koordinata;
     }

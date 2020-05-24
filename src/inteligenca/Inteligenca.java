@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 
@@ -51,9 +52,9 @@ public class Inteligenca extends KdoIgra {
 	// Zaenkrat sem dal random za vse, da sem preveril delovanje
 	public Koordinati izberiPotezo(Igra igra) {
 		Random random = new Random();
-		ArrayList<Koordinati> moznePoteze = igra.veljavnePoteze();
-		int index = random.nextInt(moznePoteze.size());
-		Koordinati poteza = moznePoteze.get(index);
+		ArrayList<Koordinati> najkrajšaPot = najkrajšaPot(Igra igra, Koordinati k, int igralec);
+		int i = random.nextInt(najkrajšaPot.size());
+		Koordinati poteza = najkrajšaPot.get(i);
 		return poteza;
 		//Koordinati naslednjaPoteza = MiniMax(igra, igralec);
 		//return naslednjaPoteza;
@@ -128,15 +129,58 @@ public class Inteligenca extends KdoIgra {
 		int velikost = igra.plosca.getVelikost();
 		int[][] matrika = igra.plosca.getMatrika();
 		int[] začetnoPolje = {k.getX(), k.getY()};
+		LinkedList<BoljšaPot> seznamKoordinat = new LinkedList();
 		// igralec1 -> (gor - dol)
 		// najkrajša pot bo od začetnegaPolja do gor + najkrajša pot od začetnegaPolja dol
 		if (igralec == 1) {
+			ArrayList<Integer> možniIndeksi = možniIndeksi(k.getX(), velikost);
+			// dokler ni na mestu zgoraj in mestu spodaj polje enako 1 ali 0 išče med možnimi indeksi
+			// če je polje enako 1, poišče BoljšoPot do temu primerno enega indeksa nižje/višje
+			// če je polje enako 0, poišče BoljšoPot do tega polja
 			
-		} 
+			// izbira na zgornjem delu
+			for (int i = 0; i < možniIndeksi.size(); i++) {
+				if (matrika[0][možniIndeksi.get(i)] == igralec) {
+					int[] končnoPolje = {0, možniIndeksi.get(i)};
+					seznamKoordinat = BoljšaPot.poiščiPot(matrika, začetnoPolje, končnoPolje);
+					break;
+			}
+			}
+			// izbira na spodnjem delu
+			for (int j = 0; j < možniIndeksi.size(); j++) {
+				if (matrika[velikost][možniIndeksi.get(j)] == igralec) {
+					int[] končnoPolje = {velikost, možniIndeksi.get(j)};
+					seznamKoordinat.addAll(BoljšaPot.poiščiPot(matrika, začetnoPolje, končnoPolje));
+					break;
+				}
+			}
+		}
 		// igralec2 -> (levo - desno)
 		else if (igralec == 2) {
-			
+			ArrayList<Integer> možniIndeksi = možniIndeksi(k.getY(), velikost);
+			// izbira na levi
+			for (int i = 0; i < možniIndeksi.size(); i++) {
+				if (matrika[možniIndeksi.get(i)][0] == igralec) {
+					int[] končnoPolje = {možniIndeksi.get(i), 0};
+					seznamKoordinat = BoljšaPot.poiščiPot(matrika, začetnoPolje, končnoPolje);
+					break;
+				}
+			}
+			// izbira na desni
+			for (int j = 0; j < možniIndeksi.size(); j++) {
+				if (matrika[možniIndeksi.get(j)][velikost] == igralec) {
+					int[] končnoPolje = {možniIndeksi.get(j), velikost};
+					seznamKoordinat.addAll(BoljšaPot.poiščiPot(matrika, začetnoPolje, končnoPolje));
+					break;
+				}
+			}
 		}
+		
+		for (BoljšaPot koordinati : seznamKoordinat) {
+			Koordinati dodajKoordinato = BoljšaPot.vKoordinati(koordinati);
+			najkrajšaPot.add(dodajKoordinato);
+		}
+		
 		return najkrajšaPot;
 	}
 	
@@ -230,7 +274,7 @@ public class Inteligenca extends KdoIgra {
 			// - pomisli, kako se bo štelo, da je bila izbrana pot v pravo smer (nova funkcija, ki glede na integer in Koordinati prišteje scoru)
 				if (Plosca.getStanje().containsValue(igralec)) {
 					for (Koordinati k : igralčevePoteze) {
-						
+						ArrayList<Koordinati> najkrajšaPot = najkrajšaPot(igra, k, igralec);						
 					}
 				} else {
 					for (Koordinati k : nasprotnikovePoteze) {
