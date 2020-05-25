@@ -65,7 +65,7 @@ public class Inteligenca extends KdoIgra {
 		Koordinati k = new Koordinati(0, 0);
 		ArrayList<Koordinati> najkrajšaPot = najkrajšaPot(igra, k);
 		int i = random.nextInt(najkrajšaPot.size());
-		Koordinati poteza = najkrajšaPot.get(0);
+		Koordinati poteza = najkrajšaPot.get(1);
 		return poteza;
 		//Koordinati naslednjaPoteza = MiniMax(igra, igralec);
 		//return naslednjaPoteza;
@@ -146,11 +146,14 @@ public class Inteligenca extends KdoIgra {
 		
 		// matriko naše igre spremeni v matriko ničel in enic, odvisno od tega,
 		// ali se trenutni igralec lahko pomika čez dana polja ali ne
-		int[][] matrika = pretvoriMatriko(igra, igralčevIndeks);
+		
+		int[][] matrika = pretvoriMatriko(igra);
+		igra.printIntMtrx(matrika);
 		
 		int[] začetnoPolje = {k.getX(), k.getY()};
 		
 		LinkedList<BoljšaPot> seznamKoordinat = new LinkedList();
+		
 		// igralec1 -> (gor - dol)
 		// najkrajša pot bo od začetnegaPolja do gor + najkrajša pot od začetnegaPolja dol
 		if (igralčevIndeks == 1) {
@@ -161,7 +164,9 @@ public class Inteligenca extends KdoIgra {
 			
 			// izbira na zgornjem delu
 			for (int i = 0; i < možniIndeksi.size(); i++) {
+				System.out.println("smo na indeksu "+i +", pri tem je iskano mesto enako " +matrika[0][možniIndeksi.get(i)]);
 				if (matrika[0][možniIndeksi.get(i)] == 1) {
+					System.out.println("če je napisalo, da je enako 1, mora biti tudi tole");
 					int[] končnoPolje = {0, možniIndeksi.get(i)};
 					seznamKoordinat = BoljšaPot.poiščiPot(matrika, začetnoPolje, končnoPolje);
 					break;
@@ -169,7 +174,9 @@ public class Inteligenca extends KdoIgra {
 			}
 			// izbira na spodnjem delu
 			for (int j = 0; j < možniIndeksi.size(); j++) {
+				System.out.println("smo na indeksu "+j +", pri tem je iskano mesto enako " +matrika[velikost][možniIndeksi.get(j)]);
 				if (matrika[velikost][možniIndeksi.get(j)] == 1) {
+					System.out.println("če je napisalo, da je enako 1, mora biti tudi tole");
 					int[] končnoPolje = {velikost, možniIndeksi.get(j)};
 					seznamKoordinat.addAll(BoljšaPot.poiščiPot(matrika, začetnoPolje, končnoPolje));
 					break;
@@ -311,12 +318,14 @@ public class Inteligenca extends KdoIgra {
 	// novaMatrika označuje matriko, ki je pripravljena, da se jo spusti čez class BoljšaPot,
 	// kjer se za najkrajšo pot upoštevajo zgolj celice, ki so označene z 1, mimo tistih, ki so 0,
 	// pa funkcija ne more (na poljih z 0 so ovire na poti, torej soigralčevi že postavljeni blocki)
-	public static int[][] pretvoriMatriko (Igra igra, int igralec) {
+	public static int[][] pretvoriMatriko (Igra igra) {
+		Igralec igralec = igra.igralecNaPotezi;
+		int igralčevIndeks = igra.getIgralecIndex(igralec);
 		int[][] novaMatrika = new int[igra.plosca.getVelikost()][igra.plosca.getVelikost()];
 		int[][] matrika = igra.plosca.getMatrika();
 		for (int i = 0; i < igra.plosca.getVelikost(); i++) {
 			for (int j = 0; j < igra.plosca.getVelikost(); j++) {
-				if (matrika[i][j] == igralec || matrika[i][j] == 0) {
+				if (matrika[i][j] == igralčevIndeks || matrika[i][j] == 0) {
 					novaMatrika[i][j] = 1;
 				} else {
 					novaMatrika[i][j] = 0;
