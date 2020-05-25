@@ -24,14 +24,13 @@ public class Inteligenca extends KdoIgra {
 	private int scoreMax = Integer.MAX_VALUE;
 	private int scoreMin = -scoreMax;
 	
-	
 	private ArrayList<Koordinati> pot;
 	
 	// da se nastavi, ali je racunalnik prvi ali drugi igralec
 	private int racunalnik;
 	
 	private int globina;
-	
+
 	public Inteligenca(String ime) {
 		super(ime);
 	}
@@ -57,24 +56,20 @@ public class Inteligenca extends KdoIgra {
 	public Koordinati izberiPotezo(Igra igra) {
 		Random random = new Random();
 		ArrayList<Koordinati> moznePoteze = igra.veljavnePoteze();
-		int[][] matrika = igra.plosca.getMatrika(igra);
-		int[][] moznosti = pretvoriMatriko(igra);
-		igra.printIntMtrx(moznosti);
+		int[][] matrika = igra.plosca.getMatrika();
+		// zakaj ne posodablja matrike, če vsakič znova zaženemo funkcijo
+		// izberiPotezo()?
+		igra.printIntMtrx(matrika);
 		int index = random.nextInt(moznePoteze.size());
 		Koordinati poteza = moznePoteze.get(index);
-		System.out.println("izbrana poteza je " +poteza );
 		return poteza;
 	}
 	
 	public Koordinati izberiPotezo2(Igra igra) {
-		// check
-		// * boljšaPot dela dovolj hitro - na testu 11x11 vrne rezultat takoj
-		// 
 		Random random = new Random();
-		// Koordinati k = izboljšanMinimax(igra);
-		Koordinati k = new Koordinati(0, 0);
+		Koordinati k = izboljšanMinimax(igra);
 		System.out.println("začetek");
-		igra.plosca.getMatrika(igra);
+		igra.plosca.getMatrika();
 		System.out.println("konec getMatrika()");
 		ArrayList<Koordinati> najkrajšaPot = najkrajšaPot(igra, k);
 		System.out.println("konec najkrajšePoti");
@@ -337,7 +332,7 @@ public class Inteligenca extends KdoIgra {
 		Igralec igralec = igra.igralecNaPotezi;
 		int igralčevIndeks = igra.getIgralecIndex(igralec);
 		int[][] novaMatrika = new int[igra.plosca.getVelikost()][igra.plosca.getVelikost()];
-		int[][] matrika = igra.plosca.getMatrika(igra);
+		int[][] matrika = igra.plosca.getMatrika();
 		for (int i = 0; i < igra.plosca.getVelikost(); i++) {
 			for (int j = 0; j < igra.plosca.getVelikost(); j++) {
 				if (matrika[i][j] == igralčevIndeks || matrika[i][j] == 0) {

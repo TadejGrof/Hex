@@ -145,8 +145,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return velikost;
 	}
 	
-	public int[][] getMatrika(Igra igra){
-		int velikost = igra.plosca.getVelikost();
+	public int[][] getMatrika(){
 		int[][] matrika = new int[velikost][velikost];
 		int[] vrstica = new int[velikost];
 		for(int i = 0; i < velikost; i ++) {

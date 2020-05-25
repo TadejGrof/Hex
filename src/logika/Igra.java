@@ -107,7 +107,7 @@ public class Igra {
 	 
 	 
 	 public int[][] setIntMtrx () {
-	 	return plosca.getMatrika(igra);
+	 	return plosca.getMatrika();
 	 }
 	 
 	 public static void printIntMtrx(int[][] mtrx) {
