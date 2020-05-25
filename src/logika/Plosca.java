@@ -148,13 +148,29 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	public int[][] getMatrika(){
 		int[][] matrika = new int[velikost][velikost];
 		int[] vrstica = new int[velikost];
-		for(int i = 0; i < velikost; i ++) {
-			for(int j = 0; j < velikost; j++) {
-				vrstica[j] = matrika[i][j];
+		
+		LinkedHashMap<Koordinati, Color> stanje = getStanje();
+		ArrayList<Integer> stanjeList = new ArrayList<Integer>();
+		
+		// kako dobim tu ven barvi za oba igralca, če delam brez funkcijo brez argumenta igra?
+		for (Color barva : stanje.values()) {
+			if (barva == igralec1) {
+				stanjeList.add(1);
+			} else if (barva == igralec2) {
+				stanjeList.add(2);
+			} else {
+				stanjeList.add(0);
+			}
+		}
+		
+		for (int i = 0; i < velikost; i++) {
+			for (int j = 0; j < velikost; j++) {
+				vrstica[j] = stanjeList.get(velikost * i + j);
 			}
 			matrika[i] = vrstica;
 			vrstica = new int[velikost];
 		}
+		
 		return matrika;
 	}
 }
