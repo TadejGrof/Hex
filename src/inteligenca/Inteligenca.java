@@ -30,7 +30,9 @@ public class Inteligenca extends KdoIgra {
 	private int racunalnik;
 	
 	private int globina;
-
+	
+	public Plosca plosca;
+	
 	public Inteligenca(String ime) {
 		super(ime);
 	}
@@ -56,16 +58,22 @@ public class Inteligenca extends KdoIgra {
 	public Koordinati izberiPotezo(Igra igra) {
 		Random random = new Random();
 		ArrayList<Koordinati> moznePoteze = igra.veljavnePoteze();
-		int[][] matrika = igra.plosca.getMatrika();
-		// zakaj ne posodablja matrike, če vsakič znova zaženemo funkcijo
-		// izberiPotezo()?
-		igra.printIntMtrx(matrika);
+		// ne posodablja matrike
+		// možni razlogi:
+		// - ne posodablja igre (check - posodablja)
+		// - ne posodablja plošče (check - posodablja)
+		// - getMatrika() deluje narobe
 		int index = random.nextInt(moznePoteze.size());
-		Koordinati poteza = moznePoteze.get(index);
+		Koordinati poteza = moznePoteze.get(0);
+		System.out.println("zle bom naprintal matriko");
+		igra.printIntMtrx(igra.plosca.getMatrika(igra));
 		return poteza;
 	}
 	
 	public Koordinati izberiPotezo2(Igra igra) {
+		if (this.plosca == igra.plosca) {
+			System.out.println("ne posodablja plošče");
+		}
 		Random random = new Random();
 		Koordinati k = izboljšanMinimax(igra);
 		System.out.println("začetek");
@@ -75,6 +83,7 @@ public class Inteligenca extends KdoIgra {
 		System.out.println("konec najkrajšePoti");
 		int i = random.nextInt(najkrajšaPot.size());
 		Koordinati poteza = najkrajšaPot.get(1);
+		this.plosca = igra.plosca;
 		return poteza;
 		//Koordinati naslednjaPoteza = MiniMax(igra, igralec);
 		//return naslednjaPoteza;
@@ -344,5 +353,5 @@ public class Inteligenca extends KdoIgra {
 		}
 		return novaMatrika;
 	}
-	
+		
 }

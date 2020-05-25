@@ -106,9 +106,9 @@ public class Igra {
 	 }
 	 
 	 
-	 public int[][] setIntMtrx () {
-	 	return plosca.getMatrika();
-	 }
+	 //public int[][] setIntMtrx () {
+	 	//return plosca.getMatrika();
+	 //}
 	 
 	 public static void printIntMtrx(int[][] mtrx) {
 		 for (int i = 0; i < mtrx[0].length; i++) {
