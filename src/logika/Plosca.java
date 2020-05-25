@@ -2,7 +2,11 @@ package logika;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import splosno.Koordinati;
 
@@ -13,14 +17,23 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	public static final int IGRALEC1 = 1;
 	public static final int IGRALEC2 = 2;
 	
-	public static ArrayList<Koordinati> koordinate;
+	
+	private final Hex SPODNJIROB = new Hex(-1,0);
+	private final Hex DESNIROB = new Hex(-2,0);
+	private final Hex ZGORNJIROB = new Hex(-3,0);
+	private final Hex LEVIROB = new Hex(-4,0);
+	
 	private static ArrayList<ArrayList<Koordinati>> plosca;
 	private static LinkedHashMap<Koordinati, Color> stanje;
 	private static int velikost;
 	private int zmagovalec;
 	
+	
+	private SeznamZaIskanje seznamZaIskanje;
+	
 	public Plosca(int velikost) {
 		this.velikost = velikost;
+		seznamZaIskanje = new SeznamZaIskanje();
 		int i; int j;
 		for(i = 0; i < velikost; i++) {
 			ArrayList<Integer> vrstica = new ArrayList<Integer>();
@@ -29,6 +42,18 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			}
 			add(vrstica);
 		}
+	}
+	
+	public static LinkedHashMap<Koordinati, Color> getStanje(){
+		return stanje;
+	}
+	
+	public ArrayList<ArrayList<Koordinati>> getPlosca(){
+		return plosca;
+	}
+	
+	public int getZmagovalec() {
+		return zmagovalec;
 	}
 	
 	public ArrayList<Koordinati> prazne() {
@@ -48,7 +73,23 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	}
 	
 	public int get(Koordinati koordinati) {
-		return get(koordinati.getX()).get(koordinati.getY());
+		try {
+			return get(koordinati.getY()).get(koordinati.getX());
+		} catch (Exception e){
+			return -1;
+		}
+	}
+	
+	public int getValue(Koordinati koordinati) {
+		if (koordinati == ZGORNJIROB) return 1;
+		if (koordinati == SPODNJIROB) return 1;
+		if (koordinati == DESNIROB) return 2;
+		if (koordinati == LEVIROB) return 2;
+		try {
+			return get(koordinati.getY()).get(koordinati.getX());
+		} catch (Exception e){
+			return -1;
+		}
 	}
 	
 	public void odigraj(Koordinati koordinati, int igralec) {
@@ -56,80 +97,129 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		vrstica.set(koordinati.getY(), igralec);
 	}
 	
-	public static LinkedHashMap<Koordinati, Color> getStanje(){
-		return stanje;
+	
+	public NajkrajsaPot najkrajsaPot(int igralec) {
+		if (igralec == IGRALEC1) {
+			return najkrajsaPot(SPODNJIROB,ZGORNJIROB,IGRALEC1);
+		} else if(igralec == IGRALEC2) {
+			return najkrajsaPot(LEVIROB,DESNIROB,IGRALEC2);
+		}
+		return null;
 	}
 	
-	public ArrayList<ArrayList<Koordinati>> getPlosca(){
-		return plosca;
+	
+	public NajkrajsaPot najkrajsaPot(Hex zacetek,Hex konec, int igralec) {
+		Hex trenutniHex;
+		seznamZaIskanje.refresh();
+		zacetek.teza = 0;
+		zacetek.potDo.add(zacetek);
+		ArrayList<Hex> trenutniSeznam = new ArrayList<Hex>(seznamZaIskanje);
+		trenutniHex = zacetek;
+		while(true) {
+			trenutniSeznam.remove(trenutniHex);
+			ArrayList<Hex> nepregledaniSosedje = filtrirajNepregledane(trenutniSeznam, trenutniHex.sosedi());
+			ArrayList<Hex> veljavniSosedje = filtrirajVeljavne(nepregledaniSosedje,igralec);
+			for(Hex sosed: veljavniSosedje) {
+				int teza;
+				if(getValue(sosed) == igralec) {
+					teza = 0;
+				} else {
+					teza = 1;
+				}
+				int novaTeza = trenutniHex.teza + teza;
+				if(novaTeza < sosed.teza) {
+					sosed.teza = novaTeza;
+					sosed.potDo = new NajkrajsaPot(trenutniHex.potDo);
+					sosed.potDo.add(sosed);
+				}
+			}
+			if(trenutniSeznam.size() == 0) {
+				return getNajkrajsaPot(igralec);
+			} else {
+				trenutniHex = vrniNajmanjsiHex(trenutniSeznam);
+			}
+		}
 	}
 	
-	public int getZmagovalec() {
-		return zmagovalec;
+	private Hex vrniNajmanjsiHex(ArrayList<Hex> seznam) {
+		Hex najmanjsi = null;
+		for (Hex hex:seznam) {
+			if (najmanjsi == null) najmanjsi = hex;
+			else if(hex.teza < najmanjsi.teza) najmanjsi = hex;
+		}
+		return najmanjsi;
+	}
+	
+	private NajkrajsaPot getNajkrajsaPot(int igralec) {
+		if(igralec == IGRALEC1) {
+			return ZGORNJIROB.potDo;
+		} else if (igralec == IGRALEC2) {
+			return DESNIROB.potDo;
+		} return null;
+	}
+	
+	private ArrayList<Hex> filtrirajVeljavne(ArrayList<Hex> sosedje, int igralec){
+		ArrayList<Hex> tocke = new ArrayList<Hex>();
+		for(Hex hex: sosedje) {
+			int value = getValue(hex);
+			if (value == 0 | value == igralec) tocke.add(hex);
+		}
+		return tocke;
+	}
+	
+	private ArrayList<Hex> filtrirajNepregledane(ArrayList<Hex> seznam, ArrayList<Hex> sosedje){
+		ArrayList<Hex> tocke = new ArrayList<Hex>();
+		for(Hex hex: sosedje) {
+			if (seznam.contains(hex)) tocke.add(hex);
+		}
+		return tocke;
 	}
 	
 	public boolean konecIgre() {
-		int i; int j;
-		i = 0;
-		for (j = 0; j < velikost; j++) {
-			if (jeKoncnaPot(najdaljsaPot(IGRALEC1, new ArrayList<Koordinati>(), i, j))) {
-				zmagovalec = IGRALEC1;
-				return true;
-			}
-		}
-		j = 0;
-		for (i = 0; i < velikost; i++) {
-			if (jeKoncnaPot(najdaljsaPot(IGRALEC2, new ArrayList<Koordinati>(), i, j))) {
-				zmagovalec = IGRALEC2;
-				return true;
-			}
-		}
-		return false;
+		return najkrajsaPot(IGRALEC1).jeKoncna() | najkrajsaPot(IGRALEC2).jeKoncna();
 	}
 	
-	public ArrayList<Koordinati> najdaljsaPot(int igralec, ArrayList<Koordinati> pot, int i, int j) {
-		ArrayList<Koordinati> osnovnaPot;
-		
-		Koordinati koordinati = koordinati(i,j);
-		pot.add(koordinati);
-		for ( Koordinati sosednji :sosednje(i,j)) {
-			if (get(sosednji) == igralec & !pot.contains(sosednji)) {
-				osnovnaPot = pot;
-				pot = najdaljsaPot(igralec,pot,sosednji.getX(),sosednji.getY());
-				if (jeKoncnaPot(pot)) {
-					return pot;
-				} else {
-					pot = osnovnaPot;
-				}
-			}
-		}
-		return pot;
-		
-		
-		
-	}
-
-	public boolean jeKoncnaPot(ArrayList<Koordinati> pot) {
-		Koordinati prva = pot.get(0);
-		Koordinati zadnja = pot.get(pot.size() - 1);
-		boolean rdeca = prva.getX() == 0 & zadnja.getX() == velikost - 1 & get(prva) == IGRALEC1;
-		boolean modra = prva.getY() == 0 & zadnja.getY() == velikost - 1 & get(prva) == IGRALEC2;
-		if (rdeca | modra) {
-			System.out.println("zmagovalna Pot:");
-			System.out.println(pot);
-		}
-		return (rdeca | modra);
-	}
-	
-	public static Koordinati koordinati(int i, int j) {
-		if (i < 0 | j < 0 | i >= velikost | j >= velikost) {
-			return null;
-		} else {
+	//vrne ustrezni koordinati za podani vrednsot i in j oziroma ustrezen rob plosce ob 
+	//negativnih oziroma prevelikih vrednostih.
+	public Koordinati koordinati(int i, int j) {
+		if(i < 0) {
+			return LEVIROB;
+		} else if(j < 0) {
+			return SPODNJIROB;
+		} else if( i >= velikost) {
+			return DESNIROB;
+		} else if( j >= velikost) {
+			return ZGORNJIROB;
+		}else{
 			return new Koordinati(i,j);
 		}
 	}
 	
-	public static ArrayList<Koordinati> sosednje(int i, int j){
+	// za podano koordinato poda njene sosede
+	public ArrayList<Koordinati> sosednje(Koordinati koordinati){
+		ArrayList<Koordinati> sosednje = new ArrayList<Koordinati>();
+		if(koordinati == SPODNJIROB) {
+			return vrsta(0);
+		} else if(koordinati == ZGORNJIROB) {
+			return vrsta(velikost - 1);
+		} else if(koordinati == DESNIROB) {
+			return stolpec(velikost - 1);
+		} else if(koordinati == LEVIROB) {
+			return stolpec(0);
+		} else {
+			int i = koordinati.getX();
+			int j = koordinati.getY();
+			sosednje.add(koordinati(i - 1, j - 1));
+			sosednje.add(koordinati(i - 1, j));
+			sosednje.add(koordinati(i, j - 1));
+			sosednje.add(koordinati(i , j + 1));
+			sosednje.add(koordinati(i + 1, j));
+			sosednje.add(koordinati(i + 1, j + 1));
+			return sosednje;
+		}
+	}
+	
+	public ArrayList<Koordinati> sosednje(int i, int j){
 		ArrayList<Koordinati> sosednje = new ArrayList<Koordinati>();
 		sosednje.add(koordinati(i - 1, j - 1));
 		sosednje.add(koordinati(i - 1, j));
@@ -156,5 +246,113 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			vrstica = new int[velikost];
 		}
 		return matrika;
+	}
+	
+	
+	// vrne seznam koordinata poljubne vrste;
+	public ArrayList<Koordinati> vrsta(int y){
+		ArrayList<Koordinati> vrsta = new ArrayList<Koordinati>();
+		for (int i = 0; i < velikost; i++) {
+			vrsta.add(new Koordinati(i,y));
+		}
+		return vrsta;
+	}
+	
+	// vrne seznam koordinata poljubnega stolpa;
+	public ArrayList<Koordinati> stolpec(int x){
+		ArrayList<Koordinati> stolpec = new ArrayList<Koordinati>();
+		for (int i = 0; i < velikost; i++) {
+			stolpec.add(new Koordinati(x,i));
+		}
+		return stolpec;
+	}
+	
+	
+	public ArrayList<Koordinati> filtriraj (ArrayList<Koordinati> koordinate, List<Integer> vrednosti){
+		ArrayList<Koordinati> tocke = new ArrayList<Koordinati>();
+		for(Koordinati t: koordinate) {
+			if (vrednosti.contains(get(t))) tocke.add(t);
+		}
+		return tocke;
+	}
+	
+	public class NajkrajsaPot extends ArrayList<Hex>{
+		private static final long serialVersionUID = 1L;
+		
+		public NajkrajsaPot(NajkrajsaPot pot) {
+			super(pot);
+		}
+		
+		public NajkrajsaPot() {
+			super();
+		}
+		
+		public int steviloPraznih() {
+			int prazne = 0;
+			for(Koordinati t:this) {
+				if(getValue(t) == 0) {
+					prazne++;
+				}
+			}
+			return prazne;
+		}
+		
+		public boolean jeKoncna() {
+			for (Koordinati t: this) {
+				if(getValue(t) == 0) return false;
+			}
+			return true;
+		}
+	}
+	
+	
+	private class SeznamZaIskanje extends ArrayList<Hex>{
+		private static final long serialVersionUID = 1L;
+		
+		public SeznamZaIskanje() {
+			int i;int j;
+			for(i = 0; i < velikost; i++) {
+				for(j = 0; j < velikost; j++) {
+					add(new Hex(i,j));
+				}
+			}
+			add(SPODNJIROB);
+			add(ZGORNJIROB);
+			add(DESNIROB);
+			add(LEVIROB);
+			
+		}
+		public void refresh() {
+			for(Hex hex: this) {
+				hex.teza = 100000;
+				hex.potDo = new NajkrajsaPot();
+			}
+		}
+		
+		public Hex get(Koordinati t) {
+			for (Hex hex : this) {
+				if(hex.getX() == t.getX() & hex.getY() == t.getY()) return hex;
+			}
+			return null;
+		}
+	}
+	private class Hex extends Koordinati{
+		
+		public Hex(int x, int y) {
+			super(x, y);
+			// TODO Auto-generated constructor stub
+		}
+		public int teza = 100000;
+		public NajkrajsaPot potDo = new NajkrajsaPot();
+		
+		public ArrayList<Hex> sosedi(){
+			ArrayList<Hex> sosedi = new ArrayList<Hex>();
+			ArrayList<Koordinati> sosednje = sosednje(this);
+			for(Koordinati t: sosednje) {
+				sosedi.add(seznamZaIskanje.get(t));
+			}
+			return sosedi;
+		}
+		
 	}
 }

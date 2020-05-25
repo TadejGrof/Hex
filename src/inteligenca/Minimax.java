@@ -15,7 +15,6 @@ public class Minimax {
 	private static Color barvaEna;
 	private static Color barvaDva;
 	private ArrayList<Koordinati> pot;
-	public ArrayList<Koordinati> koordinate = Plosca.koordinate;
 	
 	// prvi igralec bo imel cilj čimbolj povečati vrednost, drugi pa čimbolj zmanjšati, torej
 	// nastavimo prvemu na nekaj zelo malega, drugemu pa na nekaj zelo velikega (zagotovimo, da bo

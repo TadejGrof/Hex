@@ -82,7 +82,7 @@ public class Inteligenca extends KdoIgra {
 	
 	private int evaluateSosedje(Igra igra, Koordinati k, int i) {
 		int score = 0;
-		ArrayList<Koordinati> sosedi = Plosca.sosednje(k.getX(), k.getY());
+		ArrayList<Koordinati> sosedi = igra.plosca.sosednje(k.getX(), k.getY());
 		
 		// rad bi za vsako točko izmed sosedov pogledal,
 		// če je ista (torej ima vrednost i) in jo prištel k oceni

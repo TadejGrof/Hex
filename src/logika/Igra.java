@@ -122,6 +122,9 @@ public class Igra {
 	 public boolean odigraj(Koordinati koordinati) {
 		 if(jeVeljavnaPoteza(koordinati)) {
 			 plosca.odigraj(koordinati,getIgralecIndex(igralecNaPotezi));
+			 System.out.println(plosca);
+			 System.out.println("Igralec 1 najkrajsa pot: " + plosca.najkrajsaPot(Plosca.IGRALEC1));
+			 System.out.println("Igralec 2 najkrajsa pot: "+ plosca.najkrajsaPot(Plosca.IGRALEC2));
 			 naslednjiNaPotezi();
 			 return true;
 		 } 
@@ -161,7 +164,6 @@ public class Igra {
 		konec = plosca.konecIgre();
 		if(konec) {
 			zmagovalec = zmagovalecIgre();
-			System.out.println(zmagovalec.toString());
 		}
 		return konec;
 	 }
