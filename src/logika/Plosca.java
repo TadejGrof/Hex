@@ -243,6 +243,11 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		ArrayList<Integer> stanjeList = new ArrayList<Integer>();
 		
 		// kako dobim tu ven barvi za oba igralca, če delam brez funkcijo brez argumenta igra?
+		
+		// vedno moras imeti neko doloceno igro ce hoces dostopit do njene plosce in vrednosti na njej...
+		// Zakaj tocno rabis barve?
+		// ta funkcija je zelo stara in je se od takrat ko je bla plosca malce slabo narejena..
+		// pod funkcijo ti napisem novo, ki bo naredila matriko brez uporabe igralcev in barv.
 		for (Color barva : stanje.values()) {
 			if (barva == igralec1) {
 				stanjeList.add(1);
@@ -256,6 +261,22 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		for (int i = 0; i < velikost; i++) {
 			for (int j = 0; j < velikost; j++) {
 				vrstica[j] = stanjeList.get(velikost * i + j);
+			}
+			matrika[i] = vrstica;
+			vrstica = new int[velikost];
+		}
+		
+		return matrika;
+	}
+	
+	// ta dela isto...ono pobrisi po zelji
+	public int[][] getMatrika(){
+		int[][] matrika = new int[velikost][velikost];
+		int[] vrstica = new int[velikost];
+		
+		for (int i = 0; i < velikost; i++) {
+			for (int j = 0; j < velikost; j++) {
+				vrstica[j] = get(i).get(j);
 			}
 			matrika[i] = vrstica;
 			vrstica = new int[velikost];
@@ -281,15 +302,6 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			stolpec.add(new Koordinati(x,i));
 		}
 		return stolpec;
-	}
-	
-	
-	public ArrayList<Koordinati> filtriraj (ArrayList<Koordinati> koordinate, List<Integer> vrednosti){
-		ArrayList<Koordinati> tocke = new ArrayList<Koordinati>();
-		for(Koordinati t: koordinate) {
-			if (vrednosti.contains(get(t))) tocke.add(t);
-		}
-		return tocke;
 	}
 	
 	public class NajkrajsaPot extends ArrayList<Hex>{
@@ -352,6 +364,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			return null;
 		}
 	}
+	
 	private class Hex extends Koordinati{
 		
 		public Hex(int x, int y) {

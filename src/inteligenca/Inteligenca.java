@@ -66,6 +66,8 @@ public class Inteligenca extends KdoIgra {
 		int index = random.nextInt(moznePoteze.size());
 		Koordinati poteza = moznePoteze.get(0);
 		System.out.println("zle bom naprintal matriko");
+		// probaj zagnat igro v graficnem vmesniku in nastimat enega igralca kot racunalnil
+		// bos videl da dela in posodablja na 2sekundi kot rece Nadzornik;
 		igra.printIntMtrx(igra.plosca.getMatrika(igra));
 		return poteza;
 	}
