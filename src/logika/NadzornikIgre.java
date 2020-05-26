@@ -42,8 +42,8 @@ public class NadzornikIgre {
 		SwingWorker<Koordinati,Void> worker = new SwingWorker<Koordinati,Void>(){
 			@Override
 			protected Koordinati doInBackground() throws Exception {
-				try {TimeUnit.SECONDS.sleep(1);} catch(Exception e) {};
 				Koordinati poteza = igra.igralecNaPotezi.inteligenca.izberiPotezo(igra);
+				try {TimeUnit.SECONDS.sleep(1);} catch(Exception e) {};
 				return poteza;
 			}
 			@Override
