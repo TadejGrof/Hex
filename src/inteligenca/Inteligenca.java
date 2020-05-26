@@ -61,7 +61,7 @@ public class Inteligenca extends KdoIgra {
 	// Tukaj mora izbrati potezo.
 	// Zaenkrat sem dal random za vse, da sem preveril delovanje
 	public Koordinati izberiPotezo(Igra igra) {
-		return minimax(igra, igra.igralecNaPotezi);
+		return minimax(igra, globina, igra.igralecNaPotezi).koordinati;
 		//Random random = new Random();
 		//ArrayList<Koordinati> moznePoteze = igra.veljavnePoteze();
 		
@@ -70,21 +70,36 @@ public class Inteligenca extends KdoIgra {
 		//return poteza;
 	}
 	
-	public Koordinati minimax(Igra igra, Igralec jaz) {
+	
+	// ne dela cist vredu
+	public OcenjenaPoteza minimax(Igra igra, int globina, Igralec jaz) {
 		int ocena;
 		ArrayList<Koordinati> veljavne = igra.veljavnePoteze();
 		OcenjenaPoteza najboljsaPoteza = null;
 		for(Koordinati poteza: veljavne) {
 			Igra kopijaIgre = igra.kopirajIgro();
 			kopijaIgre.odigraj(poteza);
-			ocena = oceniPozicijo(kopijaIgre, jaz);
+			System.out.println(kopijaIgre.plosca);
+			if(igra.konecIgre()) {
+				ocena = oceniPozicijo(kopijaIgre,jaz);
+			} else {
+				if (globina == 1) {
+					ocena = oceniPozicijo(kopijaIgre,jaz);
+				} else {
+					ocena = minimax(kopijaIgre, globina - 1,jaz).ocena;
+				}
+			}
 			if(najboljsaPoteza == null) {
 				najboljsaPoteza = new OcenjenaPoteza(poteza,ocena);
 			} else {
-				if (ocena > najboljsaPoteza.ocena) najboljsaPoteza = new OcenjenaPoteza(poteza,ocena);
+				if (kopijaIgre.igralecNaPotezi != jaz & ocena > najboljsaPoteza.ocena) {
+					najboljsaPoteza = new OcenjenaPoteza(poteza,ocena);
+				} else if(kopijaIgre.igralecNaPotezi == jaz & ocena < najboljsaPoteza.ocena){
+					najboljsaPoteza = new OcenjenaPoteza(poteza,ocena);
+				}
 			}
 		}
-		return najboljsaPoteza.koordinati;
+		return najboljsaPoteza;
 	}
 	
 	public int oceniPozicijo(Igra igra, Igralec jaz) {

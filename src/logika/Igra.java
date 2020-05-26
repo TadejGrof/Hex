@@ -266,9 +266,9 @@ public class Igra {
 		 return vsePoteze;
 	 }
 	 
-	 public static Koordinati začetnaKoordinata () {
-		 int velikost = Plosca.getVelikost();
-
+	 
+	 //popravek...prevec uporabljas staticne. Ker mava več iger je potrebno take funkcije klicat na določeni
+	 public Koordinati začetnaKoordinata () {;
 		 int x = Math.floorDiv(velikost, 2);
 		 int y = Math.floorDiv(velikost, 2);
 		 

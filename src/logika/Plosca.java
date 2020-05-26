@@ -25,7 +25,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	
 	private static ArrayList<ArrayList<Koordinati>> plosca;
 	private static LinkedHashMap<Koordinati, Color> stanje;
-	private int velikost;
+	public int velikost;
 	private int zmagovalec;
 	
 	
