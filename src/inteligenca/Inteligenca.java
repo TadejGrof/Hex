@@ -116,7 +116,7 @@ public class Inteligenca extends KdoIgra {
 		//Koordinati poteza = najkrajšaPot.get(0);
 		//igra.printIntMtrx(igra.plosca.getMatrika());
 		//return poteza;
-
+	}
 	
 	
 	
