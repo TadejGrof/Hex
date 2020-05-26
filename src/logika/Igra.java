@@ -118,9 +118,9 @@ public class Igra {
 	 }
 	 
 	 
-	 //public int[][] setIntMtrx () {
-	 	//return plosca.getMatrika();
-	 //}
+	 public int[][] setIntMtrx () {
+	 	return plosca.getMatrika();
+	 }
 	 
 	 public static void printIntMtrx(int[][] mtrx) {
 		 for (int i = 0; i < mtrx[0].length; i++) {
@@ -264,5 +264,15 @@ public class Igra {
 			 }
 		 }
 		 return vsePoteze;
+	 }
+	 
+	 public static Koordinati začetnaKoordinata () {
+		 int velikost = Plosca.getVelikost();
+
+		 int x = Math.floorDiv(velikost, 2);
+		 int y = Math.floorDiv(velikost, 2);
+		 
+		 Koordinati k = new Koordinati(x, y);
+		 return k;
 	 }
 }
