@@ -58,17 +58,11 @@ public class Inteligenca extends KdoIgra {
 	public Koordinati izberiPotezo(Igra igra) {
 		Random random = new Random();
 		ArrayList<Koordinati> moznePoteze = igra.veljavnePoteze();
-		// ne posodablja matrike
-		// možni razlogi:
-		// - ne posodablja igre (check - posodablja)
-		// - ne posodablja plošče (check - posodablja)
-		// - getMatrika() deluje narobe
+		Koordinati k = new Koordinati(0,0);
 		int index = random.nextInt(moznePoteze.size());
-		Koordinati poteza = moznePoteze.get(0);
-		System.out.println("zle bom naprintal matriko");
-		// probaj zagnat igro v graficnem vmesniku in nastimat enega igralca kot racunalnil
-		// bos videl da dela in posodablja na 2sekundi kot rece Nadzornik;
-		igra.printIntMtrx(igra.plosca.getMatrika(igra));
+		ArrayList<Koordinati> najkrajšaPot = najkrajšaPot(igra, k);
+		Koordinati poteza = najkrajšaPot.get(0);
+		igra.printIntMtrx(igra.plosca.getMatrika());
 		return poteza;
 	}
 	
@@ -156,7 +150,6 @@ public class Inteligenca extends KdoIgra {
 	}
 	
 	private ArrayList<Koordinati> najkrajšaPot (Igra igra, Koordinati k) {
-		System.out.println("začela se je najkrajšaPot");
 		Igralec igralec = igra.igralecNaPotezi;
 		int igralčevIndeks = igra.getIgralecIndex(igralec);
 		
@@ -185,9 +178,7 @@ public class Inteligenca extends KdoIgra {
 			
 			// izbira na zgornjem delu
 			for (int i = 0; i < možniIndeksi.size(); i++) {
-				System.out.println("smo na indeksu "+i +", pri tem je iskano mesto enako " +matrika[0][možniIndeksi.get(i)]);
 				if (matrika[0][možniIndeksi.get(i)] == 1) {
-					System.out.println("če je napisalo, da je enako 1, mora biti tudi tole");
 					int[] končnoPolje = {0, možniIndeksi.get(i)};
 					seznamKoordinat = BoljšaPot.poiščiPot(matrika, začetnoPolje, končnoPolje);
 					break;
@@ -195,9 +186,7 @@ public class Inteligenca extends KdoIgra {
 			}
 			// izbira na spodnjem delu
 			for (int j = 0; j < možniIndeksi.size(); j++) {
-				System.out.println("smo na indeksu "+j +", pri tem je iskano mesto enako " +matrika[velikost][možniIndeksi.get(j)]);
 				if (matrika[velikost][možniIndeksi.get(j)] == 1) {
-					System.out.println("če je napisalo, da je enako 1, mora biti tudi tole");
 					int[] končnoPolje = {velikost, možniIndeksi.get(j)};
 					seznamKoordinat.addAll(BoljšaPot.poiščiPot(matrika, začetnoPolje, končnoPolje));
 					break;
@@ -257,8 +246,6 @@ public class Inteligenca extends KdoIgra {
 			int trenutniScore = evaluateSosedje(igra, k, igralec);
 			ovrednotenePoteze.put(k, trenutniScore);
 		}
-		// izberemo najboljšo možnost iz vseh ocen
-		// tole bo bolj smiselno z iteratorjem (ali pač?)
 		for (Koordinati k : ovrednotenePoteze.keySet()) {
 			int vrednost = ovrednotenePoteze.get(k);
 			if (vrednost > najboljšiScore) {
@@ -335,6 +322,7 @@ public class Inteligenca extends KdoIgra {
 		prefKoordinata = this.pot.get(0);
 		return prefKoordinata;
 	}
+	
 	
 	// novaMatrika označuje matriko, ki je pripravljena, da se jo spusti čez class BoljšaPot,
 	// kjer se za najkrajšo pot upoštevajo zgolj celice, ki so označene z 1, mimo tistih, ki so 0,

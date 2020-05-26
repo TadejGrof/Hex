@@ -239,41 +239,6 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		int[][] matrika = new int[velikost][velikost];
 		int[] vrstica = new int[velikost];
 		
-		LinkedHashMap<Koordinati, Color> stanje = getStanje();
-		ArrayList<Integer> stanjeList = new ArrayList<Integer>();
-		
-		// kako dobim tu ven barvi za oba igralca, če delam brez funkcijo brez argumenta igra?
-		
-		// vedno moras imeti neko doloceno igro ce hoces dostopit do njene plosce in vrednosti na njej...
-		// Zakaj tocno rabis barve?
-		// ta funkcija je zelo stara in je se od takrat ko je bla plosca malce slabo narejena..
-		// pod funkcijo ti napisem novo, ki bo naredila matriko brez uporabe igralcev in barv.
-		for (Color barva : stanje.values()) {
-			if (barva == igralec1) {
-				stanjeList.add(1);
-			} else if (barva == igralec2) {
-				stanjeList.add(2);
-			} else {
-				stanjeList.add(0);
-			}
-		}
-		
-		for (int i = 0; i < velikost; i++) {
-			for (int j = 0; j < velikost; j++) {
-				vrstica[j] = stanjeList.get(velikost * i + j);
-			}
-			matrika[i] = vrstica;
-			vrstica = new int[velikost];
-		}
-		
-		return matrika;
-	}
-	
-	// ta dela isto...ono pobrisi po zelji
-	public int[][] getMatrika(){
-		int[][] matrika = new int[velikost][velikost];
-		int[] vrstica = new int[velikost];
-		
 		for (int i = 0; i < velikost; i++) {
 			for (int j = 0; j < velikost; j++) {
 				vrstica[j] = get(i).get(j);
