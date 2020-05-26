@@ -50,7 +50,7 @@ public class Inteligenca extends KdoIgra {
 		super("Racunalnik");
 		this.tip = tip;
 		if(tip == LAHKO) {
-			this.globina = 2;
+			this.globina = 1;
 		} else if ( tip == SREDNJE) {
 			this.globina = 3;
 		} else if (tip == TEZKO) {
@@ -58,16 +58,10 @@ public class Inteligenca extends KdoIgra {
 		}
 	}
 	
+	// Tukaj mora izbrati potezo.
+	// Zaenkrat sem dal random za vse, da sem preveril delovanje
 	public Koordinati izberiPotezo(Igra igra) {
-		if(igra.poteze.size() == 0) {
-			// prva poteza:
-			return new Koordinati(igra.velikost / 2, igra.velikost / 2);
-		} else if(igra.poteze.size() < 40){
-			return alphabetaPoteze(igra, 2,scoreMin, scoreMax, igra.igralecNaPotezi).koordinati;
-		} else {
-			return alphabetaPoteze(igra, 3,scoreMin, scoreMax, igra.igralecNaPotezi).koordinati;
-		}
-		
+		return minimax(igra, globina, igra.igralecNaPotezi).koordinati;
 	}
 	
 	
@@ -76,121 +70,50 @@ public class Inteligenca extends KdoIgra {
 		int ocena;
 		ArrayList<Koordinati> veljavne = igra.veljavnePoteze();
 		OcenjenaPoteza najboljsaPoteza = null;
-		ArrayList<OcenjenaPoteza> najboljsePoteze = new ArrayList<OcenjenaPoteza>();
-		
+		// -----ta del lahko pobriševa, če ne bo delal, samo da poskusim narediti, da prvo vstavi na sredino ------
+		// dela, jaz bi pustil, samo da še pogledava, kako bo drugi odigral, da ne bo začel spodaj levo
+		// preverimo, da je plošča prazna
+		if (veljavne.size() == igra.velikost * igra.velikost) {
+			// začetna koordinata zgenerira koordinato v sredini plošče (sej to je optimalno, ne?)
+			Koordinati k = igra.začetnaKoordinata();
+			OcenjenaPoteza novaPoteza = new OcenjenaPoteza(k, Integer.MAX_VALUE);
+			return novaPoteza;
+		}
+		// --------------------------------------------------------------------------------------------------------
 		for(Koordinati poteza: veljavne) {
 			// za vsako potezo odigramo svojo igro in potem pogledamo, kako daleč smo prišli
 			Igra kopijaIgre = igra.kopirajIgro();
 			kopijaIgre.odigraj(poteza);
-			if(igra.konecIgre() | globina == 1) {
+			System.out.println(kopijaIgre.plosca);
+			if(igra.konecIgre()) {
 				ocena = oceniPozicijo(kopijaIgre,jaz);
 			} else {
-				ocena = minimax(kopijaIgre, globina - 1,jaz).ocena;
+				if (globina == 1) {
+					ocena = oceniPozicijo(kopijaIgre,jaz);
+				} else {
+					ocena = minimax(kopijaIgre, globina - 1,jaz).ocena;
+				}
 			}
-
 			if(najboljsaPoteza == null) {
 				najboljsaPoteza = new OcenjenaPoteza(poteza,ocena);
-				najboljsePoteze.add(najboljsaPoteza);
 			} else {
-				if(ocena == najboljsaPoteza.ocena) {
-					najboljsePoteze.add(new OcenjenaPoteza(poteza,ocena));
-				} else {
-					najboljsePoteze.clear();
-					if (igra.igralecNaPotezi == jaz && ocena > najboljsaPoteza.ocena) {
-						najboljsaPoteza = new OcenjenaPoteza(poteza,ocena);
-
-					} else if(igra.igralecNaPotezi != jaz && ocena < najboljsaPoteza.ocena){
-						najboljsaPoteza = new OcenjenaPoteza(poteza,ocena);
-					}
-					najboljsePoteze.add(najboljsaPoteza);
+				if (kopijaIgre.igralecNaPotezi != jaz & ocena > najboljsaPoteza.ocena) {
+					najboljsaPoteza = new OcenjenaPoteza(poteza,ocena);
+				} else if(kopijaIgre.igralecNaPotezi == jaz & ocena < najboljsaPoteza.ocena){
+					najboljsaPoteza = new OcenjenaPoteza(poteza,ocena);
 				}
-				
 			}
 		}
-		Random random = new Random();
-		return najboljsePoteze.get(random.nextInt(najboljsePoteze.size()));
+		return najboljsaPoteza;
 	}
 	
-	public OcenjenaPoteza alphabetaPoteze(Igra igra, int globina, int alpha, int beta, Igralec jaz) {
-		int ocena;
-
-		if (igra.igralecNaPotezi == jaz) {ocena = scoreMin;} else {ocena = scoreMax;}
-
-		ArrayList<Koordinati> moznePoteze = igra.veljavnePoteze();
-		NajboljsePoteze najboljsePoteze = new NajboljsePoteze();
-		
-		Koordinati kandidat = moznePoteze.get(0); // Možno je, da se ne spremini vrednost kanditata. Zato ne more biti null.
-		
-		for (Koordinati p: moznePoteze) {
-			Igra kopijaIgre = igra.kopirajIgro();
-
-			kopijaIgre.odigraj(p);
-
-			int ocenap;
-
-			if(igra.konecIgre() | globina == 1) {
-				ocenap = oceniPozicijo(kopijaIgre,jaz);
-			} else {
-				ocenap = alphabetaPoteze (kopijaIgre, globina-1, alpha, beta, jaz).ocena;;
-			}
-			System.out.println("Ocena koordinate " + p + "je " + ocenap);
-			if (igra.igralecNaPotezi == jaz) { // Maksimiramo oceno
-				if (ocenap >= ocena) { // mora biti > namesto >=
-					ocena = ocenap;
-					OcenjenaPoteza poteza = new OcenjenaPoteza(p,ocena);
-					najboljsePoteze.addIfBest(poteza);
-					alpha = Math.max(alpha,ocena);
-
-				}
-			} else { 
-				if (ocenap <= ocena) {
-					ocena = ocenap;
-					OcenjenaPoteza poteza = new OcenjenaPoteza(p,ocena);
-					najboljsePoteze.addIfBest(poteza);
-					beta = Math.min(beta, ocena);					
-				}	
-			}
-			if (alpha >= beta) {
-				return najboljsePoteze.getBest();
-			}
-		}
-		return najboljsePoteze.getBest();
-	}
-	
-	public class NajboljsePoteze extends ArrayList<OcenjenaPoteza>{
-		private static final long serialVersionUID = 1L;
-
-		public void addIfBest(OcenjenaPoteza poteza) {
-			if (this.size() == 0){
-				add(poteza);
-			} else {
-				OcenjenaPoteza p = this.get(0);
-				if (poteza.ocena > p.ocena) {
-					this.clear();
-					this.add(poteza);
-				} else if(poteza.ocena == p.ocena) {
-					this.add(poteza);
-				}
-			}
-		}
-		
-		// jutri nadaljujem tukaj...med podobnimi mora izbrati najboljso ne random...
-		public OcenjenaPoteza getBest() {
-			Random random = new Random();
-			return this.get(random.nextInt(this.size()));
-		}
-		
-		
-	}
 	public int oceniPozicijo(Igra igra, Igralec jaz) {
 		NajkrajsaPot mojaPot = igra.plosca.najkrajsaPot(igra.getIgralecIndex(jaz));
 		if(mojaPot.jeKoncna()) {
-			System.out.println("koncna pot:"+ mojaPot);
 			return Integer.MAX_VALUE;
 		} 
 		NajkrajsaPot nasprotnikovaPot = igra.plosca.najkrajsaPot(igra.getIgralecIndex(igra.nasprotnik(jaz)));
 		if(nasprotnikovaPot.jeKoncna()) {
-			System.out.println("koncna pot:"+ nasprotnikovaPot);
 			return Integer.MIN_VALUE;
 		}
 		return nasprotnikovaPot.steviloPraznih() - mojaPot.steviloPraznih();

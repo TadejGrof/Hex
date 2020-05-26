@@ -12,7 +12,6 @@ import java.util.Set;
 
 import inteligenca.Inteligenca;
 import inteligenca.Minimax;
-import logika.Plosca.NajkrajsaPot;
 import splosno.Koordinati;
 
 public class Igra {
@@ -36,15 +35,16 @@ public class Igra {
 	private ArrayList<Igralec> igralca;
 	private Igralec zmagovalec;
 	private boolean konec;
-	public ArrayList<Poteza> poteze;
 	
 	public static void main(String[] args) {
-		Igra igra = new Igra(4);
-		igra.odigraj(new Koordinati(1,2));
-		igra.odigraj(new Koordinati(0,0));
-		igra.odigraj(new Koordinati(2,0));
-		System.out.println(igra.plosca);
-		System.out.println(igra.oceniPozicijo(igra.igralec2));
+		Igra igra = new Igra(2);
+		igra.odigraj(new Koordinati(1,1));
+		System.out.println("plosca igre po potezi" + igra.plosca);
+		Inteligenca inteligenca = new Inteligenca(Inteligenca.LAHKO);
+		Koordinati najboljsaPoteza = inteligenca.izberiPotezo(igra);
+		System.out.println("Najboljsa poteza je " + najboljsaPoteza);
+		igra.odigraj(najboljsaPoteza);
+		System.out.println("plosca igre po potezi" + igra.plosca);
 	}
 	
 	
@@ -67,7 +67,6 @@ public class Igra {
 	 
 	 
 	 private void initialize() {
-		 poteze = new ArrayList<Poteza>();
 		 igralca = new ArrayList<Igralec>();
 		 
 		 igralec1 = new Igralec("Igralec1", this, RDECA, Igralec.IGRALEC);
@@ -135,7 +134,6 @@ public class Igra {
 	 public boolean odigraj(Koordinati koordinati) {
 		 if(jeVeljavnaPoteza(koordinati)) {
 			 plosca.odigraj(koordinati,getIgralecIndex(igralecNaPotezi));
-			 poteze.add(new Poteza(igralecNaPotezi,koordinati));
 			 naslednjiNaPotezi();
 			 return true;
 		 } 
@@ -154,6 +152,8 @@ public class Igra {
 	 
 	 private boolean jeVeljavnaPoteza(Koordinati koordinati) {
 		 ArrayList<Koordinati> veljavne = veljavnePoteze();
+		 System.out.println(veljavne);
+		 System.out.println(veljavne.contains(koordinati));
 		 return veljavne.contains(koordinati);
 	 }
 	 
@@ -198,18 +198,6 @@ public class Igra {
 		 return null;
 	 }
 	 
-	 public int oceniPozicijo(Igralec jaz) {
-		NajkrajsaPot mojaPot = plosca.najkrajsaPot(getIgralecIndex(jaz));
-		if(mojaPot.jeKoncna()) {
-			return Integer.MAX_VALUE;
-		} 
-		NajkrajsaPot nasprotnikovaPot = plosca.najkrajsaPot(getIgralecIndex(nasprotnik(jaz)));
-		if(nasprotnikovaPot.jeKoncna()) {
-			return Integer.MIN_VALUE;
-		}
-		return nasprotnikovaPot.steviloPraznih() - mojaPot.steviloPraznih();
-	}
-	 
 	 public static Igra kopirajIgro (Igra original) {
 		 Igra kopija = new Igra();
 		 
@@ -234,7 +222,6 @@ public class Igra {
 		 kopija.setIgralca(igralec1, igralec2);
 		 kopija.igralecNaPotezi = igralecNaPotezi;
 		 
-		 kopija.poteze = new ArrayList<Poteza>(poteze);
 		 kopija.zmagovalec = zmagovalec;
 		 kopija.konec = konec;
 		 
