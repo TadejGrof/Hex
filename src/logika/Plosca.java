@@ -65,12 +65,11 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	public ArrayList<Koordinati> prazne() {
 		ArrayList<Koordinati> prazne = new ArrayList<Koordinati>();
 		int i; int j;
-		System.out.println("delamPrazne");
 		for(i = 0; i < velikost; i++) {
 			for(j = 0; j < velikost; j++) {
 				int vrednost = this.get(i).get(j);
 				if (vrednost == PRAZNO) {
-					prazne.add(new Koordinati(i,j));
+					prazne.add(new Koordinati(j,i));
 				}
 			}
 		}
@@ -98,8 +97,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	}
 	
 	public void odigraj(Koordinati koordinati, int igralec) {
-		ArrayList<Integer> vrstica = get(koordinati.getX()); 
-		vrstica.set(koordinati.getY(), igralec);
+		ArrayList<Integer> vrstica = get(koordinati.getY()); 
+		vrstica.set(koordinati.getX(), igralec);
 	}
 	
 	
@@ -336,7 +335,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			int i;int j;
 			for(i = 0; i < velikost; i++) {
 				for(j = 0; j < velikost; j++) {
-					add(new Hex(i,j));
+					add(new Hex(j,i));
 				}
 			}
 			add(SPODNJIROB);

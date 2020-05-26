@@ -152,7 +152,6 @@ public class IgraPanel extends JPanel{
 		}
 		
 		private void izracunajVrednosti() {
-			System.out.println("racunamVrednosti");
 			N = igra.velikost;
 			
 			if (N > 6) {
@@ -183,7 +182,7 @@ public class IgraPanel extends JPanel{
 				
 				for(int i = 0; i < N; i++) {
 					for (int j = 0; j < N; j++) {
-						Koordinati koordinati = new Koordinati(i,j);
+						Koordinati koordinati = new Koordinati(j,i);
 						int vrednost = igra.plosca.get(i).get(j);
 						
 						double x = odmikX + N * visina - i * visina + j * 2* visina;
@@ -212,28 +211,28 @@ public class IgraPanel extends JPanel{
 			for (Sestkotnik hex: sestkotniki) {
 				int y = hex.getKoordinati().getY();
 				int x = hex.getKoordinati().getX();
-				if (y == 0){
+				if (x == 0){
 					g.setColor(igralec2);
 					g.drawPolygon(hex.getOuterLine(4));
 					g.fillPolygon(hex.getOuterLine(4));
 					g.drawPolygon(hex.getOuterLine(5));
 					g.fillPolygon(hex.getOuterLine(5));
 				}
-				if (y == igra.velikost - 1) {
+				if (x == igra.velikost - 1) {
 					g.setColor(igralec2);
 					g.drawPolygon(hex.getOuterLine(1));
 					g.fillPolygon(hex.getOuterLine(1));
 					g.drawPolygon(hex.getOuterLine(2));
 					g.fillPolygon(hex.getOuterLine(2));
 				}
-				if (x == 0){
+				if (y == 0){
 					g.setColor(igralec1);
 					g.drawPolygon(hex.getOuterLine(5));
 					g.fillPolygon(hex.getOuterLine(5));
 					g.drawPolygon(hex.getOuterLine(6));
 					g.fillPolygon(hex.getOuterLine(6));
 				}
-				if (x == igra.velikost - 1) {
+				if (y == igra.velikost - 1) {
 					g.setColor(igralec1);
 					g.drawPolygon(hex.getOuterLine(3));
 					g.fillPolygon(hex.getOuterLine(3));
@@ -261,6 +260,7 @@ public class IgraPanel extends JPanel{
 					for(Sestkotnik hex:sestkotniki) {
 			        	if (hex.getHexagon().contains(p)) {
 			        		Koordinati poteza = hex.getKoordinati();
+			        		System.out.println("DELAM POTEZO:" + poteza);
 			        		NadzornikIgre.clovekovaPoteza(poteza);
 			        		break;
 			        	}
@@ -290,7 +290,6 @@ public class IgraPanel extends JPanel{
 		}
 
 		public void componentResized(ComponentEvent e) {
-			System.out.println("delamResize");
 			this.removeAll();
 			sestkotniki.clear();
 			this.height = this.getHeight();
