@@ -4,17 +4,22 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
-import koordinati.Koordinati;
+import inteligenca.Inteligenca;
+import splosno.Koordinati;
 
 public class Igralec {
 	public static final int IGRALEC = 0;
-	public static final int RACUNALNIK = 1;
+	public static final int LAHEK_RACUNALNIK = 1;
+	public static final int SREDNJI_RACUNALNIK = 2;
+	public static final int TEZEK_RACUNALNIK = 3;
 	
-	private int tip;
+	public int tip;
 	
 	private String ime;
 	private Color barva;
 	private Igra igra;
+	
+	public Inteligenca inteligenca;
 	
 	public Igralec(String ime,Igra igra, Color barva) {
 		this.igra = igra;
@@ -28,12 +33,14 @@ public class Igralec {
 		this.ime = ime;
 		this.barva = barva;
 		this.tip = tip;
+		setInteligenca();
 	}
 	
 	public Igralec(String ime, Color barva, int tip) {
 		this.ime = ime;
 		this.barva = barva;
 		this.tip = tip;
+		setInteligenca();
 	}
 	
 	public void setIgra(Igra igra) {
@@ -49,10 +56,18 @@ public class Igralec {
 		return ime;
 	}
 	
-	public void nakljucnaPoteza() {
-		Random random = new Random();
-		ArrayList<Koordinati> veljavne = igra.veljavnePoteze();
-		igra.odigraj(veljavne.get(random.nextInt(veljavne.size())));
+	public void setInteligenca() {
+		if(tip == LAHEK_RACUNALNIK) {
+			this.inteligenca = new Inteligenca(Inteligenca.LAHKO);
+		} else if(tip == SREDNJI_RACUNALNIK){
+			this.inteligenca = new Inteligenca(Inteligenca.SREDNJE);
+		} else if( tip == TEZEK_RACUNALNIK) {
+			this.inteligenca = new Inteligenca(Inteligenca.TEZKO);
+		}
+	}
+	
+	public static boolean jeRacunalnik(int tip) {
+		return tip == LAHEK_RACUNALNIK | tip == SREDNJI_RACUNALNIK | tip == TEZEK_RACUNALNIK;
 	}
 	
 }

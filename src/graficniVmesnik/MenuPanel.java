@@ -11,17 +11,16 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
 import logika.Igra;
 import logika.Igralec;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class MenuPanel extends JPanel{
+	private static final long serialVersionUID = 1L;
+	
 	private Okno okno;
 	private JPanel menuBar;
 	private JPanel nastavitve;
@@ -33,7 +32,6 @@ public class MenuPanel extends JPanel{
 	
 	private GridBagConstraints gbc;
 	private JPanel gumbiPanel;
-	private JButton novoButton;
 
 	public MenuPanel(Okno okno) {
 		this.okno = okno;
@@ -96,6 +94,10 @@ public class MenuPanel extends JPanel{
 	}
 	
 	private class VelikostInput extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private CenterLabel velikostLabel;
 		private JTextField velikostInput;
 		
@@ -202,10 +204,12 @@ public class MenuPanel extends JPanel{
 		
 		
 		private class TipInput extends JPanel {
+			private static final long serialVersionUID = 1L;
+			
 			private CenterLabel tipLabel;
 			private DefaultListCellRenderer listRenderer;
 			private JComboBox<String> tipBox;
-			private String[] tipi = { "Igralec", "Racunalnik - Lahko", "Racunalik - Srednje", "Racunalnik - Težko" };
+			private String[] tipi = { "Igralec", "Racunalnik - Lahko", "Racunalnik - Srednje", "Racunalnik - Težko" };
 			
 			public TipInput() {
 				setLayout(new GridLayout(1,2));
@@ -221,11 +225,23 @@ public class MenuPanel extends JPanel{
 			}
 			
 			public int getValue() {
-				return 0;
+				int index = tipBox.getSelectedIndex();
+				if (index == 0) {
+					return Igralec.IGRALEC;
+				} else if(index == 1) {
+					return Igralec.LAHEK_RACUNALNIK;
+				} else if(index == 2) {
+					return Igralec.SREDNJI_RACUNALNIK;
+				} else if(index == 3) {
+					return Igralec.TEZEK_RACUNALNIK;
+				}
+				return Igralec.IGRALEC;
 			}
 		}
 		
 		private class ImeInput extends JPanel  {
+			private static final long serialVersionUID = 1L;
+			
 			private CenterLabel imeLabel;
 			private JTextField imeInput;
 			
@@ -246,7 +262,7 @@ public class MenuPanel extends JPanel{
 					int tip = tipPanel.getValue();
 					if (tip == Igralec.IGRALEC) {
 						return "Igralec" + String.valueOf(index);
-					} else if ( tip == Igralec.RACUNALNIK) {
+					} else if ( Igralec.jeRacunalnik(tip)) {
 						return "Racunalnik" + String.valueOf(index);
 					}
 				}
@@ -255,6 +271,8 @@ public class MenuPanel extends JPanel{
 		}
 		
 		private class BarvaInput extends JPanel {
+			private static final long serialVersionUID = 1L;
+			
 			private CenterLabel barvaLabel;
 			private JPanel barvaInput;
 			private Color barva;
@@ -285,6 +303,8 @@ public class MenuPanel extends JPanel{
 		}
 		
 		private class BarvaButton extends JButton{
+			private static final long serialVersionUID = 1L;
+			
 			private Color barva;
 			
 			public BarvaButton(Color color) {
@@ -311,7 +331,6 @@ public class MenuPanel extends JPanel{
 						Igra igra = new Igra(velikost);
 						Igralec igralec1 = igralec1Panel.getIgralec();
 						Igralec igralec2 = igralec2Panel.getIgralec();
-						igra.setIgralca(igralec1, igralec2);
 						if (igralec1.toString().contentEquals(igralec2.toString())) {
 							showMessageDialog(null,"Izberi razlicni imeni za igralca");
 						} else if( igralec1.getBarva().equals(igralec2.getBarva())) {

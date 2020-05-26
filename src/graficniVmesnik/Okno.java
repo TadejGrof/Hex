@@ -1,22 +1,11 @@
 package graficniVmesnik;
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.EventQueue;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
 import logika.Igra;
+import logika.NadzornikIgre;
 
 public class Okno {
 	public JFrame frame;
@@ -72,11 +61,7 @@ public class Okno {
 	public void refresh() {
 		Igra igra = igraPanel.getIgra();
 		if (igra != null) {
-			if ( igra.konecIgre()) {
-				okna.show(frame.getContentPane(),"konec");
-			} else {
-				okna.show(frame.getContentPane(), "igra");
-			}
+			okna.show(frame.getContentPane(), "igra");
 		} else {
 			pokaziMenu();
 		}

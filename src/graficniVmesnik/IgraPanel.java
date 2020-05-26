@@ -1,9 +1,7 @@
 package graficniVmesnik;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -19,14 +17,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import splosno.Koordinati;
 
-import static javax.swing.JOptionPane.showMessageDialog;
-
-import koordinati.Koordinati;
 import logika.Igra;
+import logika.Igralec;
+import logika.NadzornikIgre;
 
 public class IgraPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
@@ -97,16 +93,26 @@ public class IgraPanel extends JPanel{
 	
 	public void setIgra(Igra igra) {
 		this.igra = igra;
-		refreshPanel();
+		
+		NadzornikIgre.tipaIgralcev = new HashMap<Igralec,Integer>();
+		NadzornikIgre.tipaIgralcev.put(igra.igralec1, igra.igralec1.tip);
+		NadzornikIgre.tipaIgralcev.put(igra.igralec2,igra.igralec2.tip);
+		
+		NadzornikIgre.igraPanel = this;
+		NadzornikIgre.novaIgra(igra);
 	}
 	
 	
-	private void refreshPanel() {
-		if(igra.konecIgre()) {
-			igralecLabel.setText(igra.zmagovalecIgre().toString());
+	public void refreshPanel() {
+		int stanje = igra.getStanje();
+		if ( stanje == Igra.ZMAGA1) {
+			igralecLabel.setText(igra.igralec1.toString());
 			stanjeLabel.setText(zmagaStanje);
-		} else {
-			igralecLabel.setText(igra.getIgralecNaPotezi().toString());
+		} else if ( stanje == Igra.ZMAGA2) {
+			igralecLabel.setText(igra.igralec2.toString());
+			stanjeLabel.setText(zmagaStanje);
+		} else if ( stanje == Igra.IGRA) {
+			igralecLabel.setText(igra.igralecNaPotezi.toString());
 			stanjeLabel.setText(potezaStanje);
 		}
 		platno.refreshPlatno();
@@ -122,6 +128,8 @@ public class IgraPanel extends JPanel{
 		private int width;
 		private int odmikX;
 		private int odmikY;
+		
+		private int[][] matrika;
 		
 		private int igralnoX;
 		private int igralnoY;
@@ -144,8 +152,7 @@ public class IgraPanel extends JPanel{
 		}
 		
 		private void izracunajVrednosti() {
-			System.out.println("racunamVrednosti");
-			N = igra.getVelikost();
+			N = igra.velikost;
 			
 			if (N > 6) {
 				odmikY = 40;
@@ -166,11 +173,6 @@ public class IgraPanel extends JPanel{
 				}
 			}
 			visina = Math.sqrt(3) * radij / 2;
-			
-			System.out.println(visina);
-			System.out.println(height);
-			System.out.println(width);
-			System.out.println(odmikX);
 		}
 		
 		private void initialize() {
@@ -178,16 +180,15 @@ public class IgraPanel extends JPanel{
 				
 				izracunajVrednosti();
 				
-				ArrayList<ArrayList<Koordinati>> koordinate = igra.vrniKoordinate();
-				HashMap<Koordinati, Color> stanje = igra.vrniStanje();
-				
 				for(int i = 0; i < N; i++) {
 					for (int j = 0; j < N; j++) {
-						Koordinati koordinati = koordinate.get(i).get(j);
-						Color barva = stanje.get(koordinati);
+						Koordinati koordinati = new Koordinati(j,i);
+						int vrednost = igra.plosca.get(i).get(j);
+						
 						double x = odmikX + N * visina - i * visina + j * 2* visina;
+			
 						double y = odmikY - radij + igralnoY - i * 3 * radij / 2;
-						sestkotniki.add(new Sestkotnik(x,y,radij,koordinati,barva));
+						sestkotniki.add(new Sestkotnik(x,y,radij,koordinati,igra.getIgralecBarva(vrednost)));
 					}
 				}
 			}	
@@ -210,28 +211,28 @@ public class IgraPanel extends JPanel{
 			for (Sestkotnik hex: sestkotniki) {
 				int y = hex.getKoordinati().getY();
 				int x = hex.getKoordinati().getX();
-				if (y == 0){
+				if (x == 0){
 					g.setColor(igralec2);
 					g.drawPolygon(hex.getOuterLine(4));
 					g.fillPolygon(hex.getOuterLine(4));
 					g.drawPolygon(hex.getOuterLine(5));
 					g.fillPolygon(hex.getOuterLine(5));
 				}
-				if (y == igra.getVelikost() - 1) {
+				if (x == igra.velikost - 1) {
 					g.setColor(igralec2);
 					g.drawPolygon(hex.getOuterLine(1));
 					g.fillPolygon(hex.getOuterLine(1));
 					g.drawPolygon(hex.getOuterLine(2));
 					g.fillPolygon(hex.getOuterLine(2));
 				}
-				if (x == 0){
+				if (y == 0){
 					g.setColor(igralec1);
 					g.drawPolygon(hex.getOuterLine(5));
 					g.fillPolygon(hex.getOuterLine(5));
 					g.drawPolygon(hex.getOuterLine(6));
 					g.fillPolygon(hex.getOuterLine(6));
 				}
-				if (x == igra.getVelikost() - 1) {
+				if (y == igra.velikost - 1) {
 					g.setColor(igralec1);
 					g.drawPolygon(hex.getOuterLine(3));
 					g.fillPolygon(hex.getOuterLine(3));
@@ -255,14 +256,16 @@ public class IgraPanel extends JPanel{
 		public void mouseClicked(MouseEvent e) {
 			Point p = e.getPoint();
 			if (!igra.konecIgre()) {
-		        for(Sestkotnik hex:sestkotniki) {
-		        	if (hex.getHexagon().contains(p)) {
-		        		if ( igra.odigraj(hex.getKoordinati())) {
-		        			refreshPanel();
-		        		}
-		        		break;
-		        	}
-		        }
+				if(NadzornikIgre.clovekNaPotezi) {
+					for(Sestkotnik hex:sestkotniki) {
+			        	if (hex.getHexagon().contains(p)) {
+			        		Koordinati poteza = hex.getKoordinati();
+			        		System.out.println("DELAM POTEZO:" + poteza);
+			        		NadzornikIgre.clovekovaPoteza(poteza);
+			        		break;
+			        	}
+			        }
+				} 
 			}
 		}
 
@@ -287,7 +290,6 @@ public class IgraPanel extends JPanel{
 		}
 
 		public void componentResized(ComponentEvent e) {
-			System.out.println("delamResize");
 			this.removeAll();
 			sestkotniki.clear();
 			this.height = this.getHeight();
