@@ -61,11 +61,7 @@ public class Okno {
 	public void refresh() {
 		Igra igra = igraPanel.getIgra();
 		if (igra != null) {
-			if ( igra.konecIgre()) {
-				okna.show(frame.getContentPane(),"konec");
-			} else {
-				okna.show(frame.getContentPane(), "igra");
-			}
+			okna.show(frame.getContentPane(), "igra");
 		} else {
 			pokaziMenu();
 		}

@@ -15,11 +15,13 @@ import splosno.Koordinati;
 import logika.Igra;
 import logika.Igralec;
 import logika.Plosca;
+import logika.Plosca.NajkrajsaPot;
 
 public class Inteligenca extends KdoIgra {
 	public static final int LAHKO = 0;
 	public static final int SREDNJE = 1;
 	public static final int TEZKO = 2;
+	public static final int TEKMOVANJE = 3;
 	
 	private int scoreMax = Integer.MAX_VALUE;
 	private int scoreMin = -scoreMax;
@@ -30,6 +32,7 @@ public class Inteligenca extends KdoIgra {
 	private int racunalnik;
 	
 	private int globina;
+	private int tip;
 	
 	public Plosca plosca;
 	
@@ -39,11 +42,13 @@ public class Inteligenca extends KdoIgra {
 
 	public Inteligenca() {
 		super("ImeNajineSkupine");
+		this.tip = TEKMOVANJE;
 		this.globina = 5;
 	}
 	
 	public Inteligenca(int tip) {
 		super("Racunalnik");
+		this.tip = tip;
 		if(tip == LAHKO) {
 			this.globina = 1;
 		} else if ( tip == SREDNJE) {
@@ -56,21 +61,91 @@ public class Inteligenca extends KdoIgra {
 	// Tukaj mora izbrati potezo.
 	// Zaenkrat sem dal random za vse, da sem preveril delovanje
 	public Koordinati izberiPotezo(Igra igra) {
-		Random random = new Random();
-		ArrayList<Koordinati> moznePoteze = igra.veljavnePoteze();
-		// ne posodablja matrike
-		// možni razlogi:
-		// - ne posodablja igre (check - posodablja)
-		// - ne posodablja plošče (check - posodablja)
-		// - getMatrika() deluje narobe
-		int index = random.nextInt(moznePoteze.size());
-		Koordinati poteza = moznePoteze.get(0);
-		System.out.println("zle bom naprintal matriko");
-		// probaj zagnat igro v graficnem vmesniku in nastimat enega igralca kot racunalnil
-		// bos videl da dela in posodablja na 2sekundi kot rece Nadzornik;
-		igra.printIntMtrx(igra.plosca.getMatrika(igra));
-		return poteza;
+		return minimax(igra, igra.igralecNaPotezi);
+		//Random random = new Random();
+		//ArrayList<Koordinati> moznePoteze = igra.veljavnePoteze();
+		
+		//int index = random.nextInt(moznePoteze.size());
+		//Koordinati poteza = moznePoteze.get(index);
+		//return poteza;
 	}
+	
+	public Koordinati minimax(Igra igra, Igralec jaz) {
+		int ocena;
+		ArrayList<Koordinati> veljavne = igra.veljavnePoteze();
+		OcenjenaPoteza najboljsaPoteza = null;
+		for(Koordinati poteza: veljavne) {
+			Igra kopijaIgre = igra.kopirajIgro();
+			kopijaIgre.odigraj(poteza);
+			ocena = oceniPozicijo(kopijaIgre, jaz);
+			if(najboljsaPoteza == null) {
+				najboljsaPoteza = new OcenjenaPoteza(poteza,ocena);
+			} else {
+				if (ocena > najboljsaPoteza.ocena) najboljsaPoteza = new OcenjenaPoteza(poteza,ocena);
+			}
+		}
+		return najboljsaPoteza.koordinati;
+	}
+	
+	public int oceniPozicijo(Igra igra, Igralec jaz) {
+		NajkrajsaPot mojaPot = igra.plosca.najkrajsaPot(igra.getIgralecIndex(jaz));
+		if(mojaPot.jeKoncna()) {
+			return Integer.MAX_VALUE;
+		} 
+		NajkrajsaPot nasprotnikovaPot = igra.plosca.najkrajsaPot(igra.getIgralecIndex(igra.nasprotnik(jaz)));
+		if(nasprotnikovaPot.jeKoncna()) {
+			return Integer.MIN_VALUE;
+		}
+		return nasprotnikovaPot.steviloPraznih() - mojaPot.steviloPraznih();
+	}
+	
+	public class OcenjenaPoteza{
+		public int ocena;
+		public Koordinati koordinati;
+		
+		public OcenjenaPoteza(Koordinati koordinati, int ocena) {
+			this.koordinati = koordinati;
+			this.ocena = ocena;
+		}
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public Koordinati izberiPotezo2(Igra igra) {
 		if (this.plosca == igra.plosca) {

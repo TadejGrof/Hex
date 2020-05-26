@@ -56,12 +56,6 @@ public class Igralec {
 		return ime;
 	}
 	
-	public void nakljucnaPoteza() {
-		Random random = new Random();
-		ArrayList<Koordinati> veljavne = igra.veljavnePoteze();
-		igra.odigraj(veljavne.get(random.nextInt(veljavne.size())));
-	}
-	
 	public void setInteligenca() {
 		if(tip == LAHEK_RACUNALNIK) {
 			this.inteligenca = new Inteligenca(Inteligenca.LAHKO);

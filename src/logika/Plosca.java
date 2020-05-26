@@ -25,7 +25,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	
 	private static ArrayList<ArrayList<Koordinati>> plosca;
 	private static LinkedHashMap<Koordinati, Color> stanje;
-	private static int velikost;
+	private int velikost;
 	private int zmagovalec;
 	
 	
@@ -42,6 +42,12 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			}
 			add(vrstica);
 		}
+	}
+	
+	public Plosca(Plosca plosca) {
+		super(plosca);
+		this.velikost = plosca.velikost;
+		seznamZaIskanje = new SeznamZaIskanje();
 	}
 	
 	public static LinkedHashMap<Koordinati, Color> getStanje(){
@@ -63,7 +69,6 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		for(i = 0; i < velikost; i++) {
 			for(j = 0; j < velikost; j++) {
 				int vrednost = this.get(i).get(j);
-				System.out.println(vrednost);
 				if (vrednost == PRAZNO) {
 					prazne.add(new Koordinati(i,j));
 				}
@@ -176,7 +181,17 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	}
 	
 	public boolean konecIgre() {
-		return najkrajsaPot(IGRALEC1).jeKoncna() | najkrajsaPot(IGRALEC2).jeKoncna();
+		boolean igralec1 = najkrajsaPot(IGRALEC1).jeKoncna();
+		if (igralec1) {
+			zmagovalec = IGRALEC1;
+			return true;
+		}
+		boolean igralec2 = najkrajsaPot(IGRALEC2).jeKoncna();
+		if (igralec2) {
+			zmagovalec = IGRALEC2;
+			return true;
+		}
+		return false;
 	}
 	
 	//vrne ustrezni koordinati za podani vrednsot i in j oziroma ustrezen rob plosce ob 
@@ -231,42 +246,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return sosednje;
 	}
 	
-	public static int getVelikost () {
+	public int getVelikost () {
 		return velikost;
-	}
-	
-	public int[][] getMatrika(){
-		int[][] matrika = new int[velikost][velikost];
-		int[] vrstica = new int[velikost];
-		
-		LinkedHashMap<Koordinati, Color> stanje = getStanje();
-		ArrayList<Integer> stanjeList = new ArrayList<Integer>();
-		
-		// kako dobim tu ven barvi za oba igralca, če delam brez funkcijo brez argumenta igra?
-		
-		// vedno moras imeti neko doloceno igro ce hoces dostopit do njene plosce in vrednosti na njej...
-		// Zakaj tocno rabis barve?
-		// ta funkcija je zelo stara in je se od takrat ko je bla plosca malce slabo narejena..
-		// pod funkcijo ti napisem novo, ki bo naredila matriko brez uporabe igralcev in barv.
-		for (Color barva : stanje.values()) {
-			if (barva == igralec1) {
-				stanjeList.add(1);
-			} else if (barva == igralec2) {
-				stanjeList.add(2);
-			} else {
-				stanjeList.add(0);
-			}
-		}
-		
-		for (int i = 0; i < velikost; i++) {
-			for (int j = 0; j < velikost; j++) {
-				vrstica[j] = stanjeList.get(velikost * i + j);
-			}
-			matrika[i] = vrstica;
-			vrstica = new int[velikost];
-		}
-		
-		return matrika;
 	}
 	
 	// ta dela isto...ono pobrisi po zelji
@@ -304,6 +285,19 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return stolpec;
 	}
 	
+	public Plosca kopirajPlosco() {
+		int i; int j;
+		Plosca kopija = new Plosca(velikost);
+		for(i = 0; i < velikost; i++) {
+			ArrayList<Integer> vrstica = kopija.get(i);
+			for(j = 0; j < velikost; j++) {
+				vrstica.set(j, get(i).get(j));
+			}
+			kopija.set(i, vrstica);
+		}
+		return kopija;
+	}
+	
 	public class NajkrajsaPot extends ArrayList<Hex>{
 		private static final long serialVersionUID = 1L;
 		
@@ -326,6 +320,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		}
 		
 		public boolean jeKoncna() {
+			if (this.size() < velikost) return false;
 			for (Koordinati t: this) {
 				if(getValue(t) == 0) return false;
 			}

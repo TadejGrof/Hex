@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
+import inteligenca.Inteligenca;
 import inteligenca.Minimax;
 import splosno.Koordinati;
 
@@ -36,14 +37,14 @@ public class Igra {
 	private boolean konec;
 	
 	public static void main(String[] args) {
-		Igra igra = new Igra(4);
-		Scanner myObj = new Scanner(System.in);
-		while(! igra.konecIgre()) {
-			myObj.nextLine();
-			igra.nakljucnaPoteza();
-		}
-		myObj.close();
-		System.out.println(igra.plosca);
+		Igra igra = new Igra(2);
+		igra.odigraj(new Koordinati(1,1));
+		System.out.println("plosca igre po potezi" + igra.plosca);
+		Inteligenca inteligenca = new Inteligenca(Inteligenca.LAHKO);
+		Koordinati najboljsaPoteza = inteligenca.izberiPotezo(igra);
+		System.out.println("Najboljsa poteza je " + najboljsaPoteza);
+		igra.odigraj(najboljsaPoteza);
+		System.out.println("plosca igre po potezi" + igra.plosca);
 	}
 	
 	
@@ -59,7 +60,9 @@ public class Igra {
 	 }
 	 
 	 public void nakljucnaPoteza(){
-		 igralecNaPotezi.nakljucnaPoteza();
+		Random random = new Random();
+		ArrayList<Koordinati> veljavne = veljavnePoteze();
+		odigraj(veljavne.get(random.nextInt(veljavne.size())));
 	 }
 	 
 	 
@@ -73,6 +76,15 @@ public class Igra {
 		 
 		 plosca = new Plosca(velikost);
 		 igralecNaPotezi = igralec1; 
+	 }
+	 
+	 public Igralec nasprotnik(Igralec igralec) {
+		 if(igralec == igralec1) {
+			 return igralec2;
+		 } else if( igralec == igralec2) {
+			 return igralec1;
+		 }
+		 return null;
 	 }
 	 
 	 public Integer getIgralecIndex(Igralec igralec) {
@@ -122,9 +134,6 @@ public class Igra {
 	 public boolean odigraj(Koordinati koordinati) {
 		 if(jeVeljavnaPoteza(koordinati)) {
 			 plosca.odigraj(koordinati,getIgralecIndex(igralecNaPotezi));
-			 System.out.println(plosca);
-			 System.out.println("Igralec 1 najkrajsa pot: " + plosca.najkrajsaPot(Plosca.IGRALEC1));
-			 System.out.println("Igralec 2 najkrajsa pot: "+ plosca.najkrajsaPot(Plosca.IGRALEC2));
 			 naslednjiNaPotezi();
 			 return true;
 		 } 
@@ -144,11 +153,11 @@ public class Igra {
 	 private boolean jeVeljavnaPoteza(Koordinati koordinati) {
 		 ArrayList<Koordinati> veljavne = veljavnePoteze();
 		 System.out.println(veljavne);
+		 System.out.println(veljavne.contains(koordinati));
 		 return veljavne.contains(koordinati);
 	 }
 	 
 	 public ArrayList<Koordinati> veljavnePoteze(){
-		 System.out.println("iscemVeljavne");
 		 return plosca.prazne();
 	 }
 	 
@@ -156,16 +165,9 @@ public class Igra {
 		 return plosca.getPlosca();
 	 }
 	 
-	 public LinkedHashMap<Koordinati,Color> vrniStanje() {
-		 return plosca.getStanje();
-	 }
 	 
 	 public boolean konecIgre() {
-		konec = plosca.konecIgre();
-		if(konec) {
-			zmagovalec = zmagovalecIgre();
-		}
-		return konec;
+		return plosca.konecIgre();
 	 }
 	 
 	 public int getStanje() {
@@ -202,21 +204,32 @@ public class Igra {
 		 kopija.mtrx = original.mtrx;
 		 
 		 kopija.velikost = original.velikost;
-		 kopija.plosca = original.plosca;
+		 kopija.plosca = new Plosca(original.plosca);
+		 kopija.setIgralca(original.igralec1, original.igralec2);
 		 kopija.igralecNaPotezi = original.igralecNaPotezi;
 		 
-		 
-		 kopija.igralec1 = original.igralec1;
-		 kopija.igralec2 = original.igralec2;
-		 kopija.igralca = original.igralca;
 		 kopija.zmagovalec = original.zmagovalec;
 		 kopija.konec = original.konec;
 		 
 		 return kopija;
 	 }
 	 
-	 public static Koordinati naključniKoordinati () {
-		 int velikost = Plosca.getVelikost();
+	 public Igra kopirajIgro () {
+		 Igra kopija = new Igra();
+		 
+		 kopija.velikost = velikost;
+		 kopija.plosca = plosca.kopirajPlosco();
+		 kopija.setIgralca(igralec1, igralec2);
+		 kopija.igralecNaPotezi = igralecNaPotezi;
+		 
+		 kopija.zmagovalec = zmagovalec;
+		 kopija.konec = konec;
+		 
+		 return kopija;
+	 }
+	 
+	 public Koordinati naključniKoordinati () {
+		 int velikost = plosca.getVelikost();
 		 
 		 int x = 0;
 		 int y = 0;
