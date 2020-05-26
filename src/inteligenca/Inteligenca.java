@@ -62,12 +62,6 @@ public class Inteligenca extends KdoIgra {
 	// Zaenkrat sem dal random za vse, da sem preveril delovanje
 	public Koordinati izberiPotezo(Igra igra) {
 		return minimax(igra, globina, igra.igralecNaPotezi).koordinati;
-		//Random random = new Random();
-		//ArrayList<Koordinati> moznePoteze = igra.veljavnePoteze();
-		
-		//int index = random.nextInt(moznePoteze.size());
-		//Koordinati poteza = moznePoteze.get(index);
-		//return poteza;
 	}
 	
 	
@@ -76,7 +70,18 @@ public class Inteligenca extends KdoIgra {
 		int ocena;
 		ArrayList<Koordinati> veljavne = igra.veljavnePoteze();
 		OcenjenaPoteza najboljsaPoteza = null;
+		// -----ta del lahko pobriševa, če ne bo delal, samo da poskusim narediti, da prvo vstavi na sredino ------
+		// dela, jaz bi pustil, samo da še pogledava, kako bo drugi odigral, da ne bo začel spodaj levo
+		// preverimo, da je plošča prazna
+		if (veljavne.size() == igra.velikost * igra.velikost) {
+			// začetna koordinata zgenerira koordinato v sredini plošče (sej to je optimalno, ne?)
+			Koordinati k = igra.začetnaKoordinata();
+			OcenjenaPoteza novaPoteza = new OcenjenaPoteza(k, Integer.MAX_VALUE);
+			return novaPoteza;
+		}
+		// --------------------------------------------------------------------------------------------------------
 		for(Koordinati poteza: veljavne) {
+			// za vsako potezo odigramo svojo igro in potem pogledamo, kako daleč smo prišli
 			Igra kopijaIgre = igra.kopirajIgro();
 			kopijaIgre.odigraj(poteza);
 			System.out.println(kopijaIgre.plosca);
@@ -122,71 +127,6 @@ public class Inteligenca extends KdoIgra {
 			this.koordinati = koordinati;
 			this.ocena = ocena;
 		}
-
-		//Random random = new Random();
-		//ArrayList<Koordinati> moznePoteze = igra.veljavnePoteze();
-		//Koordinati k = new Koordinati(0,0);
-		//int index = random.nextInt(moznePoteze.size());
-		//ArrayList<Koordinati> najkrajšaPot = najkrajšaPot(igra, k);
-		//Koordinati poteza = najkrajšaPot.get(0);
-		//igra.printIntMtrx(igra.plosca.getMatrika());
-		//return poteza;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public Koordinati izberiPotezo2(Igra igra) {
-		if (this.plosca == igra.plosca) {
-			System.out.println("ne posodablja plošče");
-		}
-		Random random = new Random();
-		Koordinati k = izboljšanMinimax(igra);
-		System.out.println("začetek");
-		igra.plosca.getMatrika();
-		System.out.println("konec getMatrika()");
-		ArrayList<Koordinati> najkrajšaPot = najkrajšaPot(igra, k);
-		System.out.println("konec najkrajšePoti");
-		int i = random.nextInt(najkrajšaPot.size());
-		Koordinati poteza = najkrajšaPot.get(1);
-		this.plosca = igra.plosca;
-		return poteza;
-		//Koordinati naslednjaPoteza = MiniMax(igra, igralec);
-		//return naslednjaPoteza;
 	}
 	
 	private int evaluateSosedje(Igra igra, Koordinati k, int i) {
@@ -253,12 +193,12 @@ public class Inteligenca extends KdoIgra {
 		return vrstniRedIndeksov;
 	}
 	
-	private ArrayList<Koordinati> najkrajšaPot (Igra igra, Koordinati k) {
+	private ArrayList<OcenjenaPoteza> najkrajšaPot (Igra igra, Koordinati k) {
 		Igralec igralec = igra.igralecNaPotezi;
 		int igralčevIndeks = igra.getIgralecIndex(igralec);
 		
 		// seznam koordinat, ki sestavljajo najkrajšo pot
-		ArrayList<Koordinati> najkrajšaPot = new ArrayList<Koordinati>();
+		ArrayList<OcenjenaPoteza> najkrajšaPot = new ArrayList<OcenjenaPoteza>();
 		
 		int velikost = igra.plosca.getVelikost();
 		
@@ -320,13 +260,16 @@ public class Inteligenca extends KdoIgra {
 		
 		for (BoljšaPot koordinati : seznamKoordinat) {
 			Koordinati dodajKoordinato = BoljšaPot.vKoordinati(koordinati);
-			najkrajšaPot.add(dodajKoordinato);
+			if (igra.getIgralecIndex(igralec) == 1) {
+				int ocena = Integer.MAX_VALUE;
+				OcenjenaPoteza trenutnaPoteza = new OcenjenaPoteza(dodajKoordinato, ocena);
+				najkrajšaPot.add(trenutnaPoteza);
+			}
 		}
 		
 		return najkrajšaPot;
 	}
 	
-	// Minimax algoritem
 	private Koordinati MiniMax(Igra igra, int igralec) {
 		int najboljšiScore = 0;
 		Koordinati prefKoordinata = new Koordinati(0, 0);
@@ -398,7 +341,7 @@ public class Inteligenca extends KdoIgra {
 		
 		// če na plošči ni izbrane nobene druge vrednosti in je računalnik prvi, naj si izbere naključno koordinato
 		if (!igra.plosca.getStanje().containsValue(igra.getIgralecBarva(igralčevIndeks)) || !igra.plosca.getStanje().containsValue(igra.getIgralecBarva(nasprotnikovIndeks))) {
-			prefKoordinata = Igra.naključniKoordinati();
+			prefKoordinata = igra.naključniKoordinati();
 		} else {
 			// pogledamo, če je že kakšna računalnikova poteza odigrana
 				if (Plosca.getStanje().containsValue(igra.getIgralecBarva(igralčevIndeks))) {

@@ -209,7 +209,7 @@ public class MenuPanel extends JPanel{
 			private CenterLabel tipLabel;
 			private DefaultListCellRenderer listRenderer;
 			private JComboBox<String> tipBox;
-			private String[] tipi = { "Igralec", "Racunalnik - Lahko", "Racunalik - Srednje", "Racunalnik - Težko" };
+			private String[] tipi = { "Igralec", "Racunalnik - Lahko", "Racunalnik - Srednje", "Racunalnik - Težko" };
 			
 			public TipInput() {
 				setLayout(new GridLayout(1,2));
