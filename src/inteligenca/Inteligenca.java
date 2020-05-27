@@ -63,8 +63,8 @@ public class Inteligenca extends KdoIgra {
 			// prva poteza:
 			return new Koordinati(igra.velikost / 2, igra.velikost / 2);
 		} else{
-//			return alphabetaPoteze(igra, 2,scoreMin, scoreMax, igra.igralecNaPotezi).koordinati;
-			return alfabeta(igra, igra.začetnaKoordinata(), 2, scoreMax, scoreMin, igra.igralecNaPotezi).koordinati;
+			return alphabetaPoteze(igra, 2,scoreMin, scoreMax, igra.igralecNaPotezi).koordinati;
+//			return alfabeta(igra, igra.začetnaKoordinata(), 2, scoreMax, scoreMin, igra.igralecNaPotezi).koordinati;
 		}
 	}
 	
