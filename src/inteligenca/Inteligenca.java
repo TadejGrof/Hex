@@ -62,12 +62,9 @@ public class Inteligenca extends KdoIgra {
 		if(igra.poteze.size() == 0) {
 			// prva poteza:
 			return new Koordinati(igra.velikost / 2, igra.velikost / 2);
-		} else if(igra.poteze.size() < 40){
+		} else{
 			return alphabetaPoteze(igra, 2,scoreMin, scoreMax, igra.igralecNaPotezi).koordinati;
-		} else {
-			return alphabetaPoteze(igra, 3,scoreMin, scoreMax, igra.igralecNaPotezi).koordinati;
 		}
-		
 	}
 	
 	
