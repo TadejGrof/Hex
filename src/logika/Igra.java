@@ -40,7 +40,10 @@ public class Igra {
 	
 	public static void main(String[] args) {
 		Igra igra = new Igra(11);
-		System.out.println(10 % 2);
+		igra.odigraj(new Koordinati(5,5));
+		igra.odigraj(new Koordinati(0,0));
+		igra.odigraj(new Koordinati(6,7));
+		System.out.println(igra.plosca.jeMost(new Koordinati(5,5),new Koordinati(6,7)));
 	}
 	
 	

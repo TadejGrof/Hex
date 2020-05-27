@@ -28,6 +28,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	public int velikost;
 	private int zmagovalec;
 	
+	public NajkrajsaPot najkrajsaPotIgralec1;
+	public NajkrajsaPot najkrajsaPotIgralec2;
 	
 	private SeznamZaIskanje seznamZaIskanje;
 	
@@ -156,8 +158,9 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	public void odigraj(Koordinati koordinati, int igralec) {
 		ArrayList<Integer> vrstica = get(koordinati.getY()); 
 		vrstica.set(koordinati.getX(), igralec);
+		najkrajsaPotIgralec1 = najkrajsaPot(IGRALEC1);
+		najkrajsaPotIgralec2 = najkrajsaPot(IGRALEC2);
 	}
-	
 	
 	public NajkrajsaPot najkrajsaPot(int igralec) {
 		if (igralec == IGRALEC1) {
@@ -167,7 +170,6 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		}
 		return null;
 	}
-	
 	
 	public NajkrajsaPot najkrajsaPot(Hex zacetek,Hex konec, int igralec) {
 		Hex trenutniHex;
@@ -237,13 +239,12 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	}
 	
 	public boolean konecIgre() {
-		boolean igralec1 = najkrajsaPot(IGRALEC1).jeKoncna();
-		if (igralec1) {
+		if(najkrajsaPotIgralec1 == null | najkrajsaPotIgralec2 == null) return false;
+		if (najkrajsaPotIgralec1.jeKoncna()) {
 			zmagovalec = IGRALEC1;
 			return true;
 		}
-		boolean igralec2 = najkrajsaPot(IGRALEC2).jeKoncna();
-		if (igralec2) {
+		if (najkrajsaPotIgralec2.jeKoncna()) {
 			zmagovalec = IGRALEC2;
 			return true;
 		}
@@ -344,6 +345,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	public Plosca kopirajPlosco() {
 		int i; int j;
 		Plosca kopija = new Plosca(velikost);
+		kopija.najkrajsaPotIgralec1 = najkrajsaPotIgralec1;
+		kopija.najkrajsaPotIgralec2 = najkrajsaPotIgralec2;
 		for(i = 0; i < velikost; i++) {
 			ArrayList<Integer> vrstica = kopija.get(i);
 			for(j = 0; j < velikost; j++) {
@@ -352,6 +355,53 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			kopija.set(i, vrstica);
 		}
 		return kopija;
+	}
+	
+	public ArrayList<Koordinati> vseKoordinate(){
+		return null;
+	}
+	
+	public boolean jeMost(Koordinati t1, Koordinati t2) {
+		if (getValue(t1) == getValue(t2) && getValue(t1) != 0) {
+			ArrayList<Koordinati> skupniSosedje = skupniSosedje(t1,t2);
+			if (skupniSosedje.size() == 2) {
+				for ( Koordinati sosed : skupniSosedje) {
+					if(getValue(sosed) != 0) return false;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public ArrayList<Koordinati> skupniSosedje(Koordinati t1, Koordinati t2){
+		ArrayList<Koordinati> sosedje1 = sosednje(t1);
+		ArrayList<Koordinati> sosedje2 = sosednje(t2);
+		ArrayList<Koordinati> skupni = new ArrayList<Koordinati>();
+		for ( Koordinati t: sosedje1) {
+			if (sosedje2.contains(t)) skupni.add(t);
+		}
+		return skupni;
+	}
+	
+	public class Most {
+		Koordinati polna1;
+		Koordinati polna2;
+		Koordinati prazna1;
+		Koordinati prazna2;
+		
+		public Most(Koordinati t1,Koordinati t2) {
+			polna1 = t1;
+			polna2 = t2;
+			ArrayList<Koordinati> sosedje = skupniSosedje(t1,t2);
+			prazna1 = sosedje.get(0);
+			prazna2 = sosedje.get(1);
+		}
+		
+		public boolean greCezPot(NajkrajsaPot pot) {
+			return pot.contains(prazna1) & pot.contains(prazna2); 
+		}
+			
 	}
 	
 	public class NajkrajsaPot extends ArrayList<Hex>{
@@ -365,6 +415,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			super();
 		}
 		
+		
 		public int steviloPraznih() {
 			int prazne = 0;
 			for(Koordinati t:this) {
@@ -374,6 +425,25 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			}
 			return prazne;
 		}
+		
+		public ArrayList<Most> mosti(){
+			ArrayList<Most> mosti = new ArrayList<Most>();
+			for(int i = 0; i < this.size(); i++) {
+				if ( i < (this.size() - 2) && jeMost(get(i), get(i + 2))) {
+					mosti.add(new Most(get(i),get(i+2)));
+				}
+			}
+			return mosti;
+		}
+		
+		public int steviloMostov() {
+			int mosti = 0;
+			for(int i = 0; i < this.size(); i++) {
+				if ( i < (this.size() - 2) && jeMost(get(i), get(i + 2))) mosti ++;
+			}
+			return mosti;
+		}
+		
 		
 		public boolean jeKoncna() {
 			if (this.size() < velikost) return false;
