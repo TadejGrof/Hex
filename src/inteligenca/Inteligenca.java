@@ -65,7 +65,9 @@ public class Inteligenca extends KdoIgra {
 		} else if(igra.poteze.size() == 1) {
 			return drugaPoteza(igra);
 		} else{
-			return alphabetaPoteze(igra, 2,scoreMin, scoreMax, igra.igralecNaPotezi).koordinati;
+			Koordinati k = alphabetaPoteze(igra, 2,scoreMin, scoreMax, igra.igralecNaPotezi).koordinati;
+			vrniSeznameSosedov(igra, k);
+			return k;
 //			return alfabeta(igra, igra.začetnaKoordinata(), 2, scoreMax, scoreMin, igra.igralecNaPotezi).koordinati;
 		}
 	}
@@ -99,6 +101,49 @@ public class Inteligenca extends KdoIgra {
 		}
 		Random random = new Random();
 		return poteze.get(random.nextInt(poteze.size()));
+	}
+	
+	// prvi izmed seznamov je seznam tistih sosedov, ki jih je položil igralec na potezi
+	// drugi seznam je seznam sosedov, ki jih je položil nasprotnik igralca na potezi
+	// tretji seznam predstavljajo sosedi, ki so še nezasedena polja
+	public ArrayList<ArrayList<Koordinati>> vrniSeznameSosedov(Igra igra, Koordinati k) {
+		ArrayList<Koordinati> točkeNaPotezi = new ArrayList<Koordinati>();
+		ArrayList<Koordinati> točkeNasprotnika = new ArrayList<Koordinati>();
+		ArrayList<Koordinati> točkePrazne = new ArrayList<Koordinati>();
+		
+		Igralec naPotezi = igra.igralecNaPotezi;
+		Igralec nasprotnik = igra.nasprotnik(naPotezi);
+		
+		Color barvaNaPotezi = naPotezi.getBarva();
+		System.out.println("barva na potezi je " + barvaNaPotezi);
+		Color barvaNasprotnik = nasprotnik.getBarva();
+		System.out.println("nasprotnikova barva je " + barvaNasprotnik);
+		
+		ArrayList<Koordinati> sosedi = igra.plosca.sosednje(k.getX(), k.getY());
+		int[][] matrika = igra.plosca.getMatrika();
+		
+		for (Koordinati sosed : sosedi) {
+			int x = sosed.getX();
+			int y = sosed.getY();
+			Koordinati trenutnaKoordinata = new Koordinati (x, y);
+			System.out.println(trenutnaKoordinata);
+			if (matrika[y][x] == igra.getIgralecIndex(naPotezi)) {
+				točkeNaPotezi.add(trenutnaKoordinata);
+			} else if (matrika[y][x] == igra.getIgralecIndex(nasprotnik)) {
+				točkeNasprotnika.add(trenutnaKoordinata);
+			} else {
+				točkePrazne.add(trenutnaKoordinata);
+			}
+		}
+		
+		ArrayList<ArrayList<Koordinati>> končenSeznamSosedov = new ArrayList<ArrayList<Koordinati>>();
+		končenSeznamSosedov.add(točkeNaPotezi);
+		System.out.println("sosedi točke na potezi so " +točkeNaPotezi);
+		končenSeznamSosedov.add(točkeNasprotnika);
+		System.out.println("sosedi nasprotnika točke na potezi so " +točkeNasprotnika);
+		končenSeznamSosedov.add(točkePrazne);
+		System.out.println("sosedi, ki so prazne točke, so " +točkePrazne);
+		return končenSeznamSosedov;
 	}
 	
 	// ne dela cist vredu

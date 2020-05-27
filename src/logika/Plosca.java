@@ -24,7 +24,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	private final Hex LEVIROB = new Hex(-4,0);
 	
 	private static ArrayList<ArrayList<Koordinati>> plosca;
-	private static LinkedHashMap<Koordinati, Color> stanje;
+	public static LinkedHashMap<Koordinati, Color> stanje;
 	public int velikost;
 	private int zmagovalec;
 	
@@ -51,6 +51,16 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	}
 	
 	public static LinkedHashMap<Koordinati, Color> getStanje(){
+//		LinkedHashMap<Koordinati, Color> stanje = new LinkedHashMap<Koordinati, Color>();
+//
+//		Color barvaEna = igra.getIgralecBarva(1);
+//		Color barvaDva = igra.getIgralecBarva(2);
+//		
+//		for (ArrayList<Koordinati> vrstica : plosca) {
+//			for (Koordinati koordinata : vrstica) {
+//				
+//			}
+//		}
 		return stanje;
 	}
 	
