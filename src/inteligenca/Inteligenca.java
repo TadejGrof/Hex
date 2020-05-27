@@ -61,12 +61,44 @@ public class Inteligenca extends KdoIgra {
 	public Koordinati izberiPotezo(Igra igra) {
 		if(igra.poteze.size() == 0) {
 			// prva poteza:
-			return new Koordinati(igra.velikost / 2, igra.velikost / 2);
+			return nakljucnaSredinska(igra);
+		} else if(igra.poteze.size() == 1) {
+			return drugaPoteza(igra);
 		} else{
 			return alphabetaPoteze(igra, 2,scoreMin, scoreMax, igra.igralecNaPotezi).koordinati;
 		}
 	}
 	
+	public Koordinati nakljucnaSredinska(Igra igra) {
+		ArrayList<Koordinati> sredinske = igra.plosca.getSredinske();
+		Random random = new Random();
+		return sredinske.get(random.nextInt(sredinske.size()));
+	}
+	
+	public Koordinati drugaPoteza(Igra igra) {
+		Koordinati zacetnaPoteza = igra.poteze.get(0).koordinati;
+		if(igra.plosca.jeSredinska(zacetnaPoteza)) {
+			if (igra.plosca.velikost > 5) {
+				return new Koordinati(zacetnaPoteza.getX() + 2, zacetnaPoteza.getY() + 3);
+			} else {
+				return new Koordinati(zacetnaPoteza.getX() + 1, zacetnaPoteza.getY() + 1);
+			}
+		} else {
+			for (Koordinati t: igra.plosca.getSredinske()) {
+				if (igra.plosca.razdalja(zacetnaPoteza, t) > 2){
+					return t;
+				}
+			}
+		}
+		ArrayList<Koordinati> poteze = igra.veljavnePoteze();
+		for(Koordinati t:poteze) {
+			if(igra.plosca.razdalja(zacetnaPoteza,t) > 1) {
+				return t;
+			}
+		}
+		Random random = new Random();
+		return poteze.get(random.nextInt(poteze.size()));
+	}
 	
 	// ne dela cist vredu
 	public OcenjenaPoteza minimax(Igra igra, int globina, Igralec jaz) {

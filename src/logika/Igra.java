@@ -39,12 +39,8 @@ public class Igra {
 	public ArrayList<Poteza> poteze;
 	
 	public static void main(String[] args) {
-		Igra igra = new Igra(4);
-		igra.odigraj(new Koordinati(1,2));
-		igra.odigraj(new Koordinati(0,0));
-		igra.odigraj(new Koordinati(2,0));
-		System.out.println(igra.plosca);
-		System.out.println(igra.oceniPozicijo(igra.igralec2));
+		Igra igra = new Igra(11);
+		System.out.println(10 % 2);
 	}
 	
 	

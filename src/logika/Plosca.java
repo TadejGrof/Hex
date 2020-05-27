@@ -62,6 +62,63 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return zmagovalec;
 	}
 	
+	
+	//samo za 11X11;
+	public boolean jeSredinska(Koordinati t) {
+		ArrayList<Koordinati> sredinske = getSredinske();
+		return sredinske.contains(t);
+	}
+	
+	public ArrayList<Koordinati> getSredinske(){
+		ArrayList<Koordinati> sredinske = new ArrayList<Koordinati>();
+		int sredina = velikost / 2;
+		if (velikost < 4 ) {
+			sredinske.add(new Koordinati(sredina,sredina));
+		}
+		if(velikost % 2 == 0) {
+			sredinske.add(new Koordinati(sredina, sredina));
+			sredinske.add(new Koordinati(sredina - 1, sredina));
+			sredinske.add(new Koordinati(sredina, sredina - 1));
+			sredinske.add(new Koordinati(sredina - 1, sredina - 1));
+		} else {
+			if (velikost < 8) {
+				sredinske.add(new Koordinati(sredina,sredina));
+			} else  {
+				sredinske.add(new Koordinati(sredina, sredina));
+				sredinske.add(new Koordinati(sredina - 1, sredina - 1));
+				sredinske.add(new Koordinati(sredina, sredina - 1));
+				sredinske.add(new Koordinati(sredina + 1, sredina - 1));
+				sredinske.add(new Koordinati(sredina - 1, sredina + 1));
+				sredinske.add(new Koordinati(sredina, sredina + 1));
+				sredinske.add(new Koordinati(sredina + 1, sredina + 1));
+				sredinske.add(new Koordinati(sredina, sredina + 1));
+				sredinske.add(new Koordinati(sredina + 1, sredina + 1));
+				sredinske.add(new Koordinati(sredina - 1, sredina));
+				sredinske.add(new Koordinati(sredina + 1, sredina));
+			}
+			
+		}
+		return sredinske;
+		
+	}
+	public int razdalja(Koordinati t1, Koordinati t2) {
+		int x1 = t1.getX(); int x2 = t2.getX();
+		int y1 = t1.getY(); int y2 = t2.getY();
+		int razlikaX = Math.abs(x1-x2);
+		int razlikaY = Math.abs(y1-y2);
+		if (razlikaX <= 1 & razlikaY <= 1 ) return 1;
+		else if(x1 >= x2 & y1 >= y2) {
+			return razlikaY; 
+		}else if(x1 <= x2 & y1 >= y2) {
+			return razlikaX + razlikaY; 
+		} else if(x1 >= x2 & y1 <= y2) {
+			return razlikaX + razlikaY; 
+		} else if(x1 <= x2 & y1 <= y2) {
+			return razlikaY; 
+		}
+		return 0;
+	}
+	
 	public ArrayList<Koordinati> prazne() {
 		ArrayList<Koordinati> prazne = new ArrayList<Koordinati>();
 		int i; int j;
