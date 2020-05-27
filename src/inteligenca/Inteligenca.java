@@ -119,6 +119,76 @@ public class Inteligenca extends KdoIgra {
 		return poteze.get(random.nextInt(poteze.size()));
 	}
 	
+	// prvi izmed seznamov je seznam tistih sosedov, ki jih je položil igralec na potezi
+	// drugi seznam je seznam sosedov, ki jih je položil nasprotnik igralca na potezi
+	// tretji seznam predstavljajo sosedi, ki so še nezasedena polja
+	public ArrayList<ArrayList<Koordinati>> vrniSeznameSosedov(Igra igra, Koordinati k) {
+		ArrayList<Koordinati> točkeNaPotezi = new ArrayList<Koordinati>();
+		ArrayList<Koordinati> točkeNasprotnika = new ArrayList<Koordinati>();
+		ArrayList<Koordinati> točkePrazne = new ArrayList<Koordinati>();
+		
+		Igralec naPotezi = igra.igralecNaPotezi;
+		Igralec nasprotnik = igra.nasprotnik(naPotezi);
+		
+		Color barvaNaPotezi = naPotezi.getBarva();
+		System.out.println("barva na potezi je " + barvaNaPotezi);
+		Color barvaNasprotnik = nasprotnik.getBarva();
+		System.out.println("nasprotnikova barva je " + barvaNasprotnik);
+		
+		ArrayList<Koordinati> sosedi = igra.plosca.sosednje(k.getX(), k.getY());
+		int[][] matrika = igra.plosca.getMatrika();
+		
+		if (sosedi.size() > 0) {
+			// za vsako točko izmed sosedov ugotovimo, kam spada
+			for (Koordinati sosed : sosedi) {
+				int x = sosed.getX();
+				int y = sosed.getY();
+				Koordinati trenutnaKoordinata = new Koordinati (x, y);
+				System.out.println(trenutnaKoordinata);
+				if (matrika[y][x] == igra.getIgralecIndex(naPotezi)) {
+					točkeNaPotezi.add(trenutnaKoordinata);
+					System.out.println("dodali smo v točkeNaPotezi");
+				} else if (matrika[y][x] == igra.getIgralecIndex(nasprotnik)) {
+					točkeNasprotnika.add(trenutnaKoordinata);
+					System.out.println("dodali smo v točkeNasprotnika");
+				} else {
+					točkePrazne.add(trenutnaKoordinata);
+					System.out.println("dodali smo v točkePrazne");
+				}
+			}
+		}
+		ArrayList<ArrayList<Koordinati>> končenSeznamSosedov = new ArrayList<ArrayList<Koordinati>>();
+		končenSeznamSosedov.add(točkeNaPotezi);
+		System.out.println("sosedi točke na potezi so " +točkeNaPotezi);
+		končenSeznamSosedov.add(točkeNasprotnika);
+		System.out.println("sosedi nasprotnika točke na potezi so " +točkeNasprotnika);
+		končenSeznamSosedov.add(točkePrazne);
+		System.out.println("sosedi, ki so prazne točke, so " +točkePrazne);
+		return končenSeznamSosedov;
+	}
+	
+	public int[][] matrikaSosedov (Igra igra, Koordinati k) {
+		int x = k.getX();
+		int y = k.getY();
+		int velikostX = 3;
+		int velikostY = 3;
+		int velikost = igra.velikost;
+		if (x == velikost - 1) {
+			velikostX = 2;
+		}
+		if (x == 0) {
+			velikostX = 2;
+		}
+		if (y == velikost - 1) {
+			velikostY = 2;
+		}
+		if (y == 0) {
+			velikostY = 2;
+		}
+		int[][] matrikaSosedov = new int[velikostY][velikostX];
+		return matrikaSosedov;
+	}
+	
 	// ne dela cist vredu
 	public OcenjenaPoteza minimax(Igra igra, int globina, Igralec jaz) {
 		int ocena;
