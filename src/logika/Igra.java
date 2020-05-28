@@ -14,7 +14,6 @@ import java.util.Scanner;
 import java.util.Set;
 
 import inteligenca.Inteligenca;
-import inteligenca.Minimax;
 import logika.Plosca.NajkrajsaPot;
 import splosno.Koordinati;
 
@@ -207,23 +206,6 @@ public class Igra {
 		 return null;
 	 }
 	 
-	 
-	 
-	 public static Igra kopirajIgro (Igra original) {
-		 Igra kopija = new Igra();
-		 
-		 kopija.mtrx = original.mtrx;
-		 
-		 kopija.velikost = original.velikost;
-		 kopija.plosca = new Plosca(original.plosca);
-		 kopija.setIgralca(original.igralec1, original.igralec2);
-		 kopija.igralecNaPotezi = original.igralecNaPotezi;
-		 
-		 kopija.zmagovalec = original.zmagovalec;
-		 kopija.konec = original.konec;
-		 
-		 return kopija;
-	 }
 	 
 	 public Igra kopirajIgro () {
 		 Igra kopija = new Igra();
