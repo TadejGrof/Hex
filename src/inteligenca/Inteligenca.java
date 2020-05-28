@@ -146,70 +146,30 @@ public class Inteligenca extends KdoIgra {
 	// drugi seznam je seznam sosedov, ki jih je položil nasprotnik igralca na potezi
 	// tretji seznam predstavljajo sosedi, ki so še nezasedena polja
 	public ArrayList<ArrayList<Koordinati>> vrniSeznameSosedov(Igra igra, Koordinati k) {
-		ArrayList<Koordinati> točkeNaPotezi = new ArrayList<Koordinati>();
-		ArrayList<Koordinati> točkeNasprotnika = new ArrayList<Koordinati>();
+		ArrayList<Koordinati> sosedi1 = new ArrayList<Koordinati>();
+		ArrayList<Koordinati> sosedi2 = new ArrayList<Koordinati>();
 		ArrayList<Koordinati> točkePrazne = new ArrayList<Koordinati>();
+		ArrayList<ArrayList<Koordinati>> končenSeznam = new ArrayList<ArrayList<Koordinati>>();
 		
-		Igralec naPotezi = igra.igralecNaPotezi;
-		Igralec nasprotnik = igra.nasprotnik(naPotezi);
-		
-		Color barvaNaPotezi = naPotezi.getBarva();
-		System.out.println("barva na potezi je " + barvaNaPotezi);
-		Color barvaNasprotnik = nasprotnik.getBarva();
-		System.out.println("nasprotnikova barva je " + barvaNasprotnik);
-		
-		ArrayList<Koordinati> sosedi = igra.plosca.sosednje(k.getX(), k.getY());
 		int[][] matrika = igra.plosca.getMatrika();
+		ArrayList<Koordinati> sosedi = igra.plosca.sosednje(k.getX(), k.getY());
 		
-		if (sosedi.size() > 0) {
-			// za vsako točko izmed sosedov ugotovimo, kam spada
-			for (Koordinati sosed : sosedi) {
-				int x = sosed.getX();
-				int y = sosed.getY();
-				Koordinati trenutnaKoordinata = new Koordinati (x, y);
-				System.out.println(trenutnaKoordinata);
-				if (matrika[y][x] == igra.getIgralecIndex(naPotezi)) {
-					točkeNaPotezi.add(trenutnaKoordinata);
-					System.out.println("dodali smo v točkeNaPotezi");
-				} else if (matrika[y][x] == igra.getIgralecIndex(nasprotnik)) {
-					točkeNasprotnika.add(trenutnaKoordinata);
-					System.out.println("dodali smo v točkeNasprotnika");
-				} else {
-					točkePrazne.add(trenutnaKoordinata);
-					System.out.println("dodali smo v točkePrazne");
-				}
+		for (Koordinati sosed : sosedi) {
+			int x = sosed.getX();
+			int y = sosed.getY();
+			
+			if (matrika[y][x] == 1) {
+				sosedi1.add(sosed);
+			} else if (matrika[y][x] == 2) {
+				sosedi2.add(sosed);
+			} else {
+				točkePrazne.add(sosed);
 			}
 		}
-		ArrayList<ArrayList<Koordinati>> končenSeznamSosedov = new ArrayList<ArrayList<Koordinati>>();
-		končenSeznamSosedov.add(točkeNaPotezi);
-		System.out.println("sosedi točke na potezi so " +točkeNaPotezi);
-		končenSeznamSosedov.add(točkeNasprotnika);
-		System.out.println("sosedi nasprotnika točke na potezi so " +točkeNasprotnika);
-		končenSeznamSosedov.add(točkePrazne);
-		System.out.println("sosedi, ki so prazne točke, so " +točkePrazne);
-		return končenSeznamSosedov;
-	}
-	
-	public int[][] matrikaSosedov (Igra igra, Koordinati k) {
-		int x = k.getX();
-		int y = k.getY();
-		int velikostX = 3;
-		int velikostY = 3;
-		int velikost = igra.velikost;
-		if (x == velikost - 1) {
-			velikostX = 2;
-		}
-		if (x == 0) {
-			velikostX = 2;
-		}
-		if (y == velikost - 1) {
-			velikostY = 2;
-		}
-		if (y == 0) {
-			velikostY = 2;
-		}
-		int[][] matrikaSosedov = new int[velikostY][velikostX];
-		return matrikaSosedov;
+		končenSeznam.add(sosedi1);
+		končenSeznam.add(sosedi2);
+		končenSeznam.add(točkePrazne);
+		return končenSeznam;
 	}
 	
 	// --minimax algoritem 1.0 (ne dela čisto v redu in ni ključen za delovanje kode)
@@ -344,57 +304,7 @@ public class Inteligenca extends KdoIgra {
 		}
 		return new OcenjenaPoteza(kandidat,ocena);
 	}
-	
-//	public OcenjenaPoteza alfabeta (Igra igra, Koordinati k, int globina, int alfa, int beta, Igralec jaz) {
-//		System.out.println("zagnali alfabeta");
-//		if (globina == 0 || igra.konecIgre()) {
-//			int trenutnaOcena;
-//			Igra kopijaIgre = igra.kopirajIgro();
-//			kopijaIgre.odigraj(k);
-//			trenutnaOcena = oceniPozicijo(kopijaIgre, jaz);
-//			OcenjenaPoteza poteza = new OcenjenaPoteza(k, trenutnaOcena);
-//		}
-//		
-//		ArrayList<Koordinati> možnosti = igra.veljavnePoteze();
-//		
-//		// prvi igralec želi največji score, drugi najmanjšega
-//		if (jaz == igra.igralec1) {
-//			int najboljšaOcena = Integer.MIN_VALUE;
-//			Koordinati zadnjaKoordinata = new Koordinati (0,0);
-//			for (Koordinati trenutnaKoordinata : možnosti) {
-//				int trenutnaOcena = alfabeta(igra, trenutnaKoordinata, globina - 1, alfa, beta, igra.igralec1).ocena;
-//				najboljšaOcena = Math.max(najboljšaOcena, trenutnaOcena);
-//				alfa = Math.max(alfa, trenutnaOcena);
-//				zadnjaKoordinata = trenutnaKoordinata;
-//				// ta del je tisto, kar v bistvu skrajša postopek
-//				if (beta <= alfa) break;
-//			}
-//			OcenjenaPoteza poteza = new OcenjenaPoteza(zadnjaKoordinata, najboljšaOcena);
-//			return poteza;
-//		}
-//		else if (jaz == igra.igralec2) {
-//			int najboljšaOcena = Integer.MAX_VALUE;
-//			Koordinati zadnjaKoordinata = new Koordinati (0,0);
-//			for (Koordinati trenutnaKoordinata : možnosti) {
-//				int trenutnaOcena = alfabeta(igra, trenutnaKoordinata, globina - 1, alfa, beta, igra.igralec2).ocena;
-//				najboljšaOcena = Math.min(najboljšaOcena, trenutnaOcena);
-//				beta = Math.min(najboljšaOcena, trenutnaOcena);
-//				zadnjaKoordinata = trenutnaKoordinata;
-//				if (beta <= alfa) break;
-//			}
-//			OcenjenaPoteza poteza = new OcenjenaPoteza(zadnjaKoordinata, najboljšaOcena);
-//			return poteza;
-//		}
-//		// če slučajno pademo ven iz loopa
-//		System.out.println("ven iz loopa!");
-//		int score = 0;
-//		Random random = new Random();
-//		int i = random.nextInt(igra.velikost);
-//		Koordinati zasilno = new Koordinati(0,0);
-//		OcenjenaPoteza poteza = new OcenjenaPoteza(zasilno, score);
-//		return poteza;
-//	}
-	
+		
 	public class NajboljsePoteze extends ArrayList<OcenjenaPoteza>{
 		private static final long serialVersionUID = 1L;
 

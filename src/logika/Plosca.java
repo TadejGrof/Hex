@@ -54,16 +54,6 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	}
 	
 	public static LinkedHashMap<Koordinati, Color> getStanje(){
-//		LinkedHashMap<Koordinati, Color> stanje = new LinkedHashMap<Koordinati, Color>();
-//
-//		Color barvaEna = igra.getIgralecBarva(1);
-//		Color barvaDva = igra.getIgralecBarva(2);
-//		
-//		for (ArrayList<Koordinati> vrstica : plosca) {
-//			for (Koordinati koordinata : vrstica) {
-//				
-//			}
-//		}
 		return stanje;
 	}
 	

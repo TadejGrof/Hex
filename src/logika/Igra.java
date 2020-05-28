@@ -260,8 +260,6 @@ public class Igra {
 		 return vsePoteze;
 	 }
 	 
-	 
-	 //popravek...prevec uporabljas staticne. Ker mava več iger je potrebno take funkcije klicat na določeni
 	 public Koordinati začetnaKoordinata () {;
 		 int x = Math.floorDiv(velikost, 2);
 		 int y = Math.floorDiv(velikost, 2);
