@@ -6,7 +6,12 @@ import logika.Igra;
 import logika.Plosca;
 import splosno.Koordinati;
 
-// po 0 se ne moreš premikat, po enkah pa lahko
+// class BoljšaPot deluje na principu BFS (Breath First Search) algoritma
+
+// matriko predstavimo kot skupek ničel in enic, za katere velja pravilo
+// - po ničlah se ne moremo premikati (predstavlja že odigrane nasprotnikove poteze)
+// - po enicah se lahko premikamo (predstavlja igralčeve poteze in prazna polja)
+
 public class BoljšaPot {
        int x;
        int y;
@@ -22,8 +27,8 @@ public class BoljšaPot {
             this.BoljšaPot = BoljšaPot;
         }
        
-       // brez tega čudno izpisuje
-        public String toString(){
+       // izpisovanje koordinat BoljšePoti
+       public String toString(){
         	return "("+x+ ","+y+")";
         }
     
@@ -129,19 +134,4 @@ public class BoljšaPot {
         }
     }
     
-	public static void main(String[] args) { 
-	   int[][] test = new int[][] {
-           {1, 1, 1, 1, 1, 1},
-           {1, 1, 1, 1, 0, 1},
-           {1, 0, 0, 0, 1, 1},
-           {1, 1, 1, 1, 1, 1},
-           {0, 0, 0, 0, 0, 0}};
-	   int[] začetnoPolje = {10,0};
-	   int[] končnoPolje = {3,2};
-	   int[][] drugiTest = generateIntMtrx(11);
-	   LinkedList<BoljšaPot> rešitev = poiščiPot(drugiTest, začetnoPolje, končnoPolje);
-	   natisniPolja(rešitev);
-	   int[][] matrika = vMatriko(rešitev, 11);
-	   Igra.printIntMtrx(matrika);
-	} 
 }

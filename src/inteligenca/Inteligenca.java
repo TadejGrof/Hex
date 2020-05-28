@@ -47,7 +47,7 @@ public class Inteligenca extends KdoIgra {
 	}
 
 	public Inteligenca() {
-		super("Brogrammers");
+		super("Hex'n'Šus");
 		// možna imena so še
 		// - ekipaBrogrammer
 		// - bitsPlease
@@ -107,12 +107,16 @@ public class Inteligenca extends KdoIgra {
 		System.out.println("STEVILO RACUNANIH POTI: " + steviloRacunanihPoti);
 	}
 	
+	// Funkcija, ki jo uporabimo za določitev prve poteze. Izmed vseh sredinskih ploščic
+	// naključno izberemo tisto, na kateri odigramo prvo potezo.
 	public Koordinati nakljucnaSredinska(Igra igra) {
 		ArrayList<Koordinati> sredinske = igra.plosca.getSredinske();
 		Random random = new Random();
 		return sredinske.get(random.nextInt(sredinske.size()));
 	}
 	
+	
+	// Funkcija, ki glede na odigrano prvo potezo prvega igralca, odigra potezo drugega igralca temu primerno.
 	public Koordinati drugaPoteza(Igra igra) {
 		Koordinati zacetnaPoteza = igra.poteze.get(0).koordinati;
 		if(igra.plosca.jeSredinska(zacetnaPoteza)) {
@@ -208,7 +212,7 @@ public class Inteligenca extends KdoIgra {
 		return matrikaSosedov;
 	}
 	
-	// ne dela cist vredu
+	// --minimax algoritem 1.0 (ne dela čisto v redu in ni ključen za delovanje kode)
 	public OcenjenaPoteza minimax(Igra igra, int globina, Igralec jaz) {
 		int ocena;
 		ArrayList<Koordinati> veljavne = igra.veljavnePoteze();
@@ -249,6 +253,8 @@ public class Inteligenca extends KdoIgra {
 		return najboljsePoteze.get(random.nextInt(najboljsePoteze.size()));
 	}
 	
+	
+	// -- alpha-beta algoritem, s katerim računalnik izbere naslednjo najbolj smiselno potezo
 	public OcenjenaPoteza alphabetaPoteze(Igra igra, int globina, int alpha, int beta, Igralec jaz) {
 		int ocena;
 		
@@ -295,6 +301,7 @@ public class Inteligenca extends KdoIgra {
 		return najboljsePoteze.getBest();
 	}
 	
+	// vsako potezo ocenimo in shrani v class OcenjenaPoteza
 	public OcenjenaPoteza alphabetaPoteza(Igra igra, int globina, int alpha, int beta, Igralec jaz) {
 		int ocena;
 
@@ -405,7 +412,7 @@ public class Inteligenca extends KdoIgra {
 			}
 		}
 		
-		// jutri nadaljujem tukaj...med podobnimi mora izbrati najboljso ne random...
+		
 		public OcenjenaPoteza getBest() {
 			Random random = new Random();
 			return this.get(random.nextInt(this.size()));

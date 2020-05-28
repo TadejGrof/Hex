@@ -8,6 +8,11 @@ import splosno.Koordinati;
 import logika.Igra;
 import logika.Plosca;
 
+
+// začetni class za iskanje poti, ki je bil spremenjen v class BoljšaPot
+
+// s tem classom najdemo najkrajšo pot iz 
+// zgornega levega polja v matriki do spodnjega desnega
 public class Pot {
 
 	public static int[][] resitev;
@@ -106,16 +111,4 @@ public class Pot {
 	
 	public static void najkrajšiPath (int[][] matrika, int igralec) {
 	}
-	
-	public static void main(String[] args) {
-		int velikost = 5;
-		int[][] test = { { 1, 1, 1, 1, 1 },{ 0, 0, 0, 0, 0 },{ 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0 },{ 0, 0, 0, 0, 0 } };
-		int[][] matrika = generateIntMtrx(5);
-		System.out.println();
-		Pot r = new Pot(velikost);
-		r.resiMatriko(matrika, velikost);
-		System.out.println(dolzina(resitev, velikost));
-	}
-
 }
