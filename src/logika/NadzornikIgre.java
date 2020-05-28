@@ -43,7 +43,6 @@ public class NadzornikIgre {
 			@Override
 			protected Koordinati doInBackground() throws Exception {
 				Koordinati poteza = igra.igralecNaPotezi.inteligenca.izberiPotezo(igra);
-				try {TimeUnit.SECONDS.sleep(1);} catch(Exception e) {};
 				return poteza;
 			}
 			@Override

@@ -3,8 +3,11 @@ package logika;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Scanner;
@@ -41,11 +44,10 @@ public class Igra {
 	public static void main(String[] args) {
 		Igra igra = new Igra(11);
 		igra.odigraj(new Koordinati(5,5));
-		igra.odigraj(new Koordinati(0,0));
 		igra.odigraj(new Koordinati(6,7));
-		System.out.println(igra.plosca.jeMost(new Koordinati(5,5),new Koordinati(6,7)));
+		System.out.println(igra.urejeneMoznePoteze());
+		//System.out.println(igra.plosca.jeMost(new Koordinati(5,5),new Koordinati(6,7)));
 	}
-	
 	
 	public Igra() {
 		konec = false;
@@ -164,6 +166,14 @@ public class Igra {
 		 return plosca.getPlosca();
 	 }
 	 
+	 public NajkrajsaPot najkrajsaPot(Igralec igralec) {
+		 if(igralec == igralec1) {
+			 return plosca.najkrajsaPotIgralec1;
+		 } else if(igralec == igralec2) {
+			 return plosca.najkrajsaPotIgralec2;
+		 }
+		 return null;
+	 }
 	 
 	 public boolean konecIgre() {
 		return plosca.konecIgre();
@@ -197,17 +207,7 @@ public class Igra {
 		 return null;
 	 }
 	 
-	 public int oceniPozicijo(Igralec jaz) {
-		NajkrajsaPot mojaPot = plosca.najkrajsaPot(getIgralecIndex(jaz));
-		if(mojaPot.jeKoncna()) {
-			return Integer.MAX_VALUE;
-		} 
-		NajkrajsaPot nasprotnikovaPot = plosca.najkrajsaPot(getIgralecIndex(nasprotnik(jaz)));
-		if(nasprotnikovaPot.jeKoncna()) {
-			return Integer.MIN_VALUE;
-		}
-		return nasprotnikovaPot.steviloPraznih() - mojaPot.steviloPraznih();
-	}
+	 
 	 
 	 public static Igra kopirajIgro (Igra original) {
 		 Igra kopija = new Igra();
@@ -287,4 +287,45 @@ public class Igra {
 		 Koordinati k = new Koordinati(x, y);
 		 return k;
 	 }
+	 
+	 
+	 public List<Koordinati> urejeneMoznePoteze(){
+		List<Koordinati> poteze = veljavnePoteze();
+		Collections.sort(poteze,new SortKoordinati(this));
+		if(poteze.size() > 20) {
+			poteze = poteze.subList(0, 20);
+		}
+		System.out.println(poteze);
+		return poteze;
+	}
+	 
+	 public int vrednostKoordinate(Koordinati t) {
+			int steviloPotez = poteze.size();
+			Koordinati zadnja = poteze.get(steviloPotez - 1).koordinati;
+			Koordinati predzadnja = poteze.get(steviloPotez - 2).koordinati;
+			int razdalja;
+			NajkrajsaPot pot = najkrajsaPot(igralecNaPotezi);
+			boolean vsebuje = pot.vsebuje(t);
+			int vrednost = velikost;
+			vrednost -= plosca.razdalja(t,predzadnja);
+			vrednost += velikost;
+			vrednost -= plosca.razdalja(t,zadnja);
+			if(vsebuje) {
+				vrednost += 10;
+			};
+			return vrednost;
+		}
+		
+	 
+		static class SortKoordinati implements Comparator<Koordinati> { 
+			private Igra igra;
+			
+			public SortKoordinati(Igra igra){ 
+				this.igra = igra;
+			}
+		    public int compare(Koordinati a, Koordinati b) 
+		    { 
+		    	return igra.vrednostKoordinate(b) - igra.vrednostKoordinate(a);
+		    }
+		} 
 }

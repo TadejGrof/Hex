@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import inteligenca.Inteligenca;
 import splosno.Koordinati;
 
 public class Plosca extends ArrayList<ArrayList<Integer>> {
@@ -173,6 +174,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	}
 	
 	public NajkrajsaPot najkrajsaPot(int igralec) {
+		Inteligenca.steviloRacunanihPoti ++;
 		if (igralec == IGRALEC1) {
 			return najkrajsaPot(SPODNJIROB,ZGORNJIROB,IGRALEC1);
 		} else if(igralec == IGRALEC2) {
@@ -374,12 +376,10 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	public boolean jeMost(Koordinati t1, Koordinati t2) {
 		if (getValue(t1) == getValue(t2) && getValue(t1) != 0) {
 			ArrayList<Koordinati> skupniSosedje = skupniSosedje(t1,t2);
-			if (skupniSosedje.size() == 2) {
-				for ( Koordinati sosed : skupniSosedje) {
-					if(getValue(sosed) != 0) return false;
-				}
-				return true;
+			for ( Koordinati sosed : skupniSosedje) {
+				if(getValue(sosed) == 0) return true;
 			}
+			return false;
 		}
 		return false;
 	}
@@ -404,8 +404,22 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			polna1 = t1;
 			polna2 = t2;
 			ArrayList<Koordinati> sosedje = skupniSosedje(t1,t2);
-			prazna1 = sosedje.get(0);
-			prazna2 = sosedje.get(1);
+			if(sosedje.size() > 1){
+				prazna1 = sosedje.get(0);
+				prazna2 = sosedje.get(1);
+			} else if (sosedje.size() == 1){
+				prazna1 = sosedje.get(0);
+				prazna2 = null;
+			} else {
+				prazna1 = null;
+				prazna2 = null;
+			}
+				
+		}
+		
+		public boolean jeDvojni() {
+			if (prazna2 == null | prazna1 == null) return false;
+			return get(prazna1) == 0 && get(prazna2) == 0;
 		}
 		
 		public boolean greCezPot(NajkrajsaPot pot) {
@@ -425,6 +439,12 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			super();
 		}
 		
+		public boolean vsebuje(Koordinati t) {
+			for (Hex hex: this) {
+				if(hex.getX() == t.getX() && hex.getY() == t.getY()) return true;
+			}
+			return false;
+		}
 		
 		public int steviloPraznih() {
 			int prazne = 0;
