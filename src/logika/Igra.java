@@ -278,12 +278,11 @@ public class Igra {
 			int vrednost = 0;
 			NajkrajsaPot mojaPot = najkrajsaPot(igralecNaPotezi);
 			NajkrajsaPot nasprotnikovaPot = najkrajsaPot(nasprotnik(igralecNaPotezi));
-			int razdaljaOdMojePrazne = mojaPot.razdaljaOdPrazne(t);
-			int razdaljaOdNasprotnikovePrazne = nasprotnikovaPot.razdaljaOdPrazne(t);
 			int steviloMojihPraznih = mojaPot.steviloPraznih();
 			int steviloNasprotnikovihPraznih = nasprotnikovaPot.steviloPraznih();
 			int razlika = steviloMojihPraznih - steviloNasprotnikovihPraznih;
 			if((razlika) >= 0) {
+				int razdaljaOdMojePrazne = mojaPot.razdaljaOdPrazne(t);
 				if (razdaljaOdMojePrazne == 0) {
 					if (razlika > 5) vrednost = 20;
 					else vrednost += 5;
@@ -294,14 +293,19 @@ public class Igra {
 					vrednost += 1;
 				}
 				if (razlika < 4) {
+					int razdaljaOdNasprotnikovePrazne = nasprotnikovaPot.razdaljaOdPrazne(t);
 					if(razdaljaOdNasprotnikovePrazne == 0) {
 						vrednost += 3;
 					} if(razdaljaOdNasprotnikovePrazne == 1) {
 						vrednost += 2;
 					}
 				}
+				int razdaljaOdMojePolne = mojaPot.razdaljaOdPolne(t);
+				if (razdaljaOdMojePolne == 1) vrednost += 5;
 			} else {
+				int razdaljaOdNasprotnikovePrazne = nasprotnikovaPot.razdaljaOdPrazne(t);
 				if( razlika > -4) {
+					int razdaljaOdMojePrazne = mojaPot.razdaljaOdPrazne(t);
 					if (razdaljaOdMojePrazne == 0) {
 						vrednost += 2;
 					} else if(razdaljaOdMojePrazne == 1) {
@@ -321,6 +325,8 @@ public class Igra {
 					if(razlika < -3) vrednost += 3;
 					else vrednost += 2;
 				}
+				int razdaljaOdNasprotnikovePolne = mojaPot.razdaljaOdPolne(t);
+				if (razdaljaOdNasprotnikovePolne == 1) vrednost += 5;
 			}
 			return vrednost;
 	 }

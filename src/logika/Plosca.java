@@ -453,6 +453,19 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			return najmanjsaVrednost;
 		}
 		
+		public int razdaljaOdPolne(Koordinati t) {
+			int najmanjsaVrednost = Integer.MAX_VALUE;
+			int igralec = getValue(get(0));
+			for (Hex hex:this) {
+				int vrednost = getValue(hex);
+				if(vrednost == igralec) {
+					int razdalja = razdalja(hex,t);
+					if (razdalja < najmanjsaVrednost) najmanjsaVrednost = razdalja;
+				}
+			}
+			return najmanjsaVrednost;
+		}
+		
 		public int steviloPraznih() {
 			int prazne = 0;
 			for(Koordinati t:this) {
