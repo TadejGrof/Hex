@@ -255,7 +255,7 @@ public class Inteligenca extends KdoIgra {
 		int nasprotnikovePrazne = nasprotnikovaPot.steviloPraznih();
 		int razlikaPraznih = nasprotnikovePrazne - mojePrazne;
 		
-		return 2 * razlikaPraznih + 3 * steviloDvojnihMostov;
+		return 4 * razlikaPraznih + 2 * steviloDvojnihMostov;
 	}
 	
 	public class OcenjenaPoteza{

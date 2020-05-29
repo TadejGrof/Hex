@@ -102,7 +102,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	public int razdalja(Koordinati t1, Koordinati t2) {
 		int x1 = t1.getX(); int x2 = t2.getX();
 		int y1 = t1.getY(); int y2 = t2.getY();
-		if(t1.equals(t2)) return 0;
+		if(x1 == x2 & y1 == y2) return 0;
 		int razlikaX = Math.abs(x1-x2);
 		int razlikaY = Math.abs(y1-y2);
 		if (razlikaX <= 1 & razlikaY <= 1 ) return 1;
