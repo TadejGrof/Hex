@@ -8,14 +8,12 @@ import javax.swing.SwingConstants;
 public class CenterLabel extends JLabel{
 	private static final long serialVersionUID = 1L;
 	private int ratio;
-	private String text;
 	
 	public CenterLabel() {
 		initialize();
 	}
 	
 	public CenterLabel(String text) {
-		this.text = text;
 		setText(text);
 		initialize();
 	}
@@ -28,8 +26,7 @@ public class CenterLabel extends JLabel{
 	private void initialize() {
 		this.setHorizontalAlignment(SwingConstants.CENTER);
 		ratio = 3;
-		setFont();
-		
+		setFont();	
 	}
 	
 	private void setFont() {

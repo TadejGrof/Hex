@@ -1,8 +1,6 @@
 package logika;
 
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import inteligenca.Inteligenca;
 import splosno.Koordinati;
 
@@ -13,15 +11,13 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	public static final int IGRALEC1 = 1;
 	public static final int IGRALEC2 = 2;
 	
-	
 	private final Hex SPODNJIROB = new Hex(-1,0);
 	private final Hex DESNIROB = new Hex(-2,0);
 	private final Hex ZGORNJIROB = new Hex(-3,0);
 	private final Hex LEVIROB = new Hex(-4,0);
 	
-	private static ArrayList<ArrayList<Koordinati>> plosca;
-	public static LinkedHashMap<Koordinati, Color> stanje;
 	public int velikost;
+	
 	private int zmagovalec;
 	
 	public NajkrajsaPot najkrajsaPotIgralec1;
@@ -46,14 +42,6 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		super(plosca);
 		this.velikost = plosca.velikost;
 		seznamZaIskanje = new SeznamZaIskanje();
-	}
-	
-	public static LinkedHashMap<Koordinati, Color> getStanje(){
-		return stanje;
-	}
-	
-	public ArrayList<ArrayList<Koordinati>> getPlosca(){
-		return plosca;
 	}
 	
 	public int getZmagovalec() {
@@ -99,6 +87,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return sredinske;
 		
 	}
+	
+	
 	public int razdalja(Koordinati t1, Koordinati t2) {
 		int x1 = t1.getX(); int x2 = t2.getX();
 		int y1 = t1.getY(); int y2 = t2.getY();
@@ -131,14 +121,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		}
 		return prazne;
 	}
-	
-	public int get(Koordinati koordinati) {
-		try {
-			return get(koordinati.getY()).get(koordinati.getX());
-		} catch (Exception e){
-			return -1;
-		}
-	}
+
 	
 	public int getValue(Koordinati koordinati) {
 		if (koordinati == ZGORNJIROB) return 1;
@@ -405,7 +388,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		
 		public boolean jeDvojni() {
 			if (prazna2 == null | prazna1 == null) return false;
-			return get(prazna1) == 0 && get(prazna2) == 0;
+			return getValue(prazna1) == 0 && getValue(prazna2) == 0;
 		}
 		
 		public boolean greCezPot(NajkrajsaPot pot) {
@@ -531,7 +514,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		}
 		public void refresh() {
 			for(Hex hex: this) {
-				hex.teza = 100000;
+				hex.teza = Integer.MAX_VALUE;
 				hex.potDo = new NajkrajsaPot();
 			}
 		}
@@ -548,9 +531,9 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		
 		public Hex(int x, int y) {
 			super(x, y);
-			// TODO Auto-generated constructor stub
 		}
-		public int teza = 100000;
+		
+		public int teza = Integer.MAX_VALUE;
 		public NajkrajsaPot potDo = new NajkrajsaPot();
 		
 		public ArrayList<Hex> sosedi(){

@@ -56,6 +56,12 @@ public class IgraPanel extends JPanel{
 		menuBar = new JPanel(new GridLayout(1,0));
 		
 		nazajButton = new JButton("Nazaj");
+		nazajButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				igra.razveljaviZadnjoPotezo();
+				refreshPanel();
+			}
+		});
 		menuBar.add(nazajButton);
 		
 		JPanel labelsPanel = new JPanel(new GridLayout(2,1));
@@ -122,14 +128,11 @@ public class IgraPanel extends JPanel{
 		private static final long serialVersionUID = 1L;
 		
 		private ArrayList<Sestkotnik> sestkotniki;
-		private Sestkotnik hex;
 		private int N;
 		private int height;
 		private int width;
 		private int odmikX;
 		private int odmikY;
-		
-		private int[][] matrika;
 		
 		private int igralnoX;
 		private int igralnoY;
@@ -137,8 +140,6 @@ public class IgraPanel extends JPanel{
 		private int radij;
 		private double visina;
 
-		
-		private Okno okno;
 		private ArrayList<Polygon> polygoni;
 		
 		public Platno() {

@@ -333,7 +333,7 @@ public class MenuPanel extends JPanel{
 						Igralec igralec2 = igralec2Panel.getIgralec();
 						if (igralec1.toString().contentEquals(igralec2.toString())) {
 							showMessageDialog(null,"Izberi razlicni imeni za igralca");
-						} else if( igralec1.getBarva().equals(igralec2.getBarva())) {
+						} else if( igralec1.barva.equals(igralec2.barva)) {
 							showMessageDialog(null,"Izberi razlicni barvi za igralca");
 						} else  {
 							igra.setIgralca(igralec1, igralec2);

@@ -11,7 +11,6 @@ public class Okno {
 	public JFrame frame;
 	private MenuPanel menuPanel;
 	private IgraPanel igraPanel;
-	private JPanel konecPanel;
 	
 	private CardLayout okna;
 	
@@ -30,8 +29,8 @@ public class Okno {
 	
 	public Okno() {	
 		frame = new JFrame();
-		frame.setBounds(60, 20, 1000, 700);
-		//frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		//frame.setBounds(60, 20, 1000, 700);
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		okna = new CardLayout();
@@ -42,11 +41,6 @@ public class Okno {
 		
 		igraPanel = new IgraPanel(this);
 		frame.add(igraPanel, "igra");
-	
-		
-		konecPanel = new JPanel();
-		frame.add(konecPanel, "konec");
-		
 	}
 	
 	public void novaIgra(Igra igra) {

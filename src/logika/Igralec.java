@@ -11,25 +11,15 @@ public class Igralec {
 	
 	public int tip;
 	
-	private String ime;
-	private Color barva;
-	private Igra igra;
+	public String ime;
+	public Color barva;
 	
 	public Inteligenca inteligenca;
 	
-	public Igralec(String ime,Igra igra, Color barva) {
-		this.igra = igra;
+	public Igralec(String ime, Color barva) {
 		this.ime = ime;
 		tip = IGRALEC;
 		this.barva = barva;
-	}
-	
-	public Igralec(String ime, Igra igra, Color barva, int tip) {
-		this.igra = igra;
-		this.ime = ime;
-		this.barva = barva;
-		this.tip = tip;
-		setInteligenca();
 	}
 	
 	public Igralec(String ime, Color barva, int tip) {
@@ -37,14 +27,6 @@ public class Igralec {
 		this.barva = barva;
 		this.tip = tip;
 		setInteligenca();
-	}
-	
-	public void setIgra(Igra igra) {
-		this.igra = igra;
-	}
-	
-	public Color getBarva() {
-		return this.barva;
 	}
 	
 	@Override

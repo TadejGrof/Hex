@@ -34,7 +34,6 @@ public class Inteligenca extends KdoIgra {
 
 	
 	private int globina;
-	private int tip;
 	
 	public Plosca plosca;
 	
@@ -44,20 +43,11 @@ public class Inteligenca extends KdoIgra {
 
 	public Inteligenca() {
 		super("Hex'n'Šus");
-		// možna imena so še
-		// - Brogrammer
-		// - (Math.PI)zza
-		// - ekipaBrogrammer
-		// - bitsPlease
-		// - Algebros
-		// - Epsilon < 0
-		this.tip = TEKMOVANJE;
 		this.globina = 4;
 	}
 	
 	public Inteligenca(int tip) {
 		super("Racunalnik");
-		this.tip = tip;
 		if(tip == LAHKO) {
 			this.globina = 2;
 		} else if ( tip == SREDNJE) {
@@ -131,35 +121,11 @@ public class Inteligenca extends KdoIgra {
 	// prvi izmed seznamov je seznam tistih sosedov, ki jih je položil igralec na potezi
 	// drugi seznam je seznam sosedov, ki jih je položil nasprotnik igralca na potezi
 	// tretji seznam predstavljajo sosedi, ki so še nezasedena polja
-	public ArrayList<ArrayList<Koordinati>> vrniSeznameSosedov(Igra igra, Koordinati k) {
-		ArrayList<Koordinati> sosedi1 = new ArrayList<Koordinati>();
-		ArrayList<Koordinati> sosedi2 = new ArrayList<Koordinati>();
-		ArrayList<Koordinati> točkePrazne = new ArrayList<Koordinati>();
-		ArrayList<ArrayList<Koordinati>> končenSeznam = new ArrayList<ArrayList<Koordinati>>();
-		
-		int[][] matrika = igra.plosca.getMatrika();
-		ArrayList<Koordinati> sosedi = igra.plosca.sosednje(k.getX(), k.getY());
-		
-		for (Koordinati sosed : sosedi) {
-			int x = sosed.getX();
-			int y = sosed.getY();
-			
-			if (matrika[y][x] == 1) {
-				sosedi1.add(sosed);
-			} else if (matrika[y][x] == 2) {
-				sosedi2.add(sosed);
-			} else {
-				točkePrazne.add(sosed);
-			}
-		}
-		končenSeznam.add(sosedi1);
-		končenSeznam.add(sosedi2);
-		končenSeznam.add(točkePrazne);
-		return končenSeznam;
-	}
+	
 	
 	// --minimax algoritem 1.0 (ne dela čisto v redu in ni ključen za delovanje kode)
-	public OcenjenaPoteza minimax(Igra igra, int globina, Igralec jaz) {
+	@SuppressWarnings("unused")
+	private OcenjenaPoteza minimax(Igra igra, int globina, Igralec jaz) {
 		int ocena;
 		ArrayList<Koordinati> veljavne = igra.veljavnePoteze();
 		OcenjenaPoteza najboljsaPoteza = null;
@@ -255,7 +221,7 @@ public class Inteligenca extends KdoIgra {
 		int nasprotnikovePrazne = nasprotnikovaPot.steviloPraznih();
 		int razlikaPraznih = nasprotnikovePrazne - mojePrazne;
 		
-		return 4 * razlikaPraznih + 2 * steviloDvojnihMostov;
+		return 3 * razlikaPraznih + 2 * steviloDvojnihMostov;
 	}
 	
 	public class OcenjenaPoteza{
@@ -267,28 +233,5 @@ public class Inteligenca extends KdoIgra {
 			this.ocena = ocena;
 		}
 	}
- 
-
-	// novaMatrika označuje matriko, ki je pripravljena, da se jo spusti čez class BoljšaPot,
-	// kjer se za najkrajšo pot upoštevajo zgolj celice, ki so označene z 1, mimo tistih, ki so 0,
-	// pa funkcija ne more (na poljih z 0 so ovire na poti, torej soigralčevi že postavljeni blocki)
-	public static int[][] pretvoriMatriko (Igra igra) {
-		Igralec igralec = igra.igralecNaPotezi;
-		int igralčevIndeks = igra.getIgralecIndex(igralec);
-		int[][] novaMatrika = new int[igra.plosca.getVelikost()][igra.plosca.getVelikost()];
-		int[][] matrika = igra.plosca.getMatrika();
-		for (int i = 0; i < igra.plosca.getVelikost(); i++) {
-			for (int j = 0; j < igra.plosca.getVelikost(); j++) {
-				if (matrika[i][j] == igralčevIndeks || matrika[i][j] == 0) {
-					novaMatrika[i][j] = 1;
-				} else {
-					novaMatrika[i][j] = 0;
-				}
-			}
-		}
-		return novaMatrika;
-	}
-	
-
-		
+ 		
 }

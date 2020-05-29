@@ -1,7 +1,6 @@
 package logika;
 
 import java.util.HashMap;
-import java.util.Random;
 import javax.swing.SwingWorker;
 
 import graficniVmesnik.IgraPanel;
@@ -12,8 +11,6 @@ public class NadzornikIgre {
 	public static boolean clovekNaPotezi;
 	public static IgraPanel igraPanel;
 	public static Igra igra = null;
-	
-	private static Random random = new Random();
 	
 	public static void novaIgra(Igra novaIgra) {
 		igra = novaIgra;
@@ -35,6 +32,8 @@ public class NadzornikIgre {
 		}
 	}
 	
+	
+	
 	private static void racunalnikovaPoteza() {
 		SwingWorker<Koordinati,Void> worker = new SwingWorker<Koordinati,Void>(){
 			@Override
@@ -43,7 +42,7 @@ public class NadzornikIgre {
 				Koordinati poteza = igra.igralecNaPotezi.inteligenca.izberiPotezo(igra);
 				long endTime = System.currentTimeMillis();
 				System.out.println("That took " + (endTime - startTime) + " milliseconds");
-				
+	
 				return poteza;
 			}
 			@Override
