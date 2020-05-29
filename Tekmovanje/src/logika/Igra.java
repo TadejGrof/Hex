@@ -267,8 +267,8 @@ public class Igra {
 	 public List<Koordinati> urejeneMoznePoteze(){
 		List<Koordinati> poteze = veljavnePoteze();
 		Collections.sort(poteze,new SortKoordinati(this));
-		if(poteze.size() > 18) {
-			poteze = poteze.subList(0, 18);
+		if(poteze.size() > 20) {
+			poteze = poteze.subList(0, 20);
 		}
 		return poteze;
 	}
@@ -280,7 +280,7 @@ public class Igra {
 			NajkrajsaPot nasprotnikovaPot = najkrajsaPot(nasprotnik(igralecNaPotezi));
 			int steviloMojihPraznih = mojaPot.steviloPraznih();
 			int steviloNasprotnikovihPraznih = nasprotnikovaPot.steviloPraznih();
-			int razlika = steviloMojihPraznih - steviloNasprotnikovihPraznih;
+			int razlika = steviloNasprotnikovihPraznih - steviloMojihPraznih;
 			if((razlika) >= 0) {
 				int razdaljaOdMojePrazne = mojaPot.razdaljaOdPrazne(t);
 				if (razdaljaOdMojePrazne == 0) {
