@@ -1,10 +1,7 @@
 package logika;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
 import javax.swing.SwingWorker;
 
 import graficniVmesnik.IgraPanel;
@@ -42,7 +39,11 @@ public class NadzornikIgre {
 		SwingWorker<Koordinati,Void> worker = new SwingWorker<Koordinati,Void>(){
 			@Override
 			protected Koordinati doInBackground() throws Exception {
+				long startTime = System.currentTimeMillis();
 				Koordinati poteza = igra.igralecNaPotezi.inteligenca.izberiPotezo(igra);
+				long endTime = System.currentTimeMillis();
+				System.out.println("That took " + (endTime - startTime) + " milliseconds");
+				
 				return poteza;
 			}
 			@Override

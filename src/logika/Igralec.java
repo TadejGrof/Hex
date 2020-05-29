@@ -1,11 +1,7 @@
 package logika;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Random;
-
 import inteligenca.Inteligenca;
-import splosno.Koordinati;
 
 public class Igralec {
 	public static final int IGRALEC = 0;

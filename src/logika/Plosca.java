@@ -2,12 +2,7 @@ package logika;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 import inteligenca.Inteligenca;
 import splosno.Koordinati;
 
@@ -107,6 +102,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	public int razdalja(Koordinati t1, Koordinati t2) {
 		int x1 = t1.getX(); int x2 = t2.getX();
 		int y1 = t1.getY(); int y2 = t2.getY();
+		if(t1.equals(t2)) return 0;
 		int razlikaX = Math.abs(x1-x2);
 		int razlikaY = Math.abs(y1-y2);
 		if (razlikaX <= 1 & razlikaY <= 1 ) return 1;
@@ -429,11 +425,32 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			super();
 		}
 		
+		public ArrayList<Koordinati> prazne(){
+			ArrayList<Koordinati> prazne = new ArrayList<Koordinati>();
+			for (Hex hex:this) {
+				int vrednost = getValue(hex);
+				if(vrednost == 0) prazne.add(hex);
+			}
+			return prazne;
+		}
+		
 		public boolean vsebuje(Koordinati t) {
 			for (Hex hex: this) {
 				if(hex.getX() == t.getX() && hex.getY() == t.getY()) return true;
 			}
 			return false;
+		}
+		
+		public int razdaljaOdPrazne(Koordinati t) {
+			int najmanjsaVrednost = Integer.MAX_VALUE;
+			for (Hex hex:this) {
+				int vrednost = getValue(hex);
+				if(vrednost == 0) {
+					int razdalja = razdalja(hex,t);
+					if (razdalja < najmanjsaVrednost) najmanjsaVrednost = razdalja;
+				}
+			}
+			return najmanjsaVrednost;
 		}
 		
 		public int steviloPraznih() {
@@ -454,6 +471,14 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 				}
 			}
 			return mosti;
+		}
+		
+		public int steviloDvojnihMostov() {
+			int stevilo = 0;
+			for(Most most:mosti()) {
+				if (most.jeDvojni()) stevilo ++;
+			}
+			return stevilo;
 		}
 		
 		public int steviloMostov() {

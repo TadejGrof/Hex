@@ -1,19 +1,14 @@
 package logika;
 
 import java.awt.Color;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.Set;
 
-import inteligenca.Inteligenca;
 import logika.Plosca.NajkrajsaPot;
 import splosno.Koordinati;
 
@@ -44,7 +39,7 @@ public class Igra {
 		Igra igra = new Igra(11);
 		igra.odigraj(new Koordinati(5,5));
 		igra.odigraj(new Koordinati(6,7));
-		System.out.println(igra.urejeneMoznePoteze());
+		System.out.println(igra.plosca.razdalja(new Koordinati(5,5), new Koordinati(5,5)));
 		//System.out.println(igra.plosca.jeMost(new Koordinati(5,5),new Koordinati(6,7)));
 	}
 	
@@ -272,29 +267,63 @@ public class Igra {
 	 public List<Koordinati> urejeneMoznePoteze(){
 		List<Koordinati> poteze = veljavnePoteze();
 		Collections.sort(poteze,new SortKoordinati(this));
-		if(poteze.size() > 20) {
-			poteze = poteze.subList(0, 20);
+		if(poteze.size() > 18) {
+			poteze = poteze.subList(0, 18);
 		}
-		System.out.println(poteze);
 		return poteze;
 	}
 	 
+	 
 	 public int vrednostKoordinate(Koordinati t) {
-			int steviloPotez = poteze.size();
-			Koordinati zadnja = poteze.get(steviloPotez - 1).koordinati;
-			Koordinati predzadnja = poteze.get(steviloPotez - 2).koordinati;
-			int razdalja;
-			NajkrajsaPot pot = najkrajsaPot(igralecNaPotezi);
-			boolean vsebuje = pot.vsebuje(t);
-			int vrednost = velikost;
-			vrednost -= plosca.razdalja(t,predzadnja);
-			vrednost += velikost;
-			vrednost -= plosca.razdalja(t,zadnja);
-			if(vsebuje) {
-				vrednost += 10;
-			};
+			int vrednost = 0;
+			NajkrajsaPot mojaPot = najkrajsaPot(igralecNaPotezi);
+			NajkrajsaPot nasprotnikovaPot = najkrajsaPot(nasprotnik(igralecNaPotezi));
+			int razdaljaOdMojePrazne = mojaPot.razdaljaOdPrazne(t);
+			int razdaljaOdNasprotnikovePrazne = nasprotnikovaPot.razdaljaOdPrazne(t);
+			int steviloMojihPraznih = mojaPot.steviloPraznih();
+			int steviloNasprotnikovihPraznih = nasprotnikovaPot.steviloPraznih();
+			int razlika = steviloMojihPraznih - steviloNasprotnikovihPraznih;
+			if((razlika) >= 0) {
+				if (razdaljaOdMojePrazne == 0) {
+					if (razlika > 5) vrednost = 20;
+					else vrednost += 5;
+				} else if(razdaljaOdMojePrazne == 1) {
+					if (razlika > 2) vrednost += 5;
+					else vrednost += 3;
+				} else if (razdaljaOdMojePrazne == 2) {
+					vrednost += 1;
+				}
+				if (razlika < 4) {
+					if(razdaljaOdNasprotnikovePrazne == 0) {
+						vrednost += 3;
+					} if(razdaljaOdNasprotnikovePrazne == 1) {
+						vrednost += 2;
+					}
+				}
+			} else {
+				if( razlika > -4) {
+					if (razdaljaOdMojePrazne == 0) {
+						vrednost += 2;
+					} else if(razdaljaOdMojePrazne == 1) {
+						vrednost += 1;
+					} 
+				}
+				if(razdaljaOdNasprotnikovePrazne == 0) {
+					if (razlika == -1) vrednost += 4;
+					else vrednost += 2;
+				} else if(razdaljaOdNasprotnikovePrazne == 1) {
+					if(razlika < -3) {
+						vrednost += 6;
+					}
+					else if(razlika == -1) vrednost += 3;
+					else vrednost += 5;
+				} else if (razdaljaOdNasprotnikovePrazne == 2) {
+					if(razlika < -3) vrednost += 3;
+					else vrednost += 2;
+				}
+			}
 			return vrednost;
-		}
+	 }
 		
 	 
 		static class SortKoordinati implements Comparator<Koordinati> { 
@@ -303,8 +332,12 @@ public class Igra {
 			public SortKoordinati(Igra igra){ 
 				this.igra = igra;
 			}
-		    public int compare(Koordinati a, Koordinati b) 
-		    { 
+			
+			public SortKoordinati(Igra igra, int tip) {
+				this.igra = igra;
+			}
+			
+		    public int compare(Koordinati a, Koordinati b) {
 		    	return igra.vrednostKoordinate(b) - igra.vrednostKoordinate(a);
 		    }
 		} 
