@@ -70,8 +70,6 @@ public class Inteligenca extends KdoIgra {
 		}
 	}
 	
-
-	
 	// Funkcija, ki jo uporabimo za določitev prve poteze. Izmed vseh sredinskih ploščic
 	// naključno izberemo tisto, na kateri odigramo prvo potezo.
 	public Koordinati nakljucnaSredinska(Igra igra) {
