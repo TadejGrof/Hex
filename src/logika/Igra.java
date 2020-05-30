@@ -29,27 +29,34 @@ public class Igra {
 
 	public ArrayList<Poteza> poteze;
 	
+	
 	public static void main(String[] args) {
 		// POSKUS
 	}
 	
+	
+	// ustvari igro velikosti 11
 	public Igra() {
 		velikost = 11;
 		initialize();
 	}
 	
+	// ustvari igro poljubne velikosti
 	 public Igra(int velikost) {
 		 this.velikost = velikost;
 		 initialize();
 	 }
 	 
+	 // odigra nakljucno potezo.
+	 // Trenutno ni v uporabi..uporabljala se je pri racunalniku z nakljucno inteligenco
 	 public void nakljucnaPoteza(){
 		Random random = new Random();
 		ArrayList<Koordinati> veljavne = veljavnePoteze();
 		odigraj(veljavne.get(random.nextInt(veljavne.size())));
 	 }
 	 
-	 
+	 // ustvari vse potrebne sezname, nastavi igralca ter ustvari plosco,
+	 // zacne igralec1
 	 private void initialize() {
 		 poteze = new ArrayList<Poteza>();
 		 igralca = new ArrayList<Igralec>();
@@ -63,6 +70,7 @@ public class Igra {
 		 igralecNaPotezi = igralec1; 
 	 }
 	 
+	 // vrne nasprotnika za podanega igralca
 	 public Igralec nasprotnik(Igralec igralec) {
 		 if(igralec == igralec1) {
 			 return igralec2;
@@ -72,6 +80,7 @@ public class Igra {
 		 return null;
 	 }
 	 
+	 // za danega igralca vrne index, ki se igra na plosci
 	 public Integer getIgralecIndex(Igralec igralec) {
 		 if(igralec.equals(igralec1)){
 			 return 1;
@@ -81,6 +90,9 @@ public class Igra {
 		 return 0;
 	 }
 	 
+	 // za index igralca vrne njegovo barvo.
+	 // Uporabljena v graficnem vmesniku ko potrebujemo barvo
+	 // za igrano vrednost na plosci
 	 public Color getIgralecBarva(int index) {
 		 if (index == 1) {
 			 return igralec1.barva;
@@ -90,6 +102,9 @@ public class Igra {
 		 return PRAZNO;
 	 }
 	 
+	 
+	 // nastavi nova igralca.
+	 // Poklice se na zacetku igre
 	 public void setIgralca(Igralec igralec1, Igralec igralec2) {
 		 this.igralec1 = igralec1;
 		 this.igralec2 = igralec2;
@@ -100,6 +115,8 @@ public class Igra {
 		 igralca.add(igralec2);
 	 }
 	 
+	 
+	 // preveri če je poteza veljavna in jo odigra
 	 public boolean odigraj(Koordinati koordinati) {
 		 if(jeVeljavnaPoteza(koordinati)) {
 			 plosca.odigraj(koordinati,getIgralecIndex(igralecNaPotezi));
@@ -110,15 +127,15 @@ public class Igra {
 		 return false;
 	 }
 	 
+	 // nastavi naslednjega na potezi
 	 private void naslednjiNaPotezi() {
-		 int index = igralca.indexOf(igralecNaPotezi);
-		 if ( index == 0) {
-			 igralecNaPotezi = igralca.get(1);
-		 } else {
-			 igralecNaPotezi = igralca.get(0);
-		 }
+		 igralecNaPotezi = nasprotnik(igralecNaPotezi);
 	 }
 	 
+	 
+	 // razveljavi zadnjo igrano potezo.
+	 // V primeru da igralec igra z racunalnikov razveljavi zadnji dve.
+	 // deluje samo takrat ko je igra še v teku in je na potezi človek.
 	 public void razveljaviZadnjoPotezo() {
 		 int steviloPotez = poteze.size();
 		 if(Igralec.jeRacunalnik(igralec1.tip) && Igralec.jeRacunalnik(igralec2.tip)) return;
@@ -147,15 +164,19 @@ public class Igra {
 		 }
 	 }
 	 
+	 // preveri če je podana poteza veljavna
 	 private boolean jeVeljavnaPoteza(Koordinati koordinati) {
 		 ArrayList<Koordinati> veljavne = veljavnePoteze();
 		 return veljavne.contains(koordinati);
 	 }
 	 
+	 
+	 // vrne vse veljavne poteze
 	 public ArrayList<Koordinati> veljavnePoteze(){
 		 return plosca.prazne();
 	 }
 	 
+	 // vrne najkrajso pot za podanega igralca
 	 public NajkrajsaPot najkrajsaPot(Igralec igralec) {
 		 if(igralec == igralec1) {
 			 return plosca.najkrajsaPotIgralec1;
@@ -165,10 +186,13 @@ public class Igra {
 		 return null;
 	 }
 	 
+	 
+	 // preveri če je igre konec
 	 public boolean konecIgre() {
 		return plosca.konecIgre();
 	 }
 	 
+	 // vrne stanje igre
 	 public int getStanje() {
 		 if (konecIgre()) {
 			 if(zmagovalecIgre() == igralec1) {
@@ -180,6 +204,7 @@ public class Igra {
 		 return IGRA;
 	 }
 	 
+	 // vrne zmagovalca igre
 	 public Igralec zmagovalecIgre() {
 		int zmagovalec = plosca.getZmagovalec();
 		if (zmagovalec > 0) {
@@ -188,16 +213,8 @@ public class Igra {
 		return null;
 	 }
 	 
-	 public Igralec getIgralec(Color barva) {
-		 for(Igralec igralec: igralca) {
-			 if (igralec.barva.equals(barva)) {
-				 return igralec;
-			 }
-		 }
-		 return null;
-	 }
 	 
-	 
+	 // vrne kopijo igre
 	 public Igra kopirajIgro () {
 		 Igra kopija = new Igra();
 		 kopija.velikost = velikost;
@@ -208,87 +225,17 @@ public class Igra {
 		 return kopija;
 	 }
 	 
-	 public List<Koordinati> urejeneMoznePoteze(){
-		List<Koordinati> poteze = veljavnePoteze();
-		Collections.sort(poteze,new SortKoordinati(this));
-		if(poteze.size() > 20) {
-			poteze = poteze.subList(0, 20);
+	 
+	 // class omogoča beleženje potez v seznamu s pomočjo katera potem
+	 // lahko razveljavimo zadnjo potezo ali pa doimo število že igranih potez.
+	 public class Poteza {
+			public Igralec igralec;
+			public Koordinati koordinati;
+			
+			public Poteza(Igralec igralec, Koordinati koordinati) {
+				this.igralec = igralec;
+				this.koordinati = koordinati;
+			}
+			
 		}
-		return poteze;
-	}
-	 
-	 
-	 public int vrednostKoordinate(Koordinati t) {
-			int vrednost = 0;
-			NajkrajsaPot mojaPot = najkrajsaPot(igralecNaPotezi);
-			NajkrajsaPot nasprotnikovaPot = najkrajsaPot(nasprotnik(igralecNaPotezi));
-			int steviloMojihPraznih = mojaPot.steviloPraznih();
-			int steviloNasprotnikovihPraznih = nasprotnikovaPot.steviloPraznih();
-			int razlika = steviloNasprotnikovihPraznih - steviloMojihPraznih;
-			if((razlika) >= 0) {
-				int razdaljaOdMojePrazne = mojaPot.razdaljaOdPrazne(t);
-				if (razdaljaOdMojePrazne == 0) {
-					if (razlika > 5) vrednost = 20;
-					else vrednost += 5;
-				} else if(razdaljaOdMojePrazne == 1) {
-					if (razlika > 2) vrednost += 5;
-					else vrednost += 3;
-				} else if (razdaljaOdMojePrazne == 2) {
-					vrednost += 1;
-				}
-				if (razlika < 4) {
-					int razdaljaOdNasprotnikovePrazne = nasprotnikovaPot.razdaljaOdPrazne(t);
-					if(razdaljaOdNasprotnikovePrazne == 0) {
-						vrednost += 3;
-					} if(razdaljaOdNasprotnikovePrazne == 1) {
-						vrednost += 2;
-					}
-				}
-				int razdaljaOdMojePolne = mojaPot.razdaljaOdPolne(t);
-				if (razdaljaOdMojePolne == 1) vrednost += 5;
-			} else {
-				int razdaljaOdNasprotnikovePrazne = nasprotnikovaPot.razdaljaOdPrazne(t);
-				if( razlika > -4) {
-					int razdaljaOdMojePrazne = mojaPot.razdaljaOdPrazne(t);
-					if (razdaljaOdMojePrazne == 0) {
-						vrednost += 2;
-					} else if(razdaljaOdMojePrazne == 1) {
-						vrednost += 1;
-					} 
-				}
-				if(razdaljaOdNasprotnikovePrazne == 0) {
-					if (razlika == -1) vrednost += 4;
-					else vrednost += 2;
-				} else if(razdaljaOdNasprotnikovePrazne == 1) {
-					if(razlika < -3) {
-						vrednost += 6;
-					}
-					else if(razlika == -1) vrednost += 3;
-					else vrednost += 5;
-				} else if (razdaljaOdNasprotnikovePrazne == 2) {
-					if(razlika < -3) vrednost += 3;
-					else vrednost += 2;
-				}
-				int razdaljaOdNasprotnikovePolne = mojaPot.razdaljaOdPolne(t);
-				if (razdaljaOdNasprotnikovePolne == 1) vrednost += 5;
-			}
-			return vrednost;
-	 }
-		
-	 
-		static class SortKoordinati implements Comparator<Koordinati> { 
-			private Igra igra;
-			
-			public SortKoordinati(Igra igra){ 
-				this.igra = igra;
-			}
-			
-			public SortKoordinati(Igra igra, int tip) {
-				this.igra = igra;
-			}
-			
-		    public int compare(Koordinati a, Koordinati b) {
-		    	return igra.vrednostKoordinate(b) - igra.vrednostKoordinate(a);
-		    }
-		} 
 }

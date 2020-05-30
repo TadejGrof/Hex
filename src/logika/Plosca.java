@@ -25,10 +25,14 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	
 	private SeznamZaIskanje seznamZaIskanje;
 	
+	
 	public Plosca(int velikost) {
 		this.velikost = velikost;
+		// seznam s pomočjo katerega iščemo najkrajsi poti za oba igralca
 		seznamZaIskanje = new SeznamZaIskanje();
 		int i; int j;
+		// ustvari seznam seznamov s katerim so predstavljene vrstice in stolpci
+		// ter vrednosti na posameznem polju
 		for(i = 0; i < velikost; i++) {
 			ArrayList<Integer> vrstica = new ArrayList<Integer>();
 			for(j = 0; j < velikost; j++) {
@@ -38,23 +42,20 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		}
 	}
 	
-	public Plosca(Plosca plosca) {
-		super(plosca);
-		this.velikost = plosca.velikost;
-		seznamZaIskanje = new SeznamZaIskanje();
-	}
-	
+	// vrne zmagovalca, katerega najkrajsa pot je koncna
 	public int getZmagovalec() {
 		return zmagovalec;
 	}
 	
-	
-	//samo za 11X11;
+	// preveri če je dana koordinata sredinska
 	public boolean jeSredinska(Koordinati t) {
 		ArrayList<Koordinati> sredinske = getSredinske();
 		return sredinske.contains(t);
 	}
 	
+	
+	// vrne sredinske koordinate glede na velikost plosce
+	// vecja je plosca vec je sredinskih
 	public ArrayList<Koordinati> getSredinske(){
 		ArrayList<Koordinati> sredinske = new ArrayList<Koordinati>();
 		int sredina = velikost / 2;
@@ -88,7 +89,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		
 	}
 	
-	
+	// izracuna razdaljo med danima koordinatama,
+	// na podlagi polj, ki jih je potrebno prepotovati od ene do druge.
 	public int razdalja(Koordinati t1, Koordinati t2) {
 		int x1 = t1.getX(); int x2 = t2.getX();
 		int y1 = t1.getY(); int y2 = t2.getY();
@@ -108,6 +110,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return 0;
 	}
 	
+	// pogleda seznam seznamov ki predstavlja plosco ter vrne vse katerih vrenost
+	// je enaka 0, kar pomeni, da še ni bila igrana
 	public ArrayList<Koordinati> prazne() {
 		ArrayList<Koordinati> prazne = new ArrayList<Koordinati>();
 		int i; int j;
@@ -123,6 +127,9 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 	}
 
 	
+	// vrne vrednost na polju, ki ga predstavlja podana koordinata,
+	// vrednosti imajo prav tako robovi. S pomočjo tega lahko izračunamo najkrajšo pot
+	// od enega roba do drugega
 	public int getValue(Koordinati koordinati) {
 		if (koordinati == ZGORNJIROB) return 1;
 		if (koordinati == SPODNJIROB) return 1;
@@ -135,6 +142,9 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		}
 	}
 	
+	
+	// na podano mesto odigra vrednost igra, ter nastavi novi najkrajsi poti za 
+	// oba igralca
 	public void odigraj(Koordinati koordinati, int igralec) {
 		ArrayList<Integer> vrstica = get(koordinati.getY()); 
 		vrstica.set(koordinati.getX(), igralec);
@@ -219,6 +229,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return tocke;
 	}
 	
+	// preveri če je katera od najkrajsih poti koncna in tako vrne če 
+	// je že konec igre ali še ne
 	public boolean konecIgre() {
 		if(najkrajsaPotIgralec1 == null | najkrajsaPotIgralec2 == null) return false;
 		if (najkrajsaPotIgralec1.jeKoncna()) {

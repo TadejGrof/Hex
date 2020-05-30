@@ -16,12 +16,6 @@ public class Igralec {
 	
 	public Inteligenca inteligenca;
 	
-	public Igralec(String ime, Color barva) {
-		this.ime = ime;
-		tip = IGRALEC;
-		this.barva = barva;
-	}
-	
 	public Igralec(String ime, Color barva, int tip) {
 		this.ime = ime;
 		this.barva = barva;
@@ -34,6 +28,8 @@ public class Igralec {
 		return ime;
 	}
 	
+	
+	// nastavi inteligenco za racunalniskega igralca
 	public void setInteligenca() {
 		if(tip == LAHEK_RACUNALNIK) {
 			this.inteligenca = new Inteligenca(Inteligenca.LAHKO);
@@ -44,6 +40,8 @@ public class Igralec {
 		}
 	}
 	
+	
+	// preveri če je igralec računalnik
 	public static boolean jeRacunalnik(int tip) {
 		return tip == LAHEK_RACUNALNIK | tip == SREDNJI_RACUNALNIK | tip == TEZEK_RACUNALNIK;
 	}

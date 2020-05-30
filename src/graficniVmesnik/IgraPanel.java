@@ -234,8 +234,8 @@ public class IgraPanel extends JPanel{
 		protected void paintComponent(Graphics g) {
 			polygoni.clear();
 			super.paintComponent(g);
-			Color igralec1 = igra.getIgralecBarva(1);
-			Color igralec2 = igra.getIgralecBarva(2);
+			Color igralec1 = igra.igralec1.barva;
+			Color igralec2 = igra.igralec2.barva;
 			
 			// za vsak šestkonik iz seznama ustvarjenih
 			for (Sestkotnik hex: sestkotniki) {
@@ -313,15 +313,15 @@ public class IgraPanel extends JPanel{
 		}
 		
 		// v primeru spremenjene velikosti okna ponovno izračuna vse vrednosti
-				// in ustvari vse na novo
-				public void componentResized(ComponentEvent e) {
-					this.removeAll();
-					sestkotniki.clear();
-					this.height = this.getHeight();
-					this.width = this.getWidth();
-					initialize();
-					repaint();
-				}
+		// in ustvari vse na novo
+		public void componentResized(ComponentEvent e) {
+			this.removeAll();
+			sestkotniki.clear();
+			this.height = this.getHeight();
+			this.width = this.getWidth();
+			initialize();
+			repaint();
+		}
 
 /////////////////////////////////////////////////////////////////////////////////////
 				

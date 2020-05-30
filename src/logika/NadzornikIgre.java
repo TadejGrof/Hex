@@ -6,6 +6,9 @@ import javax.swing.SwingWorker;
 import graficniVmesnik.IgraPanel;
 import splosno.Koordinati;
 
+
+// deluje enako kot nadzornikIgre iz predavanj.
+
 public class NadzornikIgre {
 	public static HashMap<Igralec,Integer> tipaIgralcev;
 	public static boolean clovekNaPotezi;

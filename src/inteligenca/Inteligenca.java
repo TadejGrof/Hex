@@ -170,7 +170,7 @@ public class Inteligenca extends KdoIgra {
 		
 		if (igra.igralecNaPotezi == jaz) {ocena = scoreMin;} else {ocena = scoreMax;}
 		
-		List<Koordinati> moznePoteze = igra.urejeneMoznePoteze();
+		List<Koordinati> moznePoteze = urejeneMoznePoteze(igra);
 		
 		Koordinati kandidat = moznePoteze.get(0);
 		
@@ -231,5 +231,89 @@ public class Inteligenca extends KdoIgra {
 			this.ocena = ocena;
 		}
 	}
- 		
+	
+	
+	public List<Koordinati> urejeneMoznePoteze(Igra igra){
+		List<Koordinati> poteze = igra.veljavnePoteze();
+		Collections.sort(poteze,new SortKoordinati(igra));
+		if(poteze.size() > 20) {
+			poteze = poteze.subList(0, 20);
+		}
+		return poteze;
+	}
+	 
+	 
+	 public int vrednostKoordinate(Koordinati t,Igra igra) {
+		int vrednost = 0;
+		NajkrajsaPot mojaPot = igra.najkrajsaPot(igra.igralecNaPotezi);
+		NajkrajsaPot nasprotnikovaPot = igra.najkrajsaPot(igra.nasprotnik(igra.igralecNaPotezi));
+		int steviloMojihPraznih = mojaPot.steviloPraznih();
+		int steviloNasprotnikovihPraznih = nasprotnikovaPot.steviloPraznih();
+		int razlika = steviloNasprotnikovihPraznih - steviloMojihPraznih;
+		if((razlika) >= 0) {
+			int razdaljaOdMojePrazne = mojaPot.razdaljaOdPrazne(t);
+			if (razdaljaOdMojePrazne == 0) {
+				if (razlika > 5) vrednost = 20;
+				else vrednost += 5;
+			} else if(razdaljaOdMojePrazne == 1) {
+				if (razlika > 2) vrednost += 5;
+				else vrednost += 3;
+			} else if (razdaljaOdMojePrazne == 2) {
+				vrednost += 1;
+			}
+			if (razlika < 4) {
+				int razdaljaOdNasprotnikovePrazne = nasprotnikovaPot.razdaljaOdPrazne(t);
+				if(razdaljaOdNasprotnikovePrazne == 0) {
+					vrednost += 3;
+				} if(razdaljaOdNasprotnikovePrazne == 1) {
+					vrednost += 2;
+				}
+			}
+			int razdaljaOdMojePolne = mojaPot.razdaljaOdPolne(t);
+			if (razdaljaOdMojePolne == 1) vrednost += 5;
+		} else {
+			int razdaljaOdNasprotnikovePrazne = nasprotnikovaPot.razdaljaOdPrazne(t);
+			if( razlika > -4) {
+				int razdaljaOdMojePrazne = mojaPot.razdaljaOdPrazne(t);
+				if (razdaljaOdMojePrazne == 0) {
+					vrednost += 2;
+				} else if(razdaljaOdMojePrazne == 1) {
+					vrednost += 1;
+				} 
+			}
+			if(razdaljaOdNasprotnikovePrazne == 0) {
+				if (razlika == -1) vrednost += 4;
+				else vrednost += 2;
+			} else if(razdaljaOdNasprotnikovePrazne == 1) {
+				if(razlika < -3) {
+					vrednost += 6;
+				}
+				else if(razlika == -1) vrednost += 3;
+				else vrednost += 5;
+			} else if (razdaljaOdNasprotnikovePrazne == 2) {
+				if(razlika < -3) vrednost += 3;
+				else vrednost += 2;
+			}
+			int razdaljaOdNasprotnikovePolne = mojaPot.razdaljaOdPolne(t);
+			if (razdaljaOdNasprotnikovePolne == 1) vrednost += 5;
+		}
+		return vrednost;
+	 }
+		
+	 
+	private class SortKoordinati implements Comparator<Koordinati> { 
+		private Igra igra;
+		
+		public SortKoordinati(Igra igra){ 
+			this.igra = igra;
+		}
+		
+		public SortKoordinati(Igra igra, int tip) {
+			this.igra = igra;
+		}
+		
+	    public int compare(Koordinati a, Koordinati b) {
+	    	return vrednostKoordinate(b,igra) - vrednostKoordinate(a,igra);
+	    }
+	} 		
 }
