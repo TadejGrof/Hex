@@ -110,13 +110,15 @@ public class IgraPanel extends JPanel{
 	public void setIgra(Igra igra) {
 		this.igra = igra;
 		
-		// Nastavi tipa igralcev
-		NadzornikIgre.tipaIgralcev = new HashMap<Igralec,Integer>();
-		NadzornikIgre.tipaIgralcev.put(igra.igralec1, igra.igralec1.tip);
-		NadzornikIgre.tipaIgralcev.put(igra.igralec2,igra.igralec2.tip);
-		
-		NadzornikIgre.igraPanel = this;
-		NadzornikIgre.novaIgra(igra);
+		// Nastavi tipa igralcev v primeri da igra obstaja
+		if (igra != null) {
+			NadzornikIgre.tipaIgralcev = new HashMap<Igralec,Integer>();
+			NadzornikIgre.tipaIgralcev.put(igra.igralec1, igra.igralec1.tip);
+			NadzornikIgre.tipaIgralcev.put(igra.igralec2,igra.igralec2.tip);
+			
+			NadzornikIgre.igraPanel = this;
+			NadzornikIgre.novaIgra(igra);
+		}
 	}
 	
 	// Osveži napise ter igralno ploščo glede na podatke igre

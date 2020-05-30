@@ -43,6 +43,9 @@ public class Sestkotnik {
             return polygon;
         }
         
+        
+        // za podano stranico ustvari Polygon, ki predstavlja želeni rob debeline 10
+        // s pomočjo te funkcije tvorimo Zunjanje robe plošče.
         public Polygon getOuterLine(int i) {
         	int debelina = 10;
         	Polygon polygon = new Polygon();
@@ -69,6 +72,7 @@ public class Sestkotnik {
         	return polygon;
         }
         
+        // vrne manjši oziroma večji šestkotnik, glede na podani zamik.
         public Polygon getResizedHexagon(int zamik) {
         	return createHexagon(-zamik);
         }
