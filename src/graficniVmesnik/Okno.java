@@ -12,6 +12,10 @@ public class Okno {
 	
 	private CardLayout okna;
 	
+	private final String cardMenu = "menu";
+	private final String cardIgra = "igra";
+	
+	// Požene grafični vmesnik
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -27,35 +31,44 @@ public class Okno {
 	
 	public Okno() {	
 		frame = new JFrame();
+		
 		//frame.setBounds(60, 20, 1000, 700);
+		// Če hočemo manjše okno na začetku, odkomentiramo zgornjo in komentiramo spodnjo
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		// med menujem in igro preklapjamo s pomočjo CardLayout-a
 		okna = new CardLayout();
 		frame.setLayout(okna);
 		
 		menuPanel = new MenuPanel(this);
-		frame.add(menuPanel,"menu");
+		frame.add(menuPanel, cardMenu);
 		
 		igraPanel = new IgraPanel(this);
-		frame.add(igraPanel, "igra");
+		frame.add(igraPanel, cardIgra);
 	}
 	
-	public void novaIgra(Igra igra) {
+	// Nastavimo novo igro
+	public void setIgra(Igra igra) {
 		igraPanel.setIgra(igra);
 		refresh();
 	}
 	
-	public void pokaziMenu() {
-		okna.show(frame.getContentPane(), "menu");
+	// pokaze karto v CardLayout z ustreznim imenom (cardMenu ali cardIgra)
+	public void pokazi(String cardName) {
+		okna.show(frame.getContentPane(), cardName);
 	}
 	
+	// osveži stanje okna glede na igro, na začetku ko je igra null pokaze menu na
+	// katerem lahko usvarimo novo s funkcijo novaIgra kjer se spet poklice refresh()
+	// in se pokaze igralna karta.
 	public void refresh() {
-		Igra igra = igraPanel.getIgra();
+		Igra igra = igraPanel.igra;
 		if (igra != null) {
-			okna.show(frame.getContentPane(), "igra");
+			pokazi("igra");
 		} else {
-			pokaziMenu();
+			pokazi("menu");
 		}
 	}
 }

@@ -84,7 +84,9 @@ public class MenuPanel extends JPanel{
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.1;
 		
+		
 		gumbiPanel = new JPanel(new GridLayout(1,0));
+		// gumb dodamo na sredino za lepši izgled
 		gumbiPanel.add(new JPanel());
 		gumbiPanel.add(new NovoButton());
 		gumbiPanel.add(new JPanel());
@@ -93,11 +95,11 @@ public class MenuPanel extends JPanel{
 		
 	}
 	
+	
+	// input s pomočjo katerega nastavimo velikost igre
 	private class VelikostInput extends JPanel {
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
+		
 		private CenterLabel velikostLabel;
 		private JTextField velikostInput;
 		
@@ -123,11 +125,14 @@ public class MenuPanel extends JPanel{
 			add(velikostInput,gbc);
 		}
 		
+		// vrne podano velikost. Zraven preveri, če so vnešeni podatki pravilni.
 		public int getValue() {
+			// preveri če ni prazno
 			String stevilo = velikostInput.getText();
 			if (stevilo == null || stevilo.length() == 0) {
 	           return 0;
 	        }
+			// preveri če je res število
 	        for (char c : stevilo.toCharArray()) {
 	            if (!Character.isDigit(c)) {
 	                return 0;
@@ -136,11 +141,15 @@ public class MenuPanel extends JPanel{
 			return Integer.parseInt(stevilo);
 		}
 		
+		// nastavi vrednost velikost...uporablja se za nastavitev 
+		// vrednosti 11 v primeru napačne nastavljene vrednosti ob potrditvi
 		public void setValue(int stevilo) {
 			velikostInput.setText(String.valueOf(stevilo));
 		}
 	}
 	
+	
+	// Menu igralca, ki vsebuje inpute za tip, ime in barvo.
 	private class IgralecPanel extends JPanel{
 		private static final long serialVersionUID = 1L;
 
@@ -158,6 +167,7 @@ public class MenuPanel extends JPanel{
 		
 		private JPanel barve;
 		
+		// ustvari menu za igralca z podanim indexom.
 		public IgralecPanel(int index) {
 			this.index = index;
 			
@@ -180,6 +190,11 @@ public class MenuPanel extends JPanel{
 			barvaLabel.setRatio(labelNastavitveRatio);
 			add(barvaLabel);
 			
+			ustvariBarve();
+		}
+		
+		// Doda panel z moznimi izbirami barv
+		private void ustvariBarve() {
 			barve = new JPanel(new GridLayout(2,5));
 			barve.add(new BarvaButton(Color.RED));
 			barve.add(new BarvaButton(Color.BLUE));
@@ -192,9 +207,9 @@ public class MenuPanel extends JPanel{
 			barve.add(new BarvaButton(Color.CYAN));
 			barve.add(new BarvaButton(Color.BLACK));
 			add(barve);
-			
 		}
-		
+				
+		// Iz inputov za tip, ime in barvo tvori novega igralca.
 		public Igralec getIgralec() {
 			String ime = imePanel.getValue();
 			int tip = tipPanel.getValue();
@@ -202,13 +217,15 @@ public class MenuPanel extends JPanel{
 			return new Igralec(ime,barva,tip);
 		}
 		
-		
+		//JLabel in JComboBox predstavljata input za igralčev tip
 		private class TipInput extends JPanel {
 			private static final long serialVersionUID = 1L;
 			
 			private CenterLabel tipLabel;
 			private DefaultListCellRenderer listRenderer;
 			private JComboBox<String> tipBox;
+			
+			//nastavimo stringe za posamezen tip igralca
 			private String[] tipi = { "Igralec", "Racunalnik - Lahko", "Racunalnik - Srednje", "Racunalnik - Težko" };
 			
 			public TipInput() {
@@ -224,6 +241,7 @@ public class MenuPanel extends JPanel{
 				add(tipBox);
 			}
 			
+			// vrne vrednost igralca glede na izbrani index v JComboBoxu
 			public int getValue() {
 				int index = tipBox.getSelectedIndex();
 				if (index == 0) {
@@ -232,18 +250,20 @@ public class MenuPanel extends JPanel{
 					return Igralec.LAHEK_RACUNALNIK;
 				} else if(index == 2) {
 					return Igralec.SREDNJI_RACUNALNIK;
-				} else if(index == 3) {
+				} else {
 					return Igralec.TEZEK_RACUNALNIK;
 				}
-				return Igralec.IGRALEC;
 			}
 		}
 		
+		
+		// JLabel in JTextField predstavljata input za igralčevo ime
 		private class ImeInput extends JPanel  {
 			private static final long serialVersionUID = 1L;
 			
 			private CenterLabel imeLabel;
 			private JTextField imeInput;
+			
 			
 			public ImeInput() {
 				setLayout(new GridLayout(1,2));
@@ -256,6 +276,9 @@ public class MenuPanel extends JPanel{
 				add(imeInput);
 			}
 			
+			
+			// vrne vnešeno ime igralca...v primeru da je ime prazno pogleda tip igralca
+			// ter vrne primerno ime glede na index
 			public String getValue() {
 				String ime = imeInput.getText();
 				if ( ime.isBlank()) {
@@ -278,6 +301,8 @@ public class MenuPanel extends JPanel{
 			private Color barva;
 			
 			public BarvaInput() {
+				
+				// Nastvavi prvotne barve (Rdeca in Modra)
 				if (index == 1) {
 					barva = Color.RED;
 				} else {
@@ -292,24 +317,33 @@ public class MenuPanel extends JPanel{
 				add(barvaInput);
 			}
 			
+			// nastavi barvo
 			public void setValue(Color color) {
 				this.barva = color;
 				barvaInput.setBackground(color);
 				
 			}
+			
+			// vrne izbrano barvo
 			public Color getValue() {
 				return barva;
 			}
 		}
 		
+		
+		// uporabimo za nastavljanje barv pri barvaInputu
 		private class BarvaButton extends JButton{
 			private static final long serialVersionUID = 1L;
 			
 			private Color barva;
 			
+			
+			// za podano barvo ustvari gumb
 			public BarvaButton(Color color) {
 				barva = color;
 				setBackground(barva);
+				
+				// ob kliku nastavi barvo pri barvaInputu
 				addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
 						barvaPanel.setValue(barva);
@@ -317,8 +351,10 @@ public class MenuPanel extends JPanel{
 				});
 			}
 		}
+		
 	}
 	
+	// Gumb, ki ustvari novoIgro
 	private class NovoButton extends JButton{
 		private static final long serialVersionUID = 1L;
 
@@ -327,19 +363,26 @@ public class MenuPanel extends JPanel{
 			addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int velikost = velikostInput.getValue();
+					// Najprej preveri pravilnost velikosti igre.
 					if ( velikost > 0) {
 						Igra igra = new Igra(velikost);
 						Igralec igralec1 = igralec1Panel.getIgralec();
 						Igralec igralec2 = igralec2Panel.getIgralec();
 						if (igralec1.toString().contentEquals(igralec2.toString())) {
+							// Če sta imeni enaki:
 							showMessageDialog(null,"Izberi razlicni imeni za igralca");
 						} else if( igralec1.barva.equals(igralec2.barva)) {
+							// Če sta barvi enaki:
 							showMessageDialog(null,"Izberi razlicni barvi za igralca");
 						} else  {
+							// Če je vse pravilno igri nastavimo ustvarjena igralca.
+							// Oknu podamu novo igro.
 							igra.setIgralca(igralec1, igralec2);
-							okno.novaIgra(igra);
+							okno.setIgra(igra);
 						}
 					} else {
+						// V primeru, da velikost ni pravilna to izpiše ter nastavi
+						// priporočeno velikost 11
 						showMessageDialog(null,"Izberi ustrezno velikost igre");
 						velikostInput.setValue(11);
 					}

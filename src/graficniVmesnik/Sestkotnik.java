@@ -4,15 +4,17 @@ import java.awt.Color;
 import java.awt.Polygon;
 import splosno.Koordinati;
 
+
+// class, ki pomaga pri risanju lepih šestkotnikov.
 public class Sestkotnik {
         private final int radius;
         
         private double x;
         private double y;
 
-        private final Polygon hexagon;
-        private Color barva;
-        private Koordinati koordinati;
+        public final Polygon hexagon;
+        public Color barva;
+        public Koordinati koordinati;
         
         public Sestkotnik(double x, double y, int radius, Koordinati koordinati, Color barva) {
             this.x = x;
@@ -24,6 +26,10 @@ public class Sestkotnik {
             
         }
 
+        // ustvari Polygon, ki predstavlja šestkotnik glede na podane podatke o središču
+        // in radiju. Za argument sprejme zamik, ki nam omogoča to, da lahko ustvarimo,
+        // dva podobna šestkotnika, ki ju damo enega na drugega, da potem izgleda kot
+        // da ima prvi rob širine podanega zamika
         private Polygon createHexagon(int zamik) {
             Polygon polygon = new Polygon();
 
@@ -35,22 +41,6 @@ public class Sestkotnik {
                 polygon.addPoint(xval, yval);
             }
             return polygon;
-        }
-
-        public int getRadius() {
-            return radius;
-        }
-        
-        public Koordinati getKoordinati() {
-        	return koordinati;
-        }
-
-        public Polygon getHexagon() {
-            return hexagon;
-        }
-        
-        public Color getBarva() {
-        	return barva;
         }
         
         public Polygon getOuterLine(int i) {

@@ -28,7 +28,7 @@ public class IgraPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	private Okno okno;
-	private Igra igra;
+	public Igra igra;
 	private JPanel menuBar;
 	private Platno platno;
 	private GridBagConstraints gbc;
@@ -37,6 +37,8 @@ public class IgraPanel extends JPanel{
 	private JButton nazajButton;
 	private JButton novoButton;
 	
+	
+	// Izpisi ob določenih stanjih igre
 	private final String zmagaStanje = "Zmagovalec:";
 	private final String potezaStanje = "Igralec na potezi:";
 	
@@ -55,6 +57,8 @@ public class IgraPanel extends JPanel{
 		
 		menuBar = new JPanel(new GridLayout(1,0));
 		
+		
+		// Gumb, ki omogoča razveljavitev poteze
 		nazajButton = new JButton("Nazaj");
 		nazajButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -64,6 +68,9 @@ public class IgraPanel extends JPanel{
 		});
 		menuBar.add(nazajButton);
 		
+		// Tukaj izpisujemo stanje igre
+		// Ob poteku se izpiše ime igralca, ki je na potezi
+		// V primeru zmage pa se izpiše ime zmagovalca
 		JPanel labelsPanel = new JPanel(new GridLayout(2,1));
 		stanjeLabel = new CenterLabel(potezaStanje);
 		stanjeLabel.setRatio(5);
@@ -75,10 +82,13 @@ public class IgraPanel extends JPanel{
 		
 		menuBar.add(labelsPanel);
 		
+		
+		// Gumb ki izbriše trenutno igro oziroma jo nastavi na null, ter pokaze
+		// menu kjer lahko ustvarimo novo igro.
 		novoButton = new JButton("Nova igra");
 		novoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				okno.pokaziMenu();
+				okno.setIgra(null);
 			}
 		});
 		menuBar.add(novoButton);
@@ -89,17 +99,18 @@ public class IgraPanel extends JPanel{
 		gbc.gridy = 1;
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.8;
+		
+		// ustvari igralno plosco
 		platno = new Platno();
 		add(platno,gbc);
 	}
 	
-	public Igra getIgra() {
-		return igra;
-	}
 	
+	// Nastvari novo igro ter poskrbi za NadzornikaIgre
 	public void setIgra(Igra igra) {
 		this.igra = igra;
 		
+		// Nastavi tipa igralcev
 		NadzornikIgre.tipaIgralcev = new HashMap<Igralec,Integer>();
 		NadzornikIgre.tipaIgralcev.put(igra.igralec1, igra.igralec1.tip);
 		NadzornikIgre.tipaIgralcev.put(igra.igralec2,igra.igralec2.tip);
@@ -108,7 +119,7 @@ public class IgraPanel extends JPanel{
 		NadzornikIgre.novaIgra(igra);
 	}
 	
-	
+	// Osveži napise ter igralno ploščo glede na podatke igre
 	public void refreshPanel() {
 		int stanje = igra.getStanje();
 		if ( stanje == Igra.ZMAGA1) {
@@ -124,6 +135,7 @@ public class IgraPanel extends JPanel{
 		platno.refreshPlatno();
 	}
 	
+	// igralna plošča
 	public class Platno extends JPanel implements MouseListener, ComponentListener {
 		private static final long serialVersionUID = 1L;
 		
@@ -152,6 +164,11 @@ public class IgraPanel extends JPanel{
 			this.addComponentListener(this);
 		}
 		
+		
+		// izračuna vrednosti odmikov potrebnih za ustrezno prilagoditev plošče
+		// ob spremenjeni velikost okna. 
+		// Nastavi tudi ustrezen radij šestkotnikov, da je potem dobljena plošča
+		// ustrezne velikost in vse skupaj lepo izgleda
 		private void izracunajVrednosti() {
 			N = igra.velikost;
 			
@@ -176,11 +193,16 @@ public class IgraPanel extends JPanel{
 			visina = Math.sqrt(3) * radij / 2;
 		}
 		
+		
+		// ustvari ploščo
 		private void initialize() {
 			if (igra != null) {
 				
+				// najprej izračuna vrednosti
 				izracunajVrednosti();
 				
+				
+				// nato ustvari vse šestkotnike za vse koordinate
 				for(int i = 0; i < N; i++) {
 					for (int j = 0; j < N; j++) {
 						Koordinati koordinati = new Koordinati(j,i);
@@ -195,6 +217,8 @@ public class IgraPanel extends JPanel{
 			}	
 		}
 		
+		
+		// Na novo izračuna vse vrednosti ter na novo ustavari šestkonike
 		private void refreshPlatno() {
 			removeAll();
 			sestkotniki.clear();
@@ -202,6 +226,8 @@ public class IgraPanel extends JPanel{
 			repaint();
 		}
 		
+		
+		// funkcija ki nariše ploščo
 		@Override 
 		protected void paintComponent(Graphics g) {
 			polygoni.clear();
@@ -209,10 +235,13 @@ public class IgraPanel extends JPanel{
 			Color igralec1 = igra.getIgralecBarva(1);
 			Color igralec2 = igra.getIgralecBarva(2);
 			
+			// za vsak šestkonik iz seznama ustvarjenih
 			for (Sestkotnik hex: sestkotniki) {
-				int y = hex.getKoordinati().getY();
-				int x = hex.getKoordinati().getX();
+				int y = hex.koordinati.getY();
+				int x = hex.koordinati.getX();
+				// ustvari robove plošče
 				if (x == 0){
+					// levi rob
 					g.setColor(igralec2);
 					g.drawPolygon(hex.getOuterLine(4));
 					g.fillPolygon(hex.getOuterLine(4));
@@ -220,6 +249,7 @@ public class IgraPanel extends JPanel{
 					g.fillPolygon(hex.getOuterLine(5));
 				}
 				if (x == igra.velikost - 1) {
+					// desni rob
 					g.setColor(igralec2);
 					g.drawPolygon(hex.getOuterLine(1));
 					g.fillPolygon(hex.getOuterLine(1));
@@ -227,6 +257,7 @@ public class IgraPanel extends JPanel{
 					g.fillPolygon(hex.getOuterLine(2));
 				}
 				if (y == 0){
+					// spodnji rob
 					g.setColor(igralec1);
 					g.drawPolygon(hex.getOuterLine(5));
 					g.fillPolygon(hex.getOuterLine(5));
@@ -234,42 +265,64 @@ public class IgraPanel extends JPanel{
 					g.fillPolygon(hex.getOuterLine(6));
 				}
 				if (y == igra.velikost - 1) {
+					// zgornji rob
 					g.setColor(igralec1);
 					g.drawPolygon(hex.getOuterLine(3));
 					g.fillPolygon(hex.getOuterLine(3));
 					g.drawPolygon(hex.getOuterLine(2));
 					g.fillPolygon(hex.getOuterLine(2));
 				}
-				Polygon osnovniHex = hex.getHexagon();
+				// za vsako koordinati ustvari črni šestkotnik, ki predstavlja rob
+				Polygon osnovniHex = hex.hexagon;
 				g.setColor(Color.black);
 				g.drawPolygon(osnovniHex);
 				g.fillPolygon(osnovniHex);
-				g.setColor(hex.getBarva());
-				polygoni.add(hex.getHexagon());
+				polygoni.add(hex.hexagon);
 				
+				// na vsak črni šestkotnik narišemo manjši šestkotnik strezne barve
+				// barvo smo podali pri izračunu glede na stanje igre
 				Polygon smallerHex = hex.getResizedHexagon(-2);
+				g.setColor(hex.barva);
 				g.drawPolygon(smallerHex);
 				g.fillPolygon(smallerHex);
 			}
 			g.dispose();
 		}
 
+		// funkcija, ki omogoča igranje človeškega igralca preko 
+		// klika miške na ustrezen šestkotnik
 		public void mouseClicked(MouseEvent e) {
 			Point p = e.getPoint();
+			// preveri, da ni konec igre in da je na potezi res človek
 			if (!igra.konecIgre()) {
 				if(NadzornikIgre.clovekNaPotezi) {
+					// za vsak šestkotnik pogleda, če vsebuje točko klika
 					for(Sestkotnik hex:sestkotniki) {
-			        	if (hex.getHexagon().contains(p)) {
-			        		Koordinati poteza = hex.getKoordinati();
-			        		System.out.println("DELAM POTEZO:" + poteza);
+			        	if (hex.hexagon.contains(p)) {
+			        		// Če ja odigra koordinati, ki ju predtavlja ta šestkotnik
+			        		Koordinati poteza = hex.koordinati;
 			        		NadzornikIgre.clovekovaPoteza(poteza);
+			        		// prekine loop
 			        		break;
 			        	}
 			        }
 				} 
 			}
 		}
+		
+		// v primeru spremenjene velikosti okna ponovno izračuna vse vrednosti
+				// in ustvari vse na novo
+				public void componentResized(ComponentEvent e) {
+					this.removeAll();
+					sestkotniki.clear();
+					this.height = this.getHeight();
+					this.width = this.getWidth();
+					initialize();
+					repaint();
+				}
 
+/////////////////////////////////////////////////////////////////////////////////////
+				
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
 			
@@ -288,15 +341,6 @@ public class IgraPanel extends JPanel{
 		public void mouseExited(MouseEvent e) {
 			// TODO Auto-generated method stub
 			
-		}
-
-		public void componentResized(ComponentEvent e) {
-			this.removeAll();
-			sestkotniki.clear();
-			this.height = this.getHeight();
-			this.width = this.getWidth();
-			initialize();
-			repaint();
 		}
 
 		public void componentMoved(ComponentEvent e) {
