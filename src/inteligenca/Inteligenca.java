@@ -41,11 +41,14 @@ public class Inteligenca extends KdoIgra {
 		super(ime);
 	}
 
+	// ustvari inteligenco za tekmovanje
 	public Inteligenca() {
 		super("Hex'n'Šus");
 		this.globina = 4;
 	}
 	
+	
+	// ustvari inteligenco določenega tipa
 	public Inteligenca(int tip) {
 		super("Racunalnik");
 		if(tip == LAHKO) {
@@ -57,6 +60,11 @@ public class Inteligenca extends KdoIgra {
 		}
 	}
 	
+	// izbere potezo
+	// če je prva poteza odigra v sredino
+	// če je druga in je nasprotnik igral v sredino, odigra najboljšo blokado
+	// če je druga in ni nasprotnik igral v sredino, iskoristi in igra v sredino
+	// če je kasnejša poteza potem na podlagi sposbnosti ocene igre in algoritma minimax izbere najboljšo potezo
 	public Koordinati izberiPotezo(Igra igra) {
 		if(igra.poteze.size() == 0) {
 			// prva poteza:
@@ -116,11 +124,6 @@ public class Inteligenca extends KdoIgra {
 		return poteze.get(random.nextInt(poteze.size()));
 	}
 	
-	// prvi izmed seznamov je seznam tistih sosedov, ki jih je položil igralec na potezi
-	// drugi seznam je seznam sosedov, ki jih je položil nasprotnik igralca na potezi
-	// tretji seznam predstavljajo sosedi, ki so še nezasedena polja
-	
-	
 	// --minimax algoritem 1.0 (ne dela čisto v redu in ni ključen za delovanje kode)
 	@SuppressWarnings("unused")
 	private OcenjenaPoteza minimax(Igra igra, int globina, Igralec jaz) {
@@ -165,6 +168,8 @@ public class Inteligenca extends KdoIgra {
 	
 	
 	// vsako potezo ocenimo in shrani v class OcenjenaPoteza
+	// vrne najvišje ocenjeno potezo na podani globini
+	// je hitrejši od navadnega minimaxa saj nepotrebnih vej ne preglejuje
 	public OcenjenaPoteza alphabetaPoteza(Igra igra, int globina, int alpha, int beta, Igralec jaz) {
 		int ocena;
 		
@@ -207,6 +212,13 @@ public class Inteligenca extends KdoIgra {
 		return new OcenjenaPoteza(kandidat,ocena);
 	}
 	
+	// Da igralec zmaga igro potrebuje najti pot od enega konca do drugega. 
+	// Definiramo pot, potrebno za zmago kot pot, ki vsebuje tako prazna kot igrana polja tega igralca in se začne v enem robu
+	// ter konča na drugem. Najkrajšo tako pot definiramo kot pot, ki med vsemi potmi vsebuje najmanj praznih polj.
+	// Tako lahko v vsakem trenutku igre ocenimo, kateri igralec je bližje zmagi, oziroma najkrajša pot katerega igralca vsbuje
+	// najmanj praznih.
+	// Ker je, še posebej na začetku takih ekvivalentnih poti več, k oceni dodamo še število mostov igralca, da lažje izberemo
+	// boljšo potezo
 	public int oceniPozicijo(Igra igra, Igralec jaz) {
 		NajkrajsaPot mojaPot = igra.najkrajsaPot(jaz);
 		NajkrajsaPot nasprotnikovaPot = igra.najkrajsaPot(igra.nasprotnik(jaz));
@@ -232,7 +244,11 @@ public class Inteligenca extends KdoIgra {
 		}
 	}
 	
-	
+	// Na začetku igre je možnih potez ogromno, še posebej pri veliki plošči 11 x 11. Zato poteze uredimo s pomočjo ocene 
+	// stanja igre in učinek igrane koordinate na igro. Oceno poteze dobimo s funckijo vrednostKoordinate. Ko imamo seznam vseh
+	// potez urejenih v padajčem vrstnem redu glede na njihovo oceno, zberemo prvih 20, kar nam omogoči večjo globino.
+	// predvidevamo torej da je najboljša poteza prisotna v naših prvih 20 najboljše ocenjenih koordinatah in potem s pomočjo
+	// minimaxa najdemo res najboljši izmed njih
 	public List<Koordinati> urejeneMoznePoteze(Igra igra){
 		List<Koordinati> poteze = igra.veljavnePoteze();
 		Collections.sort(poteze,new SortKoordinati(igra));
@@ -242,7 +258,11 @@ public class Inteligenca extends KdoIgra {
 		return poteze;
 	}
 	 
-	 
+	 // določi oceno koordinate za podano igro. Pogleda če igralec na potezi zmaguje oziroma izgublja in potem na podlagi tega
+	// in na podlagi sosedov določi oceno koordiate.
+	// ideja je, da če igralec zmaguje se bolj splača gledat poteze blizu njegove najkrajše poti...tako tvori moste ali pa
+	// zakljuci/dopolni pot
+	// če pa igralec izgublja pa se bolj splača gledat poteze blizu nasprotnikove najkrajse poti in tako tvoriti ustrezno blokado
 	 public int vrednostKoordinate(Koordinati t,Igra igra) {
 		int vrednost = 0;
 		NajkrajsaPot mojaPot = igra.najkrajsaPot(igra.igralecNaPotezi);
@@ -300,7 +320,7 @@ public class Inteligenca extends KdoIgra {
 		return vrednost;
 	 }
 		
-	 
+	 // primerjalni class, uporabljen pri sortiranju potez glede na njihovo oceno
 	private class SortKoordinati implements Comparator<Koordinati> { 
 		private Igra igra;
 		
