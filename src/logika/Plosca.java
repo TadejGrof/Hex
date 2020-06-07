@@ -152,6 +152,11 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		najkrajsaPotIgralec2 = najkrajsaPot(IGRALEC2);
 	}
 	
+	// za podanega igralca izračuna ter vrne najkrajšo pot od enega do drugega roba
+	// vrne pot, ki bi bila v primeru, da je cela zapolnjena iz strani igralca, zmagovalna
+	// in pri tem najkrajša možna med vsemi glede na trenutno stanje igre
+	// možnih je seveda več podobnih rešitev ( še posebej na začetku )
+	// ...funckija vrne prvo glede na izračun
 	public NajkrajsaPot najkrajsaPot(int igralec) {
 		Inteligenca.steviloRacunanihPoti ++;
 		if (igralec == IGRALEC1) {
@@ -162,39 +167,58 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return null;
 	}
 	
+	
+	// poisce najkrajso pot od podanega zacetka pa do konca za podanega igralca
 	public NajkrajsaPot najkrajsaPot(Hex zacetek,Hex konec, int igralec) {
 		Hex trenutniHex;
+		// pripravimo seznam za novo iskanje
 		seznamZaIskanje.refresh();
 		zacetek.teza = 0;
+		// zacetni poti dodamo prvo zacetno tocko
 		zacetek.potDo.add(zacetek);
+		// ustvarimo kopijo seznama, da vemo katere smo že gledali
 		ArrayList<Hex> trenutniSeznam = new ArrayList<Hex>(seznamZaIskanje);
 		trenutniHex = zacetek;
 		while(true) {
+			// prvega pregledanega odstranimo iz seznama
 			trenutniSeznam.remove(trenutniHex);
+			// filtriramo nepregledane
 			ArrayList<Hex> nepregledaniSosedje = filtrirajNepregledane(trenutniSeznam, trenutniHex.sosedi());
+			// filtriramo veljavne...iscemo torej le v smeri, ki je prazna ali še ni igrana
 			ArrayList<Hex> veljavniSosedje = filtrirajVeljavne(nepregledaniSosedje,igralec);
 			for(Hex sosed: veljavniSosedje) {
 				int teza;
+				// boljše je če je polje že igrano zato v tem primeri teže spremenimo
 				if(getValue(sosed) == igralec) {
 					teza = 0;
 				} else {
+					// v primeru ko je polje prazno prištejemo težo ena
 					teza = 1;
 				}
+				// nastavimo novo težo
 				int novaTeza = trenutniHex.teza + teza;
 				if(novaTeza < sosed.teza) {
+					// če je teža ( napor ) do soseda manjši kot teža od prejšnjih poti
+					// do tega soseda, nastavi za hex, ki predstavja tega soseda novo pot
+					// ter novo težo
+					// na koncu tako dobimo za vsak hex najkrajšo pot in če izberemo
+					// zadnjega ( ustrezen rob ) dobimo željeno pot 
 					sosed.teza = novaTeza;
 					sosed.potDo = new NajkrajsaPot(trenutniHex.potDo);
 					sosed.potDo.add(sosed);
 				}
 			}
 			if(trenutniSeznam.size() == 0) {
+				// če smo pregledali vse vrnemo najkrajšo pot do končnega roba
 				return getNajkrajsaPot(igralec);
 			} else {
+				// drugače nastavimo trenutni hex na najustreznejšega ter nadaljujemo postopek
 				trenutniHex = vrniNajmanjsiHex(trenutniSeznam);
 			}
 		}
 	}
 	
+	// vrne Hex, ki ima najmanjšo vrednost med vsemi iz seznama
 	private Hex vrniNajmanjsiHex(ArrayList<Hex> seznam) {
 		Hex najmanjsi = null;
 		for (Hex hex:seznam) {
@@ -204,6 +228,9 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return najmanjsi;
 	}
 	
+	// predvidevamo da smo začeli v spodnjem kotu za igralca1 oziroma levem 
+	// za igralca2. Funkcija tako pogleda za hex ki predstavlja zgornji oziroma desni
+	// rob ter vrne shranjeno najkrašo pot do tega roba od začetka
 	private NajkrajsaPot getNajkrajsaPot(int igralec) {
 		if(igralec == IGRALEC1) {
 			return ZGORNJIROB.potDo;
@@ -212,6 +239,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		} return null;
 	}
 	
+	// iz seznama sosedov vrne le tiste ki so ali prazni ali igrani iz igralčeve strani
+	// omogoči nadaljevanje iskanja najkrajše poti na veljavnih mestih
 	private ArrayList<Hex> filtrirajVeljavne(ArrayList<Hex> sosedje, int igralec){
 		ArrayList<Hex> tocke = new ArrayList<Hex>();
 		for(Hex hex: sosedje) {
@@ -221,6 +250,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return tocke;
 	}
 	
+	// ko imamo enkrat seznam veljavnih, izločimo tiste, ki smo jih že pregledali
 	private ArrayList<Hex> filtrirajNepregledane(ArrayList<Hex> seznam, ArrayList<Hex> sosedje){
 		ArrayList<Hex> tocke = new ArrayList<Hex>();
 		for(Hex hex: sosedje) {
@@ -284,39 +314,6 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		}
 	}
 	
-	public ArrayList<Koordinati> sosednje(int i, int j){
-		ArrayList<Koordinati> sosednje = new ArrayList<Koordinati>();
-		sosednje.add(koordinati(i - 1, j - 1));
-		sosednje.add(koordinati(i - 1, j));
-		sosednje.add(koordinati(i, j - 1));
-		sosednje.add(koordinati(i , j + 1));
-		sosednje.add(koordinati(i + 1, j));
-		sosednje.add(koordinati(i + 1, j + 1));
-		while (sosednje.remove(null));
-		return sosednje;
-	}
-	
-	public int getVelikost () {
-		return velikost;
-	}
-	
-	// ta dela isto...ono pobrisi po zelji
-	public int[][] getMatrika(){
-		int[][] matrika = new int[velikost][velikost];
-		int[] vrstica = new int[velikost];
-		
-		for (int i = 0; i < velikost; i++) {
-			for (int j = 0; j < velikost; j++) {
-				vrstica[j] = get(i).get(j);
-			}
-			matrika[i] = vrstica;
-			vrstica = new int[velikost];
-		}
-		
-		return matrika;
-	}
-	
-	
 	// vrne seznam koordinata poljubne vrste;
 	public ArrayList<Koordinati> vrsta(int y){
 		ArrayList<Koordinati> vrsta = new ArrayList<Koordinati>();
@@ -335,6 +332,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return stolpec;
 	}
 	
+	// vrne kopijo plosce
+	// uporablja se pri kopiranju igre
 	public Plosca kopirajPlosco() {
 		int i; int j;
 		Plosca kopija = new Plosca(velikost);
@@ -350,10 +349,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return kopija;
 	}
 	
-	public ArrayList<Koordinati> vseKoordinate(){
-		return null;
-	}
-	
+	// preveri, če koordianti tvorita most
 	public boolean jeMost(Koordinati t1, Koordinati t2) {
 		if (getValue(t1) == getValue(t2) && getValue(t1) != 0) {
 			ArrayList<Koordinati> skupniSosedje = skupniSosedje(t1,t2);
@@ -365,6 +361,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return false;
 	}
 	
+	// vrne seznam skupnih sosedov podanih koordnati
 	public ArrayList<Koordinati> skupniSosedje(Koordinati t1, Koordinati t2){
 		ArrayList<Koordinati> sosedje1 = sosednje(t1);
 		ArrayList<Koordinati> sosedje2 = sosednje(t2);
@@ -375,6 +372,10 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		return skupni;
 	}
 	
+	// povezava dveh igranih polj med katerima je eno polje prazno
+	// obstajata dve taki možni povezavi:
+	// - enojni (koordinati imata le enega skupnega soseda)
+	// - dvojni (koordianti imata dva skupna soseda)
 	public class Most {
 		Koordinati polna1;
 		Koordinati polna2;
@@ -398,11 +399,14 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 				
 		}
 		
+		// preveri če je most dvojni
 		public boolean jeDvojni() {
 			if (prazna2 == null | prazna1 == null) return false;
 			return getValue(prazna1) == 0 && getValue(prazna2) == 0;
 		}
 		
+		// preveri če gre pot pod mostom, kar pomeni da lahko pot
+		// enostavno blokiramo z povezavo mosta
 		public boolean greCezPot(NajkrajsaPot pot) {
 			return pot.contains(prazna1) & pot.contains(prazna2); 
 		}
@@ -420,6 +424,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			super();
 		}
 		
+		// vrne vse prazne
 		public ArrayList<Koordinati> prazne(){
 			ArrayList<Koordinati> prazne = new ArrayList<Koordinati>();
 			for (Hex hex:this) {
@@ -429,6 +434,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			return prazne;
 		}
 		
+		// preveri če pot vsebuje podani koordinati
 		public boolean vsebuje(Koordinati t) {
 			for (Hex hex: this) {
 				if(hex.getX() == t.getX() && hex.getY() == t.getY()) return true;
@@ -436,6 +442,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			return false;
 		}
 		
+		// za koordinati t vrne razdaljo od najbižjega še ne igranega polja
+		// uporablja se pri ocenjevanju koordinat pri inteligenci (vrednostKoordinate)
 		public int razdaljaOdPrazne(Koordinati t) {
 			int najmanjsaVrednost = Integer.MAX_VALUE;
 			for (Hex hex:this) {
@@ -448,6 +456,9 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			return najmanjsaVrednost;
 		}
 		
+		
+		// za koordinato t vrne razdlajo do najbižjega polnega ( igranega ) polja 
+		// uporablja se pri ocenjevanju koordinat pri inteligenci (vrednostKoordinate)
 		public int razdaljaOdPolne(Koordinati t) {
 			int najmanjsaVrednost = Integer.MAX_VALUE;
 			int igralec = getValue(get(0));
@@ -461,6 +472,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			return najmanjsaVrednost;
 		}
 		
+		// vrne število praznih ( še ne igranih ) polj v tej poti.
 		public int steviloPraznih() {
 			int prazne = 0;
 			for(Koordinati t:this) {
@@ -471,6 +483,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			return prazne;
 		}
 		
+		// vrne vse mostove, ki jih tvori ta pot
 		public ArrayList<Most> mosti(){
 			ArrayList<Most> mosti = new ArrayList<Most>();
 			for(int i = 0; i < this.size(); i++) {
@@ -481,6 +494,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			return mosti;
 		}
 		
+		
+		// vrne število boljših (dvojnih) mostov
 		public int steviloDvojnihMostov() {
 			int stevilo = 0;
 			for(Most most:mosti()) {
@@ -489,6 +504,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			return stevilo;
 		}
 		
+		// vrne število mostov, ki jih tvori pot
 		public int steviloMostov() {
 			int mosti = 0;
 			for(int i = 0; i < this.size(); i++) {
@@ -497,7 +513,10 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			return mosti;
 		}
 		
-		
+		// preveri če je pot končna
+		// torej ker predvidevamo, da vedno začetno v enem robu in končamo v drugem
+		// je potrebno preveriti le če so vsa polja na poti zapolnjena z ustrezno
+		// vrednostjo igralca (če je seveda teh polj več kot je velikost plošče)
 		public boolean jeKoncna() {
 			if (this.size() < velikost) return false;
 			for (Koordinati t: this) {
@@ -507,7 +526,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		}
 	}
 	
-	
+	// ustvari seznam hex-ov (razširjenih koordinat)
 	private class SeznamZaIskanje extends ArrayList<Hex>{
 		private static final long serialVersionUID = 1L;
 		
@@ -524,6 +543,9 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			add(LEVIROB);
 			
 		}
+		
+		// za vsak hex iz seznama ponastavi začetno vrednost in ustvari novo
+		// najkrajso pot, ki je zaenkrat še prazna
 		public void refresh() {
 			for(Hex hex: this) {
 				hex.teza = Integer.MAX_VALUE;
@@ -531,6 +553,7 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 			}
 		}
 		
+		// za podano kooordinato vrne pripadajoči hex iz seznama
 		public Hex get(Koordinati t) {
 			for (Hex hex : this) {
 				if(hex.getX() == t.getX() & hex.getY() == t.getY()) return hex;
@@ -539,6 +562,9 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		}
 	}
 	
+	
+	// razširitev koordinat, ki nam omogoča vrednotenje posameznega mesta na plosci
+	// in tako poiskati najkrajso pot od zacetnega do koncnega polja
 	private class Hex extends Koordinati{
 		
 		public Hex(int x, int y) {
@@ -548,6 +574,8 @@ public class Plosca extends ArrayList<ArrayList<Integer>> {
 		public int teza = Integer.MAX_VALUE;
 		public NajkrajsaPot potDo = new NajkrajsaPot();
 		
+		
+		// vrne sosede iz seznamaZaIskanje
 		public ArrayList<Hex> sosedi(){
 			ArrayList<Hex> sosedi = new ArrayList<Hex>();
 			ArrayList<Koordinati> sosednje = sosednje(this);

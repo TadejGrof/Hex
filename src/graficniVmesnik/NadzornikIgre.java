@@ -1,9 +1,10 @@
-package logika;
+package graficniVmesnik;
 
 import java.util.HashMap;
 import javax.swing.SwingWorker;
 
-import graficniVmesnik.IgraPanel;
+import logika.Igra;
+import logika.Igralec;
 import splosno.Koordinati;
 
 

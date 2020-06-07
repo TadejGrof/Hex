@@ -22,7 +22,6 @@ import splosno.Koordinati;
 
 import logika.Igra;
 import logika.Igralec;
-import logika.NadzornikIgre;
 
 public class IgraPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
